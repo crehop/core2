@@ -39,6 +39,4 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 	}
-	@Override
-
 }
