@@ -12,6 +12,7 @@ public class GameStateManager {
 	}
 	
 	public void setState(int state) {
+		gameState.dispose();
 		if (state == MENU) {
 			// switch
 		}
