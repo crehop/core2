@@ -1,8 +1,8 @@
 package com.gdx.orion.gamestates;
 
-public class PlayState extends GameState {
+public class LevelEdit extends GameState {
 
-	protected PlayState(GameStateManager gsm) {
+	protected LevelEdit(GameStateManager gsm) {
 		super(gsm);
 		init();
 	}
