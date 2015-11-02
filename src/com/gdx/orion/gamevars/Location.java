@@ -1,4 +1,4 @@
-package game;
+package com.gdx.orion.gamevars;
 
 public class Location {
 	public float x;

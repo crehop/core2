@@ -1,8 +1,7 @@
-package camera;
-
-import game.Location;
+package com.gdx.orion.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.gdx.orion.gamevars.Location;
 
 public class Camera {
 	public OrthographicCamera cam;
