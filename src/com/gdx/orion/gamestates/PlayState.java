@@ -1,8 +1,8 @@
 package com.gdx.orion.gamestates;
 
-public class MenuState extends GameState {
+public class PlayState extends GameState {
 
-	protected MenuState(GameStateManager gsm) {
+	protected PlayState(GameStateManager gsm) {
 		super(gsm);
 		init();
 	}
@@ -27,6 +27,4 @@ public class MenuState extends GameState {
 		
 	}
 
-	
-	
 }

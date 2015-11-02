@@ -8,16 +8,16 @@ public class GameStateManager {
 	public static final int PLAY = 1;
 	
 	public GameStateManager() {
-		
+		setState(MENU);
 	}
 	
 	public void setState(int state) {
-		gameState.dispose();
+		if (gameState != null) gameState.dispose();
 		if (state == MENU) {
-			// switch
+			gameState = new MenuState(this);
 		}
 		if (state == PLAY) {
-			// switch
+			gameState = new PlayState(this);
 		}
 	}
 	
