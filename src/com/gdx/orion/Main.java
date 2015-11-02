@@ -5,9 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
 public class Main extends ApplicationAdapter {
-	
 	public void create () {
-
 	}
 
 	@Override

@@ -13,4 +13,16 @@ public class Camera {
 		location = new Location(x,y,z);
 		cam.position.set(x, y, z);
 	}
+	
+	public void update(float x, float y, float z){
+		this.location.x = x;
+		this.location.y = y;
+		this.location.z = z;
+		cam.position.set(location.x,location.y,location.z);
+		cam.update();
+	}
+	
+	public OrthographicCamera getCamera(){
+		return this.cam;
+	}
 }
