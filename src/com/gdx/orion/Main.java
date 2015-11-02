@@ -10,7 +10,6 @@ public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	
-	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
@@ -24,4 +23,22 @@ public class Main extends ApplicationAdapter {
 		batch.draw(img, 0, Gdx.graphics.getHeight()/2 - 300 - img.getHeight()/2 + 300);
 		batch.end();
 	}
+
+	@Override
+	public void resize (int width, int height) {
+	}
+
+	@Override
+	public void pause () {
+	}
+
+	@Override
+	public void resume () {
+	}
+
+	@Override
+	public void dispose () {
+	}
+	@Override
+
 }
