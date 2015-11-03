@@ -4,7 +4,6 @@ public class Play extends GameState {
 
 	protected Play(GameStateManager gsm) {
 		super(gsm);
-		init();
 	}
 
 	@Override

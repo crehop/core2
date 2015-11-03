@@ -4,7 +4,6 @@ public class Store extends GameState {
 
 	protected Store(GameStateManager gsm) {
 		super(gsm);
-		init();
 	}
 
 	@Override

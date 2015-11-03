@@ -3,14 +3,17 @@ package com.gdx.orion;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.gdx.orion.camera.Camera;
 import com.gdx.orion.gamestates.GameStateManager;
 
 public class Main extends ApplicationAdapter{
 	
 	private GameStateManager gsm;
+	public Camera cam;
 	
 	public void create() {
 		gsm = new GameStateManager();
+		cam = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), null);
 	}
 
 	@Override

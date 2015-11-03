@@ -4,7 +4,6 @@ public class LevelEdit extends GameState {
 
 	protected LevelEdit(GameStateManager gsm) {
 		super(gsm);
-		init();
 	}
 
 	@Override

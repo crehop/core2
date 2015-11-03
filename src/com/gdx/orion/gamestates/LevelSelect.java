@@ -4,7 +4,6 @@ public class LevelSelect extends GameState {
 
 	protected LevelSelect(GameStateManager gsm) {
 		super(gsm);
-		init();
 	}
 
 	@Override
