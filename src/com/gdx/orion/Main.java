@@ -13,7 +13,7 @@ public class Main extends ApplicationAdapter{
 	
 	public void create() {
 		gsm = new GameStateManager();
-		cam = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), null);
+		cam = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 0);
 	}
 
 	@Override
