@@ -1,19 +1,23 @@
 package com.gdx.orion;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.gdx.orion.camera.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.gdx.orion.gamestates.GameStateManager;
+import com.gdx.orion.screens.Player;
+import com.gdx.orion.utils.Console;
 
-public class Main extends ApplicationAdapter{
+public class Main extends Game{
 	
-	private GameStateManager gsm;
-	public Camera cam;
+	private static GameStateManager gsm;
+	private static OrthographicCamera cam;
+	public  static Player player;
+	public static boolean console = true;
 	
 	public void create() {
 		gsm = new GameStateManager();
-		cam = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), null);
+		player = new Player(0,0,0, this);
 	}
 
 	@Override
@@ -24,9 +28,14 @@ public class Main extends ApplicationAdapter{
 		// Render the game state and draw it
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.draw();
+		cam.update();
+		
+		//ALWAYS LAST
+		if(console){
+			Console.render();
+		}
 		
 	}
-
 	@Override
 	public void resize (int width, int height) {
 	}
@@ -41,6 +50,14 @@ public class Main extends ApplicationAdapter{
 
 	@Override
 	public void dispose () {
+	}
+	
+	public static OrthographicCamera getCam() {
+		return cam;
+	}
+
+	public static void setCam(OrthographicCamera cam) {
+		Main.cam = cam;
 	}
 }
 
