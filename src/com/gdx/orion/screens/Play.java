@@ -5,13 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.gdx.orion.utils.Console;
 
 public class Play implements Screen {
 	public static Game game;
 	public static OrthographicCamera cam;
-	public static StretchViewport viewport;  
+	public static ScalingViewport viewport;  
 	final float GAME_WORLD_WIDTH = 1080;
 	final float GAME_WORLD_HEIGHT = 720;
 
@@ -33,7 +35,9 @@ public class Play implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
 		Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
-		Console.setLine3("VIEWPORT:"+ cam.viewportWidth + "/" +" pla");
+		Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
+		Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
+		Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
 		Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 		cam.update();
 		Console.render(cam);
@@ -41,7 +45,8 @@ public class Play implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		Console.resize(width,height,Play.cam);
+		viewport.update(width, height);
+		viewport.apply();
 	}
 
 	@Override

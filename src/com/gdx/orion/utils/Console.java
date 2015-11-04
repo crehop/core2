@@ -20,25 +20,26 @@ public class Console{
 	private static String line8 = "LINE 8:";
 	private static String line9 = "LINE 9:";
 	private static String line10 = "LINE 10:";
-	private static int x = 5;
-	private static int y = Gdx.graphics.getHeight() - 5;
+	public static int x = 5;
+	public static int y = 5;
 	private static BitmapFont font = new BitmapFont();
 	private static boolean enabled = true;
 	private static boolean initiated = false;
-	static SpriteBatch batch = new SpriteBatch();
 	static Random rand = new Random();
+	static SpriteBatch batch = new SpriteBatch();
 	
 
 	public static void render(OrthographicCamera cam) {
-		batch.begin();
 		batch.setProjectionMatrix(cam.combined);
-		System.out.println(cam.combined.getScaleX());
 		if(initiated == false){
 			initiated = true;
 		}
 		if(enabled){
+			x= 5;
+			y= (int) cam.viewportHeight - 5;
+			batch.begin();
 			checkConsole();
-
+			font.getData().setScale(1.75f);
 			font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 			font.draw(batch, line1, x, y); 
 			y -= font.getCapHeight() + 3;
@@ -65,9 +66,6 @@ public class Console{
 	}
 	public static void checkConsole(){
 		if(consoleOn){
-			y = Gdx.graphics.getHeight() - 5;
-			x = 5;
-			
 			if(line1 == null){
 				line1 = "null";
 			}
@@ -166,10 +164,5 @@ public class Console{
 	}
 	public static void setLine10(String line10) {
 		Console.line10 = line10;
-	}
-	
-	public static void resize(int height, int width, OrthographicCamera cam){
-		x = (int) (5 + cam.position.x);
-		y = (int) (height - 5 + cam.position.y);
 	}
 }
