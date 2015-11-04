@@ -2,8 +2,11 @@ package com.gdx.orion.utils;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.gdx.orion.Main;
 
 public class Console{
 	private static boolean consoleOn = true;
@@ -26,13 +29,16 @@ public class Console{
 	static Random rand = new Random();
 	
 
-	public static void render() {
+	public static void render(OrthographicCamera cam) {
+		batch.begin();
+		batch.setProjectionMatrix(cam.combined);
+		System.out.println(cam.combined.getScaleX());
 		if(initiated == false){
 			initiated = true;
 		}
 		if(enabled){
 			checkConsole();
-			batch.begin();
+
 			font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 			font.draw(batch, line1, x, y); 
 			y -= font.getCapHeight() + 3;
@@ -162,8 +168,8 @@ public class Console{
 		Console.line10 = line10;
 	}
 	
-	public static void resize(int height, int width){
-		x = 5;
-		y = height - 5;
+	public static void resize(int height, int width, OrthographicCamera cam){
+		x = (int) (5 + cam.position.x);
+		y = (int) (height - 5 + cam.position.y);
 	}
 }

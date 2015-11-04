@@ -1,7 +1,9 @@
-package com.gdx.orion.gamestates;
+package com.gdx.orion.screens;
 
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public class Menu extends GameState {
+public class Menu implements Screen {
 
 	private SpriteBatch sb;
     private BitmapFont font;
@@ -21,14 +23,17 @@ public class Menu extends GameState {
     private TextureAtlas buttonAtlas;
     private TextButton button;
     private TextButtonStyle textBS;
+    private Game game;
     
     private final String TITLE = "Asteroids";
 	
-	protected Menu(GameStateManager gsm) {
-		super(gsm);
+
+	public Menu(Game game) {
+		super();
+		this.game = game;
+		//init();
 	}
 
-	@Override
 	public void init() {
 		
 		sb = new SpriteBatch();
@@ -38,7 +43,7 @@ public class Menu extends GameState {
 		
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
-		buttonAtlas = new TextureAtlas(Gdx.files.getFileHandle("/project-gdx-orion-core//assets//reeeeeeee.jpg", FileType.Local));
+		buttonAtlas = new TextureAtlas(Gdx.files.getFileHandle("reeeeeeee.jpg", FileType.Local));
 		skin.addRegions(buttonAtlas);
 		textBS = new TextButtonStyle();
 		textBS.font = font;
@@ -48,15 +53,13 @@ public class Menu extends GameState {
 	}
 
 	@Override
-	public void update(float dt) {
-		
-		//Input would be handled in here
+	public void show() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void draw() {
-		
+	public void render(float delta) {
 		sb.getProjectionMatrix();
 		
 		stage.draw();
@@ -69,7 +72,32 @@ public class Menu extends GameState {
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void dispose() {
+		// TODO Auto-generated method stub
 		
 	}
 

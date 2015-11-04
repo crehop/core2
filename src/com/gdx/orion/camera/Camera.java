@@ -1,27 +1,19 @@
 package com.gdx.orion.camera;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 //import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gdx.orion.Main;
 import com.gdx.orion.gamevars.Location;
 
 public class Camera {
 	protected Vector3 position = null;
 	protected Location location;
-	protected Viewport viewport;
 	protected float far = 1000;
 	protected float near = 0.1f;
 
 	public Camera(float x, float y, float z){
 		position = new Vector3(x,y,z);
 		this.location = new Location(x,y,z);
-		Main.getCam().near = near;
-		Main.getCam().far = far;
-		viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Main.getCam());
+		//Main.getCamera().near = near;
+		//Main.getCamera().far = far;	
 	}
 	public void walkBackward(float distance){
 		this.position.y -= distance;
@@ -61,6 +53,5 @@ public class Camera {
 	}
 	protected void updateLocation(){
 		this.location.update(position);
-
 	}
 }
