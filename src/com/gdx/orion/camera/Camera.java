@@ -19,7 +19,6 @@ public class Camera {
 	public Camera(float x, float y, float z){
 		position = new Vector3(x,y,z);
 		this.location = new Location(x,y,z);
-		Main.setCam(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		Main.getCam().near = near;
 		Main.getCam().far = far;
 		viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Main.getCam());
@@ -27,13 +26,11 @@ public class Camera {
 	public void walkBackward(float distance){
 		this.position.y -= distance;
 		updateLocation();
-		
 	}
 	public void walkForward(float distance){
 		this.position.y += distance;
 		updateLocation();
 	}
-
 	public void strafeRight(float distance){
 		//moves camera forward relative to its current rotation;
 		this.position.x += distance;

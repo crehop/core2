@@ -161,4 +161,9 @@ public class Console{
 	public static void setLine10(String line10) {
 		Console.line10 = line10;
 	}
+	
+	public static void resize(int height, int width){
+		x = 5;
+		y = height - 5;
+	}
 }

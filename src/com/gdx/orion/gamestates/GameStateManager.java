@@ -1,5 +1,8 @@
 package com.gdx.orion.gamestates;
 
+import com.badlogic.gdx.Game;
+import com.gdx.orion.Main;
+
 public class GameStateManager {
 
 	private GameState gameState;
@@ -10,17 +13,17 @@ public class GameStateManager {
 	public static final int LEVELSELECT = 3;
 	public static final int STORE = 4;
 	
-	public GameStateManager() {
-		setState(PLAY);
+	public GameStateManager(Game game) {
+		setState(PLAY, game);
 	}
 	
-	public void setState(int state) {
+	public void setState(int state, Game game) {
 		if (gameState != null) gameState.dispose();
 		if (state == MENU) {
 			gameState = new Menu(this);
 		}
 		if (state == PLAY) {
-			gameState = new Play(this);
+			gameState = new Play(this, game);
 		}
 	}
 	
