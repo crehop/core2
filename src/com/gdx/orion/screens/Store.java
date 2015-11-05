@@ -1,12 +1,14 @@
 package com.gdx.orion.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.gdx.orion.Main;
 
 public class Store implements Screen {
-
-	protected Store() {
+	private Game game;
+	protected Store(Game game) {
 		super();
+		this.game = game;
 	}
 
 	@Override

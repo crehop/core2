@@ -39,7 +39,7 @@ public class Console{
 
 		batch.setProjectionMatrix(cam.combined);
 		if(initiated == false){
-			parameter.size = 12;
+			parameter.size = 22;
 			initiated = true;
 		}
 		if(enabled){

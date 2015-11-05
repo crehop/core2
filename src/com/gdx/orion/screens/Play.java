@@ -41,6 +41,7 @@ public class Play implements Screen {
 		Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 		cam.update();
 		Console.render(cam);
+		GameStateManager.setScreen(GameStateManager.LEVELSELECT);
 	}
 
 	@Override
