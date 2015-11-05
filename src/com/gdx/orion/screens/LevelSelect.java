@@ -1,10 +1,11 @@
 package com.gdx.orion.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
 public class LevelSelect implements Screen {
 
-	protected LevelSelect() {
+	protected LevelSelect(Game game) {
 		super();
 	}
 

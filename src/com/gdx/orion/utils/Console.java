@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.gdx.orion.Main;
 
 public class Console{
@@ -22,7 +24,11 @@ public class Console{
 	private static String line10 = "LINE 10:";
 	public static int x = 5;
 	public static int y = 5;
-	private static BitmapFont font = new BitmapFont();
+	private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
+	private static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+	private static BitmapFont font = generator.generateFont(parameter); // font size 12 pixels
+
+
 	private static boolean enabled = true;
 	private static boolean initiated = false;
 	static Random rand = new Random();
@@ -30,8 +36,10 @@ public class Console{
 	
 
 	public static void render(OrthographicCamera cam) {
+
 		batch.setProjectionMatrix(cam.combined);
 		if(initiated == false){
+			parameter.size = 22;
 			initiated = true;
 		}
 		if(enabled){
@@ -39,7 +47,6 @@ public class Console{
 			y= (int) cam.viewportHeight - 5;
 			batch.begin();
 			checkConsole();
-			font.getData().setScale(1.75f);
 			font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 			font.draw(batch, line1, x, y); 
 			y -= font.getCapHeight() + 3;
