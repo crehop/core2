@@ -5,7 +5,7 @@ import com.badlogic.gdx.Screen;
 public abstract class GameState {
 	private int ID = 0;
 	private Screen screen;
-	boolean active = false;
+	protected boolean active = false;
 	public abstract void setActive(boolean active);
 	public abstract boolean isActive();
 	public GameState(int ID){

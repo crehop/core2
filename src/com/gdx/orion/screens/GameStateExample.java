@@ -3,6 +3,7 @@ package com.gdx.orion.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.gdx.orion.screens.GameState;
 
 public class GameStateExample extends GameState implements Screen{
 	public GameStateExample(int ID){
