@@ -1,14 +1,14 @@
 package com.gdx.orion.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 
-public class LevelSelect extends GameState implements Screen {
-
-	protected LevelSelect(Game game) {
-		super(GameStateManager.LEVELSELECT);
+public class GameStateExample extends GameState implements Screen{
+	public GameStateExample(int ID){
+		//THIS ID NEEDS TO BE SET IN GAME STATE MANAGER (Ex: GameStateManager.MENU) and named after this class (ex:
+		//GameStateManager.GAMESTATEEXAMPLE as a FINAL int
+		super(ID);
 	}
 
 	@Override
@@ -16,7 +16,6 @@ public class LevelSelect extends GameState implements Screen {
 		if(active){
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
-			System.out.println("ACTIVE");
 		}
 	}
 	
@@ -58,5 +57,4 @@ public class LevelSelect extends GameState implements Screen {
 	public boolean isActive() {
 		return super.active;
 	}
-
 }

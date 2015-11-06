@@ -16,13 +16,12 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.setVSync(true);
 		Gdx.input.setCursorCatched(false);
-		this.setScreen(GameStateManager.getScreen(1));
+		GameStateManager.setScreen(1);
 	}
 
 	@Override
 	public void render () {
 		super.render();
-
 	}
 	@Override
 	public void resize (int width, int height) {

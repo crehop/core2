@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public class Menu implements Screen {
+public class Menu extends GameState implements Screen {
 
 	private SpriteBatch sb;
     private BitmapFont font;
@@ -26,10 +27,9 @@ public class Menu implements Screen {
     private Game game;
     
     private final String TITLE = "Asteroids";
-	
-
+    
 	public Menu(Game game) {
-		super();
+		super(GameStateManager.MENU);
 		this.game = game;
 		//init();
 	}
@@ -53,54 +53,56 @@ public class Menu implements Screen {
 	}
 
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void render(float delta) {
-		sb.getProjectionMatrix();
-		
-		stage.draw();
-		
-		sb.begin();
-		font.draw(sb, TITLE, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 + 100);
-		
-		sb.end();
-		
+		if(active){
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
+			sb.getProjectionMatrix();
+			stage.draw();
+			sb.begin();
+			font.draw(sb, TITLE, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 + 100);
+			sb.end();
+		}
 	}
-
+	
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public void show() {
+		this.setActive(true);
+	}
+	
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+		this.setActive(false);
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void setActive(boolean active) {
+		super.active = active;
+	}
 
+	@Override
+	public boolean isActive() {
+		return super.active;
+	}
 	
 	
 }
