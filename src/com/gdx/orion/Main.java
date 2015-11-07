@@ -3,8 +3,8 @@ package com.gdx.orion;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.gdx.orion.screens.GameStateManager;
-import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.PlayController;
 
 public class Main extends Game implements ApplicationListener{
@@ -13,13 +13,16 @@ public class Main extends Game implements ApplicationListener{
 	public static PlayController playController = new PlayController();
 	
 	@Override
-	public void create(){
+	public void create() {
+		final Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music/1 - Fathers Day - Silent Loser.mp3"));
+		
 		GameStateManager.initiate(this);
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.setVSync(true);
 		Gdx.input.setCursorCatched(false);
 		GameStateManager.setScreen(1);
 		Gdx.input.setInputProcessor(playController);
+		music.play();
 	}
 
 	@Override
