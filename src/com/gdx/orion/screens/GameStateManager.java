@@ -26,7 +26,7 @@ public class GameStateManager {
 		game = game2;
 		levelEdit = new LevelEdit(game);
 		levelSelect = new LevelSelect(game);
-		play = new Play(game);
+		play = new Play(game, 1);
 		menu = new Menu(game);
 		store = new Store(game);
 		gameStates.add(play);
