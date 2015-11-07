@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.gdx.orion.gamevars.Location;
@@ -34,13 +35,14 @@ public class Play extends GameState implements Screen {
 	protected Play(Game game, int level) {
 		super(GameStateManager.PLAY);
 		cam = new OrthographicCamera();
-		cam.position.set(GAME_WORLD_WIDTH/2,GAME_WORLD_HEIGHT/2,0);
-		viewport = new StretchViewport(1080, 720, cam);
+		viewport = new ScalingViewport(Scaling.stretch, 1080, 720, cam);
 		viewport.apply();
+		cam.position.set(0, 0, 0);
+		cam.update();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.gameWorld = new World(new Vector2(0.1f,0.1f), true);
-		WorldUtils.GenerateWorldBorder(gameWorld, 10, 10, 20, 20);
+		this.gameWorld = new World(new Vector2(-0.1f,-9.1f), true);
+		WorldUtils.GenerateWorldBorder(gameWorld, 5, 720, 5,1080);
 		new Ball(gameWorld, new Location(100,120,0));
 		new Ball(gameWorld, new Location(120,120,0));
 		new Ball(gameWorld, new Location(130,112,0));
@@ -50,6 +52,7 @@ public class Play extends GameState implements Screen {
 	@Override
 	public void render(float delta) {
 		if(isActive()){
+			if(gameWorld.getBodyCount() < 1000)new Ball(gameWorld, new Location(140,140,0));
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
@@ -58,6 +61,7 @@ public class Play extends GameState implements Screen {
 			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine6("WORLD ENTITIES: " + gameWorld.getBodyCount());
+			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
 			cam.update();
 			Console.render(cam);
 			renderer.render(gameWorld, viewport.getCamera().combined);

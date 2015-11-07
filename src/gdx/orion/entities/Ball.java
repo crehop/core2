@@ -40,7 +40,7 @@ public class Ball {
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape2;
-		fdef.density = 200;
+		fdef.density = 2000;
 		fdef.friction = 1000;
 		body = world.createBody(def);
 		body.createFixture(fdef);

@@ -19,7 +19,7 @@ public class WorldUtils {
 	private static Array<Body> bodies = new Array<Body>();
 
 
-	public static void GenerateWorldBorder(World world,float x1,float y1,float x2,float y2){
+	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
 		def.position.set(0 - Gdx.graphics.getWidth()/2,0 - Gdx.graphics.getHeight()/2);
 		def.type = BodyType.StaticBody;
 		world.getBodies(bodies);
@@ -51,6 +51,7 @@ public class WorldUtils {
 		shape.set(worldBorder);
 		fdef.shape = shape;
 		body.createFixture(fdef);		
+		
 		worldBorder[0] = x1;
 		worldBorder[1] = y2;
 		worldBorder[2] = x2;

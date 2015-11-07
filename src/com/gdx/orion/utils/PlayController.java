@@ -1,48 +1,85 @@
 package com.gdx.orion.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.gdx.orion.screens.GameStateManager;
 
 public class PlayController extends InputAdapter implements InputProcessor {
-
-	private boolean exitKey;
-	private boolean forward;
-	private boolean back;
-	private boolean strafeLeft;
-	private boolean strafeRight;
+	
+	public PlayController(){
+	}
+	private boolean exitKey = false;
+	private boolean forward = false;
+	private boolean back = false;
+	private boolean strafeLeft = false;
+	private boolean strafeRight = false;
 	
 	public  void checkInput() {
 		if(exitKey){
-			
+			Gdx.app.exit();
 		}
 		if(forward){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.cam.translate(0, 5, 0);
+			}
 		}
 		if(back){
-			if(Gdx.input.isCursorCatched()){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.cam.translate(0, -5, 0);
 			}
 		}
 		if(strafeLeft){
-			if(Gdx.input.isCursorCatched()){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.cam.translate(-5, 0, 0);
 			}
 		}
-		if(strafeRight){	
-			if(Gdx.input.isCursorCatched()){
-				
+		if(strafeRight){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.cam.translate(5, 0, 0);
 			}
 		}
 	}
 	
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		switch(keycode){
+			case Input.Keys.W:
+				forward = true;
+				break;
+			case Input.Keys.S:
+				back = true;
+				break;
+			case Input.Keys.A:
+				strafeLeft = true;
+				break;
+			case Input.Keys.D:
+				strafeRight = true;
+				break;
+			case Input.Keys.ESCAPE:
+				exitKey = true;
+				break;
+		}
 		return super.keyDown(keycode);
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+		switch(keycode){
+			case Input.Keys.W:
+				forward = false;
+				break;
+			case Input.Keys.S:
+				back = false;
+				break;
+			case Input.Keys.A:
+				strafeLeft = false;
+				break;
+			case Input.Keys.D:
+				strafeRight = false;
+				break;
+		}
 		return super.keyUp(keycode);
 	}
 
@@ -78,7 +115,15 @@ public class PlayController extends InputAdapter implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		if(GameStateManager.play.isActive()){
+			if(!(GameStateManager.play.cam.zoom + amount < 1)){
+				GameStateManager.play.cam.zoom += amount;
+				Console.setLine8(""+GameStateManager.play.cam.zoom);
+			}
+			if(GameStateManager.play.cam.zoom < 0){
+				GameStateManager.play.cam.zoom = 1;
+			}
+		}
 		return super.scrolled(amount);
 	}
 }
