@@ -52,15 +52,14 @@ public class Asteroid {
 			numpoints = 8;
 		}
 		if(size == 2){
-			numpoints = 5;
 			force = MathUtils.random(-750,750);
-			width = height = MathUtils.random(15,40);
+			width = height = MathUtils.random(45,75);
 			numpoints = 8;
 		}
 		if(size == 3){
 			numpoints = 8;
 			force = MathUtils.random(-600,600);
-			width = height = MathUtils.random(20,60);
+			width = height = MathUtils.random(60,160);
 		}
 		this.speed = new Vector2((location.x + MathUtils.random(force * 10000)),(location.y + MathUtils.random(force *10000)));
 		float radians = (float) (Math.toRadians(360)/numpoints);
