@@ -1,5 +1,6 @@
 package com.gdx.orion.screens;
 
+import gdx.orion.entities.Asteroid;
 import gdx.orion.entities.Ball;
 import gdx.orion.entities.PlayerShip;
 
@@ -12,6 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -35,6 +37,7 @@ public class Play extends GameState implements Screen {
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	private ShapeRenderer sr = new ShapeRenderer();
 	private PlayerShip ship;
+	Random rand = new Random();
 	
 	protected Play(Game game, int level) {
 		super(GameStateManager.PLAY);
@@ -48,20 +51,17 @@ public class Play extends GameState implements Screen {
 		this.game = game;
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
-		new Ball(getGameWorld(), new Location(100,120,0),1,100);
-		new Ball(getGameWorld(), new Location(120,120,0),1,10);
-		new Ball(getGameWorld(), new Location(130,112,0),1,45);
-		new Ball(getGameWorld(), new Location(140,140,0),1,85);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
+		
+		new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
 	}
 
 	@Override
 	public void render(float delta) {
 		if(isActive()){
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
-			Random random = new Random();
 			if(getGameWorld().getBodyCount() < 500) {
-				new PlayerShip(getGameWorld(), new Location((int)(random.nextFloat() * GAME_WORLD_WIDTH * .70),140,0));
+				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,720) ,MathUtils.random(-100,300), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
 			}
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
