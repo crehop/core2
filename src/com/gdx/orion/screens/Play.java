@@ -30,8 +30,8 @@ public class Play extends GameState implements Screen {
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
-	public final float GAME_WORLD_WIDTH = 1080;
-	public final float GAME_WORLD_HEIGHT = 720;
+	public final float GAME_WORLD_WIDTH = 10800;
+	public final float GAME_WORLD_HEIGHT = 7200;
 	private Stage stage;
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
@@ -60,8 +60,8 @@ public class Play extends GameState implements Screen {
 	public void render(float delta) {
 		if(isActive()){
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
-			if(getGameWorld().getBodyCount() < 500) {
-				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,720) ,MathUtils.random(-100,300), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
+			while(getGameWorld().getBodyCount() < 2000) {
+				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
 			}
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	

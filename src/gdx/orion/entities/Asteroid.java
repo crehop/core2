@@ -23,7 +23,6 @@ public class Asteroid {
 	private float width;
 	private float height;
 	int numpoints = 0;
-	private float offset = (float) Math.toRadians(45);
 
 	public Asteroid(World world, Location position, float density, int size){
 
@@ -41,28 +40,30 @@ public class Asteroid {
 		fdef.friction = 1;
 		body.createFixture(fdef);
 		body.applyForce(speed,body.getWorldCenter(), false);
+		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
 	}
 
 	private float[] setShape(int size) {
+		numpoints = 8;
 		float force = 0;
 		if(size == 1){
 			force = MathUtils.random(-1000,1000);
-			width = height = MathUtils.random(5,10);
-			numpoints = 6;
-			
-		}
-		if(size == 2){
-			force = MathUtils.random(-750,750);
-			width = height = MathUtils.random(15,40);
-			numpoints = 7;
-		}
-		if(size == 3){
-			force = MathUtils.random(-600,600);
-			width = height = MathUtils.random(20,60);
+			width = height = MathUtils.random(15,50);
 			numpoints = 8;
 		}
-		this.speed = new Vector2((location.x + MathUtils.random(force)),(location.y + MathUtils.random(force)));
-		float radians = MathUtils.degreesToRadians;
+		if(size == 2){
+			numpoints = 5;
+			force = MathUtils.random(-750,750);
+			width = height = MathUtils.random(15,40);
+			numpoints = 8;
+		}
+		if(size == 3){
+			numpoints = 8;
+			force = MathUtils.random(-600,600);
+			width = height = MathUtils.random(20,60);
+		}
+		this.speed = new Vector2((location.x + MathUtils.random(force * 10000)),(location.y + MathUtils.random(force *10000)));
+		float radians = (float) (Math.toRadians(360)/numpoints);
 		float[] shapex = new float[numpoints];
 		float[] shapey = new float[numpoints];
 		float[] dists = new float[numpoints];
@@ -70,12 +71,12 @@ public class Asteroid {
 		float angle = 0;
 		float radius = width/2;
 		for(int i = 0; i < numpoints; i++){
-			dists[i] = MathUtils.random(radius / 2, radius);
+			dists[i] = MathUtils.random(radius /.75f, radius);
 		} 
 		for(int i = 0; i < numpoints; i++){
-			shapex[i] = body.getLocalCenter().x + MathUtils.cos(angle) * dists[i];
-			shapey[i] = body.getLocalCenter().y + MathUtils.sin(angle) * dists[i];
-			angle += 2 * 3.1415f/numpoints;
+			shapex[i] = body.getLocalCenter().x + MathUtils.cos(radians * i) * dists[i];
+			shapey[i] = body.getLocalCenter().y + MathUtils.sin(radians * i) * dists[i];
+			angle += 4 * 3.1415f/numpoints;
 
 		}
 		int count = 0;
