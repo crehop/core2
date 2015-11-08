@@ -7,7 +7,7 @@ public class Location {
 	public float x;
 	public float y;
 	public float z;
-	private Vector3 position;
+	private Vector3 position = new Vector3(0,0,0);
 	
 	public Location(float x,float y, float z){
 		this.x = x;

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.gdx.orion.screens.GameStateManager;
 
 public class PlayController extends InputAdapter implements InputProcessor {
@@ -15,6 +17,7 @@ public class PlayController extends InputAdapter implements InputProcessor {
 	private boolean back = false;
 	private boolean strafeLeft = false;
 	private boolean strafeRight = false;
+	private boolean stop;
 	
 	public  void checkInput() {
 		if(exitKey){
@@ -22,22 +25,27 @@ public class PlayController extends InputAdapter implements InputProcessor {
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.cam.translate(0, 5, 0);
+				GameStateManager.play.getPlayerShip().forward(100000);
 			}
 		}
 		if(back){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.cam.translate(0, -5, 0);
+				GameStateManager.play.getPlayerShip().forward(-100000);
 			}
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.cam.translate(-5, 0, 0);
+				GameStateManager.play.getPlayerShip().turn(1000);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.cam.translate(5, 0, 0);
+				GameStateManager.play.getPlayerShip().turn(-1000);
+			}
+		}
+		if(stop){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.getPlayerShip().fire();  
 			}
 		}
 	}
@@ -60,6 +68,9 @@ public class PlayController extends InputAdapter implements InputProcessor {
 			case Input.Keys.ESCAPE:
 				exitKey = true;
 				break;
+			case Input.Keys.SPACE:
+				stop = true;
+				break;
 		}
 		return super.keyDown(keycode);
 	}
@@ -78,6 +89,9 @@ public class PlayController extends InputAdapter implements InputProcessor {
 				break;
 			case Input.Keys.D:
 				strafeRight = false;
+				break;
+			case Input.Keys.SPACE:
+				stop = false;
 				break;
 		}
 		return super.keyUp(keycode);

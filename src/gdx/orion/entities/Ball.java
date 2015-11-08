@@ -20,7 +20,7 @@ public class Ball {
 	FixtureDef fdef;
 	Random rand = new Random();
 
-	public Ball(World world, Location position){
+	public Ball(World world, Location position, float density, int size){
 		this.location = position;
 		def = new BodyDef();
 		def.position.set(location.x, location.y);
@@ -36,12 +36,12 @@ public class Ball {
 		creature[6] = 86;
 		creature[7] = 0;
 		shape.set(creature);
-		shape2.setRadius(rand.nextInt(30));
+		shape2.setRadius(size);
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape2;
-		fdef.density = 2000;
-		fdef.friction = 1000;
+		fdef.density = density;
+		fdef.friction = 1;
 		body = world.createBody(def);
 		body.createFixture(fdef);
 	}

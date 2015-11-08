@@ -14,7 +14,7 @@ public class Main extends Game implements ApplicationListener{
 	
 	@Override
 	public void create() {
-		final Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music/1 - Fathers Day - Silent Loser.mp3"));
+		//final Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music/1 - Fathers Day - Silent Loser.mp3"));
 		
 		GameStateManager.initiate(this);
 		Gdx.graphics.setContinuousRendering(true);
@@ -22,7 +22,7 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.input.setCursorCatched(false);
 		GameStateManager.setScreen(1);
 		Gdx.input.setInputProcessor(playController);
-		music.play();
+		//music.play();
 	}
 
 	@Override

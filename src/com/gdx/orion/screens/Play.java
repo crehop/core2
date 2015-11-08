@@ -1,7 +1,9 @@
 package com.gdx.orion.screens;
 
 import gdx.orion.entities.Ball;
+import gdx.orion.entities.PlayerShip;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Game;
@@ -23,6 +25,7 @@ import com.gdx.orion.utils.WorldUtils;
 public class Play extends GameState implements Screen {
 	public Game game;
 	public OrthographicCamera cam;
+	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public final float GAME_WORLD_WIDTH = 1080;
 	public final float GAME_WORLD_HEIGHT = 720;
@@ -30,31 +33,33 @@ public class Play extends GameState implements Screen {
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	private ShapeRenderer sr = new ShapeRenderer();
+	private PlayerShip ship;
 	
 	protected Play(Game game, int level) {
 		super(GameStateManager.PLAY);
 		cam = new OrthographicCamera();
-		viewport = new ScalingViewport(Scaling.stretch, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT, cam);
+		consoleCam = new OrthographicCamera();
+		viewport = new ScalingViewport(Scaling.stretch, 640, 480, cam);
 		viewport.apply();
-		cam.position.set(0, 0, 0);
-		cam.update();
-		cam.zoom = 1.8f;
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.gameWorld = new World(new Vector2(-0.1f,-5000f), true);
-		WorldUtils.GenerateWorldBorder(gameWorld, 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
-		new Ball(gameWorld, new Location(100,120,0));
-		new Ball(gameWorld, new Location(120,120,0));
-		new Ball(gameWorld, new Location(130,112,0));
-		new Ball(gameWorld, new Location(140,140,0));
+		this.setGameWorld(new World(new Vector2(0f,0f), false));
+		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
+		new Ball(getGameWorld(), new Location(100,120,0),1,100);
+		new Ball(getGameWorld(), new Location(120,120,0),1,10);
+		new Ball(getGameWorld(), new Location(130,112,0),1,45);
+		new Ball(getGameWorld(), new Location(140,140,0),1,85);
+		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
+		game.setScreen(this);
 	}
 
 	@Override
 	public void render(float delta) {
 		if(isActive()){
+			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Random random = new Random();
-			if(gameWorld.getBodyCount() < 500) {
-				new Ball(gameWorld, new Location((int)(random.nextFloat() * GAME_WORLD_WIDTH * .70),140,0));
+			if(getGameWorld().getBodyCount() < 500) {
+				new PlayerShip(getGameWorld(), new Location((int)(random.nextFloat() * GAME_WORLD_WIDTH * .70),140,0));
 			}
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
@@ -63,12 +68,14 @@ public class Play extends GameState implements Screen {
 			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
 			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-			Console.setLine6("WORLD ENTITIES: " + gameWorld.getBodyCount());
+			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
 			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
 			cam.update();
-			Console.render(cam);
-			renderer.render(gameWorld, viewport.getCamera().combined);
-			gameWorld.step(Gdx.graphics.getDeltaTime(), 2, 2);
+			renderer.render(getGameWorld(), viewport.getCamera().combined);
+			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
+			//MUST BE LAST
+			Console.render(consoleCam);
+			consoleCam.update();
 		}
 	}
 
@@ -111,5 +118,17 @@ public class Play extends GameState implements Screen {
 	@Override
 	public boolean isActive() {
 		return super.active;
+	}
+
+	public PlayerShip getPlayerShip() {
+		return this.ship;
+	}
+
+	public World getGameWorld() {
+		return gameWorld;
+	}
+
+	public void setGameWorld(World gameWorld) {
+		this.gameWorld = gameWorld;
 	}
 }
