@@ -27,6 +27,7 @@ public class Play extends GameState implements Screen {
 	public OrthographicCamera cam;
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
+	public ScalingViewport consoleViewport;  
 	public final float GAME_WORLD_WIDTH = 1080;
 	public final float GAME_WORLD_HEIGHT = 720;
 	private Stage stage;
@@ -40,6 +41,8 @@ public class Play extends GameState implements Screen {
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
 		viewport = new ScalingViewport(Scaling.stretch, 640, 480, cam);
+		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
+		consoleViewport.apply();
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
@@ -50,7 +53,6 @@ public class Play extends GameState implements Screen {
 		new Ball(getGameWorld(), new Location(130,112,0),1,45);
 		new Ball(getGameWorld(), new Location(140,140,0),1,85);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
-		game.setScreen(this);
 	}
 
 	@Override
@@ -81,6 +83,8 @@ public class Play extends GameState implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		consoleViewport.update(width, height);
+		consoleViewport.apply();
 		viewport.update(width, height);
 		viewport.apply();
 	}

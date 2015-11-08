@@ -36,14 +36,14 @@ public class Console{
 	
 
 	public static void render(OrthographicCamera cam) {
-
+		batch.setProjectionMatrix(cam.combined);
 		if(initiated == false){
 			parameter.size = 12;
 			initiated = true;
 		}
 		if(enabled){
-			x= 5;
-			y= (int) Gdx.graphics.getHeight() - 5;
+			x= (int) (-cam.viewportWidth/2) + 5;
+			y= (int) (cam.viewportHeight/2 -5);
 			batch.begin();
 			checkConsole();
 			font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
