@@ -90,6 +90,13 @@ public class Menu extends GameState implements Screen {
             }
         });
 		
+		levelEditor.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	GameStateManager.setScreen(2);
+            }
+        });
+		
 		exit.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
