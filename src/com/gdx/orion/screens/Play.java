@@ -3,6 +3,8 @@ package com.gdx.orion.screens;
 import gdx.orion.entities.Asteroid;
 import gdx.orion.entities.PlayerShip;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import com.badlogic.gdx.Game;
@@ -13,7 +15,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
@@ -23,14 +31,15 @@ import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
-public class Play extends GameState implements Screen {
+public class Play extends GameState implements Screen, ContactListener {
+	public String test;
 	public Game game;
 	public OrthographicCamera cam;
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
-	public final float GAME_WORLD_WIDTH = 10800;
-	public final float GAME_WORLD_HEIGHT = 7200;
+	public final float GAME_WORLD_WIDTH = 1080000;
+	public final float GAME_WORLD_HEIGHT = 7200000;
 	private static PlayController playController = new PlayController();
 	private Stage stage;
 	private World gameWorld;
@@ -38,8 +47,11 @@ public class Play extends GameState implements Screen {
 	private ShapeRenderer sr = new ShapeRenderer();
 	private PlayerShip ship;
 	Random rand = new Random();
+	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+	public HashMap<String,Asteroid> asteroidMap = new HashMap<String,Asteroid>();
 	
-	protected Play(Game game, int level) {
+	
+	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
@@ -51,21 +63,27 @@ public class Play extends GameState implements Screen {
 		this.game = game;
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
+		this.gameWorld.setContactListener(this);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		ship.getBody().setAngularDamping(2.00f);
 		
-		new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
-	}
-
+		Asteroid roid = new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
+		asteroidMap.put("" + roid.getBody().getUserData(), roid);	}
+	
 	@Override
 	public void render(float delta) {
 		if(isActive()){
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
-			while(getGameWorld().getBodyCount() < 5000) {
-				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
+			while(getGameWorld().getBodyCount() < 500) {
+				Asteroid roid = new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
+				asteroidMap.put("" + roid.getBody().getUserData(), roid);
 			}
+			for(Asteroid asteroid: asteroids){
+				asteroid.fragment(10);
+			}
+			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
@@ -138,5 +156,51 @@ public class Play extends GameState implements Screen {
 
 	public void setGameWorld(World gameWorld) {
 		this.gameWorld = gameWorld;
+	}
+
+	@Override
+	public void beginContact(Contact contact) {
+		if(contact.getFixtureA().getBody().getUserData() != null && contact.getFixtureB().getBody().getUserData() == null){
+			test =  "" + contact.getFixtureA().getBody().getUserData();
+			if(asteroidMap.containsKey(test)){
+					asteroids.add(asteroidMap.get(test));
+					asteroidMap.remove(test);
+				}
+			test =  "" + contact.getFixtureB().getBody().getUserData();
+			if(asteroidMap.containsKey(test)){
+				asteroids.add(asteroidMap.get(test));
+				asteroidMap.remove(test);
+			}
+		}
+		if(contact.getFixtureB().getBody().getUserData() != null && contact.getFixtureA().getBody().getUserData() == null){
+			test =  "" + contact.getFixtureA().getBody().getUserData();
+			if(asteroidMap.containsKey(test)){
+					asteroids.add(asteroidMap.get(test));
+					asteroidMap.remove(test);
+				}
+			test =  "" + contact.getFixtureB().getBody().getUserData();
+			if(asteroidMap.containsKey(test)){
+				asteroids.add(asteroidMap.get(test));
+				asteroidMap.remove(test);
+			}
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+		// TODO Auto-generated method stub
+		
 	}
 }
