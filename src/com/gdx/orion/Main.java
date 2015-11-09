@@ -10,7 +10,6 @@ import com.gdx.orion.utils.PlayController;
 public class Main extends Game implements ApplicationListener{
 	
 	public static boolean console = true;
-	public static PlayController playController = new PlayController();
 	
 	@Override
 	public void create() {
@@ -20,15 +19,13 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.setVSync(true);
 		Gdx.input.setCursorCatched(false);
-		GameStateManager.setScreen(1);
-		Gdx.input.setInputProcessor(playController);
+		GameStateManager.setScreen(0);
 		//music.play();
 	}
 
 	@Override
 	public void render () {
 		super.render();
-		playController.checkInput();
 	}
 	@Override
 	public void resize (int width, int height) {

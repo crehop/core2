@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
+import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
 public class Play extends GameState implements Screen {
@@ -30,6 +31,7 @@ public class Play extends GameState implements Screen {
 	public ScalingViewport consoleViewport;  
 	public final float GAME_WORLD_WIDTH = 10800;
 	public final float GAME_WORLD_HEIGHT = 7200;
+	private static PlayController playController = new PlayController();
 	private Stage stage;
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
@@ -59,6 +61,8 @@ public class Play extends GameState implements Screen {
 	public void render(float delta) {
 		if(isActive()){
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
+			Gdx.input.setInputProcessor(playController);
+			playController.checkInput();
 			while(getGameWorld().getBodyCount() < 2000) {
 				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
 			}
