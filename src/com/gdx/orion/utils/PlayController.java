@@ -19,12 +19,12 @@ public class PlayController extends InputAdapter {
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(10000);
+				GameStateManager.play.getPlayerShip().forward(100000);
 			}
 		}
 		if(back){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(-10000);
+				GameStateManager.play.getPlayerShip().forward(-100000);
 			}
 		}
 		if(strafeLeft){
