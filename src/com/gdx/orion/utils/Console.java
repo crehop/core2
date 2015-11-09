@@ -22,6 +22,7 @@ public class Console{
 	private static String line8 = "LINE 8:";
 	private static String line9 = "LINE 9:";
 	private static String line10 = "LINE 10:";
+	private static String line11 = "LINE 11:";
 	public static int x = 5;
 	public static int y = 5;
 	private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
@@ -67,6 +68,8 @@ public class Console{
 			y -= font.getCapHeight() + 3;
 			font.draw(batch, line10, x, y); 
 			y -= font.getCapHeight() + 3;
+			font.draw(batch, line11, x, y); 
+			y -= font.getCapHeight() + 3;
 			batch.end();
 		}
 	}
@@ -101,6 +104,9 @@ public class Console{
 			}
 			if(line10 == null){
 				line10 = "null";
+			}
+			if(line11 == null){
+				line11 = "null";
 			}
 		}
 	}
@@ -170,5 +176,9 @@ public class Console{
 	}
 	public static void setLine10(String line10) {
 		Console.line10 = line10;
+	}
+
+	public static void setLine11(String line11) {
+		Console.line11 = line11;
 	}
 }
