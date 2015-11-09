@@ -27,7 +27,7 @@ public class GameStateManager {
 		levelEdit = new LevelEdit(game);
 		levelSelect = new LevelSelect(game);
 		play = new Play(game, 1);
-		menu = new Menu(game);
+		menu = new Menu(game, 0);
 		store = new Store(game);
 		gameStates.add(play);
 		gameStates.add(menu);
@@ -39,6 +39,9 @@ public class GameStateManager {
 	public static Screen getScreen(int screen){
 		if(screen == PLAY){
 			return play;
+		}
+		if (screen == MENU) {
+			return menu;
 		}
 		return null;
 	}
