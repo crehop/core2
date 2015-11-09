@@ -35,12 +35,12 @@ public class PlayController extends InputAdapter implements InputProcessor {
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(1000);
+				GameStateManager.play.getPlayerShip().turn(4000);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(-1000);
+				GameStateManager.play.getPlayerShip().turn(-4000);
 			}
 		}
 		if(stop){
