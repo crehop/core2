@@ -1,10 +1,8 @@
 package com.gdx.orion.screens;
 
 import gdx.orion.entities.Asteroid;
-import gdx.orion.entities.Ball;
 import gdx.orion.entities.PlayerShip;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Game;
@@ -72,6 +70,7 @@ public class Play extends GameState implements Screen {
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
 			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
+			Console.setLine11("SHIP ANGLE:" + ship.getBody().getAngle());
 			cam.update();
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
