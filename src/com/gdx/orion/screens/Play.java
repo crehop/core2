@@ -50,6 +50,7 @@ public class Play extends GameState implements Screen {
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
+		ship.getBody().setAngularDamping(2.00f);
 		
 		new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
 	}
