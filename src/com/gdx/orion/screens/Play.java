@@ -71,7 +71,7 @@ public class Play extends GameState implements Screen {
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
 			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
-			Console.setLine11("SHIP ANGLE:" + ship.getBody().getAngle());
+			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
 			cam.update();
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
