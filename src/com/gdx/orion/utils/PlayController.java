@@ -3,15 +3,9 @@ package com.gdx.orion.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.gdx.orion.screens.GameStateManager;
 
-public class PlayController extends InputAdapter implements InputProcessor {
-	
-	public PlayController(){
-	}
+public class PlayController extends InputAdapter {
 	private boolean exitKey = false;
 	private boolean forward = false;
 	private boolean back = false;
@@ -19,7 +13,7 @@ public class PlayController extends InputAdapter implements InputProcessor {
 	private boolean strafeRight = false;
 	private boolean stop;
 	
-	public  void checkInput() {
+	public void checkInput() {
 		if(exitKey){
 			Gdx.app.exit();
 		}
