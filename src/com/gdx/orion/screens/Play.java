@@ -63,7 +63,7 @@ public class Play extends GameState implements Screen {
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
-			while(getGameWorld().getBodyCount() < 2000) {
+			while(getGameWorld().getBodyCount() < 5000) {
 				new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
 			}
 			Gdx.gl.glClearColor(0, 0, 0, 1);

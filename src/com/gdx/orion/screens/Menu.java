@@ -90,6 +90,13 @@ public class Menu extends GameState implements Screen {
             }
         });
 		
+		exit.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	Gdx.app.exit();
+            }
+        });
+		
 		consoleCam = new OrthographicCamera();
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
 		consoleViewport.apply();
