@@ -12,16 +12,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
@@ -49,8 +50,12 @@ public class Play extends GameState implements Screen, ContactListener {
 	Random rand = new Random();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	public HashMap<String,Asteroid> asteroidMap = new HashMap<String,Asteroid>();
+	private SpriteBatch batch = new SpriteBatch();
+    private Texture texture = new Texture(Gdx.files.internal("images/starfield_by_phillipsj2.png"));
+    private Sprite sprite = new Sprite(texture);
 	
 	
+    
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
 		cam = new OrthographicCamera();
@@ -72,7 +77,11 @@ public class Play extends GameState implements Screen, ContactListener {
 	
 	@Override
 	public void render(float delta) {
-		if(isActive()){
+		if(isActive()) {
+			
+	        
+	       
+			
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
@@ -85,7 +94,10 @@ public class Play extends GameState implements Screen, ContactListener {
 			}
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.begin();
+			sprite.draw(batch);
+			batch.end();
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
 			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
@@ -97,6 +109,8 @@ public class Play extends GameState implements Screen, ContactListener {
 			cam.update();
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
+			
+			
 			//MUST BE LAST
 			Console.render(consoleCam);
 			consoleCam.update();
