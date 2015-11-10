@@ -81,10 +81,6 @@ public class Play extends GameState implements Screen, ContactListener {
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
-			
-	        
-	       
-			
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
@@ -99,7 +95,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
-			sprite.draw(batch);
+			//sprite.draw(batch);
 			batch.end();
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
