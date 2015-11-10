@@ -1,6 +1,7 @@
 package com.gdx.orion.screens;
 
 import gdx.orion.entities.Asteroid;
+import gdx.orion.entities.Fragment;
 import gdx.orion.entities.PlayerShip;
 
 import java.util.ArrayList;
@@ -47,8 +48,10 @@ public class Play extends GameState implements Screen, ContactListener {
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	private ShapeRenderer sr = new ShapeRenderer();
 	private PlayerShip ship;
+	private Vector2 data;
 	Random rand = new Random();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+	public ArrayList<Fragment> frags = new ArrayList<Fragment>();
 	public HashMap<String,Asteroid> asteroidMap = new HashMap<String,Asteroid>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/starfield_by_phillipsj2.png"));
@@ -71,7 +74,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		this.gameWorld.setContactListener(this);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		ship.getBody().setAngularDamping(2.00f);
-		
+		World.setVelocityThreshold(12.0f);
 		Asteroid roid = new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
 		asteroidMap.put("" + roid.getBody().getUserData(), roid);	}
 	
@@ -90,7 +93,7 @@ public class Play extends GameState implements Screen, ContactListener {
 				asteroidMap.put("" + roid.getBody().getUserData(), roid);
 			}
 			for(Asteroid asteroid: asteroids){
-				asteroid.fragment(10);
+				if(asteroid.getBody().getUserData() instanceof Vector2)asteroid.fragment(10);
 			}
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -177,23 +180,17 @@ public class Play extends GameState implements Screen, ContactListener {
 		if(contact.getFixtureA().getBody().getUserData() != null && contact.getFixtureB().getBody().getUserData() == null){
 			test =  "" + contact.getFixtureA().getBody().getUserData();
 			if(asteroidMap.containsKey(test)){
+					data = contact.getFixtureA().getBody().getPosition();
+					asteroidMap.get(test).getBody().setUserData(data);
 					asteroids.add(asteroidMap.get(test));
 					asteroidMap.remove(test);
-				}
-			test =  "" + contact.getFixtureB().getBody().getUserData();
-			if(asteroidMap.containsKey(test)){
-				asteroids.add(asteroidMap.get(test));
-				asteroidMap.remove(test);
 			}
 		}
 		if(contact.getFixtureB().getBody().getUserData() != null && contact.getFixtureA().getBody().getUserData() == null){
-			test =  "" + contact.getFixtureA().getBody().getUserData();
-			if(asteroidMap.containsKey(test)){
-					asteroids.add(asteroidMap.get(test));
-					asteroidMap.remove(test);
-				}
 			test =  "" + contact.getFixtureB().getBody().getUserData();
 			if(asteroidMap.containsKey(test)){
+				data = contact.getFixtureA().getBody().getPosition();
+				asteroidMap.get(test).getBody().setUserData(data);
 				asteroids.add(asteroidMap.get(test));
 				asteroidMap.remove(test);
 			}

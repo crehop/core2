@@ -68,13 +68,14 @@ public class PlayerShip {
 		body.applyForceToCenter(force, false);
 	}
 	public void fire(){
-		fireSpot.x = (float) body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset));
-		fireSpot.y = (float) body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset));
+		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 19.5);
+		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 19.5);
 		Console.setLine10("BULLET X/Y:" + (body.getPosition().x  + (float) (Math.cos(body.getAngle() + offset)) + "/" +  (body.getPosition().y  + (float) (Math.cos(body.getAngle() + offset)))));
-		Ball ball = new Ball(this.world,fireSpot,1110,1);
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 1000000000);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 1000000000);
-		ball.body.applyForceToCenter(force, false);
+		Ball ball = new Ball(this.world,fireSpot,100000,1);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * 2000000000 * 20000000 + body.getLocalCenter().x);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * 2000000000 * 20000000+ body.getLocalCenter().y);
+		ball.body.setBullet(true);
+		ball.body.setLinearVelocity(force);
 		bullets.add(ball);
 		if(bullets.size() > 100){
 			world.destroyBody(bullets.get(0).body);

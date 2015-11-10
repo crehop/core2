@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gdx.orion.gamevars.Location;
+import com.gdx.orion.screens.GameStateManager;
 
 public class Fragment {
 	private World world;
@@ -17,8 +18,8 @@ public class Fragment {
 	private Body body;
 	private PolygonShape shape;
 	private Location location;
-	private Vector2 speed;
-	public Fragment(float points, float points2, float points3, float points4, float points5, float points6, World world, Vector2 position, float density){
+	private float offset = (float) Math.toRadians(180f);
+	public Fragment(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
 		shape = new PolygonShape();
 		vertices = new float[6];
 		vertices[0] = points;
@@ -31,20 +32,27 @@ public class Fragment {
 		def = new BodyDef();
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
-		def.position.set(position);
+		def.position.set(body2.getPosition());
 		body = world.createBody(def);
 		shape.set(vertices);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
-		fdef.density = density;
+		fdef.density = 10;
 		fdef.friction = 1;
-		float force = MathUtils.random(1f,100f);
 		body.createFixture(fdef);
+		//hit.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * force * MathUtils.random(100));
+		//hit.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * force * MathUtils.random(100));
 		this.location = new Location(body.getPosition().x, body.getPosition().y,0);
 		body.getPosition().set(location.x, location.y);
-		this.speed = new Vector2((location.x + MathUtils.random(force * 10000)),(location.y + MathUtils.random(force *10000)));
-		body.applyForce(speed,body.getWorldCenter(), false);
-		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
-		System.out.println("CREATING FRAGMENT!");
+		body.setLinearVelocity(body2.getLinearVelocity());
+		body.setAngularVelocity(body2.getAngularVelocity());
+		GameStateManager.play.frags.add(this);
+		if(GameStateManager.play.frags.size() > 1000){
+			world.destroyBody(GameStateManager.play.frags.get(0).body);
+			GameStateManager.play.frags.remove(0);
+		}
+	}
+	public Body getBody() {
+		return body;
 	}
 }

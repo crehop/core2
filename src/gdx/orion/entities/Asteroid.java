@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.ShortArray;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.UIDGetter;
 
@@ -47,7 +46,7 @@ public class Asteroid {
 		fdef.friction = 1;
 		body.createFixture(fdef);
 		body.applyForce(speed,body.getWorldCenter(), false);
-		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
+		body.applyAngularImpulse(MathUtils.random(40000000,90000000), false);
 		body.setUserData(new String("" + UIDGetter.getID()));
 	}
 
@@ -111,27 +110,24 @@ public class Asteroid {
 		float[] points = new float[shapeVerts.length * 2];
 		for(int i = 0; i < shapeVerts.length; i++){
 			points[i] = shapeVerts[i];
-			System.out.println("VERT:" + points[i]);
 		}
-		System.out.println("Size:" + points.length);
 		//Vector2 impact = new Vector2(impactx,impacty);
 		//Vector2 exit = new Vector2((impactx-xmin)/(xmax - xmin),(impacty - ymin)/(ymax-ymin));
 		DelaunayTriangulator triangulator = new DelaunayTriangulator();
 		triangulator.computeTriangles(points, 0, force, true);
-		System.out.println("TRIANGLES SIZE:" + points.length);
 		int count = 0;
 		for(int i = 0; i < points.length; i+=6){
 			count++;
 			if(count <= 3){
 				new Fragment(points[i], points[i+1], points[i+2],
-						points[i+3], points[i+4], points[i+5], world, body.getPosition(),density);
+						points[i+3], points[i+4], points[i+5], world, body);
 			}
 		}
-		new Fragment(points[16],points[17],points[6],points[7],points[10], points[11],world, body.getPosition(),density);
-		new Fragment(points[0],points[1],points[6],points[7],points[16], points[17],world, body.getPosition(),density);
-		new Fragment(points[6],points[7],points[4],points[5],points[0], points[1],world, body.getPosition(),density);
-		new Fragment(points[16],points[17],points[0],points[1],points[14], points[15],world, body.getPosition(),density);
-		new Fragment(points[10],points[11],points[12],points[13],points[16], points[17],world, body.getPosition(),density);
+		new Fragment(points[16],points[17],points[6],points[7],points[10], points[11],world, body);
+		new Fragment(points[0],points[1],points[6],points[7],points[16], points[17],world, body);
+		new Fragment(points[6],points[7],points[4],points[5],points[0], points[1],world, body);
+		new Fragment(points[16],points[17],points[0],points[1],points[14], points[15],world, body);
+		new Fragment(points[10],points[11],points[12],points[13],points[16], points[17],world, body);
 		world.destroyBody(body);
 	}
 
