@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -58,6 +59,7 @@ public class Play extends GameState implements Screen, ContactListener {
 	public ArrayList<Fragment> frags = new ArrayList<Fragment>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
+    private Texture texture2 = new Texture(Gdx.files.internal("images/images.png"));
     private Sprite sprite = new Sprite(texture);
 	int count = 0;
 	
@@ -102,20 +104,6 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
-			batch.end();
-			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
-			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
-			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
-			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
-			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
-			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
-			cam.update();
-			
-			renderer.render(getGameWorld(), viewport.getCamera().combined);
-			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
-			gameWorld.getBodies(bodies);
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 					entityDataA = (EntityData)body.getUserData();
@@ -131,8 +119,24 @@ public class Play extends GameState implements Screen, ContactListener {
 							gameWorld.destroyBody(body);
 						}
 					}
+					if(entityDataA.getType() == EntityType.ASTEROID){
+						batch.draw(texture2, ((Asteroid)entityDataA.getObject()).getVerts(), 0, 16);						
+					}
 				}
 			}
+			batch.end();
+			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
+			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
+			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
+			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
+			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
+			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
+			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
+			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
+			cam.update();
+			renderer.render(getGameWorld(), viewport.getCamera().combined);
+			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
+			gameWorld.getBodies(bodies);
 			
 			//MUST BE LAST
 			Console.render(consoleCam);
