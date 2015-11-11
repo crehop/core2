@@ -202,28 +202,24 @@ public class Play extends GameState implements Screen, ContactListener {
 			entityDataB = (EntityData)contact.getFixtureB().getBody().getUserData();
 			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.BULLET){
 				entityDataA.damage(1);
-				System.out.println("BOOM 1");
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DESTROYME);
 				}
 			}
 			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.BULLET){
 				entityDataB.damage(1);
-				System.out.println("BOOM 2");
 				if(entityDataB.getLife() < 1){
 					entityDataB.setType(EntityType.DESTROYME);
 				}
 			}
 			if(entityDataA.getType() == EntityType.FRAGMENT && entityDataB.getType() == EntityType.BULLET){
 				entityDataA.damage(1);
-				System.out.println("BOOM 3");
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DELETEME);
 				}
 			}
 			if(entityDataB.getType() == EntityType.FRAGMENT && entityDataA.getType() == EntityType.BULLET){
 				entityDataB.damage(1);
-				System.out.println("BOOM 4");
 				if(entityDataB.getLife()  < 1){
 					entityDataB.setType(EntityType.DELETEME);
 				}
