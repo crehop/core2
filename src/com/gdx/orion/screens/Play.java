@@ -12,11 +12,17 @@ import java.util.Random;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -28,12 +34,15 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.PlayController;
+import com.gdx.orion.utils.Scene2dUtils;
 import com.gdx.orion.utils.WorldUtils;
 
 public class Play extends GameState implements Screen, ContactListener {
@@ -59,6 +68,13 @@ public class Play extends GameState implements Screen, ContactListener {
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Sprite sprite = new Sprite(texture);
+    private Skin skin;
+    private Pixmap pixmap;
+	private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
+	private static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+	private BitmapFont font;
+	private TextButton.TextButtonStyle style;
+	private TextButton pause;
 	int count = 0;
 	
 	
@@ -74,6 +90,21 @@ public class Play extends GameState implements Screen, ContactListener {
 		consoleViewport.apply();
 		viewport.apply();
 		this.stage = new Stage(viewport);
+		
+		this.skin = new Skin();
+		this.pixmap = new Pixmap(100, 100, Format.RGBA8888);
+		this.pixmap.setColor(Color.GRAY);
+		this.pixmap.fill();
+		this.pixmap.setColor(Color.BLACK);
+		this.pixmap.drawRectangle(0, 0, 100, 100);
+		this.skin.add("white", new Texture(pixmap));
+		this.font = generator.generateFont(parameter);
+		this.skin.add("default", font);
+		this.style = Scene2dUtils.createTextButtonStyle(skin, "default");
+		this.pause = new TextButton("PAUSE", style);
+		this.pause.setPosition(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+		this.stage.addActor(pause);
+		
 		this.game = game;
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
@@ -103,6 +134,8 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.begin();
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 			batch.end();
+			stage.act();
+			stage.draw();
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
 			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
