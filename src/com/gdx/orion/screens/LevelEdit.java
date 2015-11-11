@@ -12,9 +12,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.utils.Console;
@@ -24,8 +28,8 @@ public class LevelEdit extends GameState implements Screen {
 	public static Game game;
 	public static OrthographicCamera cam;
 	public static ScalingViewport viewport;  
-	final float GAME_WORLD_WIDTH = 1080;
-	final float GAME_WORLD_HEIGHT = 720;
+	final float GAME_WORLD_WIDTH = 1000;
+	final float GAME_WORLD_HEIGHT = 800;
 	
 	private Stage stage;
 	private Skin skin;
@@ -35,11 +39,13 @@ public class LevelEdit extends GameState implements Screen {
 	private FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 	private BitmapFont font;
 	private TextButton.TextButtonStyle style;
+	private TextButton.TextButtonStyle editStyle;
 	
 	private TextButton worldBorder;
 	private TextButton asteroid;
 	private TextButton gravityWell;
 	private TextButton spawnPoint;
+	private TextButton back;
 	
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
@@ -62,21 +68,41 @@ public class LevelEdit extends GameState implements Screen {
 		
 		font = generator.generateFont(parameter);
 		skin.add("default", font);
-		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 		
-		worldBorder = new TextButton("BORDER", style);
-		worldBorder.setPosition(0, 0);
-		asteroid = new TextButton("ASTEROID", style);
-		asteroid.setPosition(100, 0);
-		gravityWell = new TextButton("GRAVITY", style);
-		gravityWell.setPosition(0, 100);
-		spawnPoint = new TextButton("SPAWN", style);
-		spawnPoint.setPosition(100, 100);
+		style = Scene2dUtils.createTextButtonStyle(skin, "default");
+		editStyle = new TextButtonStyle();
+		editStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
+		editStyle.down = skin.newDrawable("white", Color.DARK_GRAY);
+		editStyle.checked = skin.newDrawable("white", Color.DARK_GRAY);
+		editStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
+		editStyle.font = skin.getFont("default");
+		
+		skin.add("editStyle", editStyle);
+		skin.add("default", style);
+		
+		worldBorder = new TextButton("BORDER", editStyle);
+		worldBorder.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 100);
+		asteroid = new TextButton("ASTEROID", editStyle);
+		asteroid.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 200);
+		gravityWell = new TextButton("GRAVITY", editStyle);
+		gravityWell.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 300);
+		spawnPoint = new TextButton("SPAWN", editStyle);
+		spawnPoint.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 400);
+		back = new TextButton("BACK", style);
+		back.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 700);
 		
 		stage.addActor(worldBorder);
 		stage.addActor(asteroid);
 		stage.addActor(gravityWell);
 		stage.addActor(spawnPoint);
+		stage.addActor(back);
+		
+		back.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	GameStateManager.setScreen(0);
+            }
+        });
 		
 		consoleCam = new OrthographicCamera();
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);

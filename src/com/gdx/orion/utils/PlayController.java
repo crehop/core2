@@ -1,6 +1,5 @@
 package com.gdx.orion.utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.gdx.orion.screens.GameStateManager;
@@ -15,7 +14,10 @@ public class PlayController extends InputAdapter {
 	
 	public void checkInput() {
 		if(exitKey){
-			Gdx.app.exit();
+			if (GameStateManager.play.isActive()){
+				GameStateManager.play.dispose();
+				GameStateManager.setScreen(5);
+			}
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){

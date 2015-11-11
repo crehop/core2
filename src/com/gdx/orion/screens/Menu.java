@@ -120,7 +120,7 @@ public class Menu extends GameState implements Screen {
 			stage.act();
 			stage.draw();
 			
-			Console.setLine1("WIP Menu; Play button works!");
+			Console.setLine1("Welcome to the main menu!");
 			Console.setLine2(Gdx.input.getX() + ", " + Gdx.input.getY());
 			Console.render(consoleCam);
 			consoleCam.update();

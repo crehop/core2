@@ -11,8 +11,6 @@ public class Scene2dUtils {
 	public static TextButtonStyle createTextButtonStyle(Skin skin, String fontName) {
 		TextButtonStyle style = new TextButtonStyle();
 		style.up = skin.newDrawable("white", Color.DARK_GRAY);
-		style.down = skin.newDrawable("white", Color.DARK_GRAY);
-		style.checked = skin.newDrawable("white", Color.DARK_GRAY);
 		style.over = skin.newDrawable("white", Color.LIGHT_GRAY);
 
 		style.font = skin.getFont(fontName);
