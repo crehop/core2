@@ -116,7 +116,6 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
-<<<<<<< HEAD
 			batch.end();
 			stage.act();
 			stage.draw();
@@ -133,8 +132,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
 			gameWorld.getBodies(bodies);
-=======
->>>>>>> trippy-programing-art-
+			batch.begin();
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 					entityDataA = (EntityData)body.getUserData();
