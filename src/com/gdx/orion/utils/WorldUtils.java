@@ -21,6 +21,8 @@ public class WorldUtils {
 	private static Body body;
 	private static BodyDef def = new BodyDef();
 	private static Array<Body> bodies = new Array<Body>();
+	private static float[] temp = new float[16];
+	private static int count = 0;
 
 
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
@@ -87,7 +89,16 @@ public class WorldUtils {
 		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null));
 	}
 	
-	public static void createAsteroid(Vector3 position, int size, int composition){
-		
+	public static float[] moveVerts(float[] verts, Body body){
+		count = 0;
+		for(float vert:verts){
+			if(count%2 == 0){
+				temp[count] = vert + body.getWorldCenter().x;
+			}else{
+				temp[count] = vert + body.getWorldCenter().y;
+			}
+			count++;
+		}
+		return temp;
 	}
 }

@@ -62,6 +62,7 @@ public class Play extends GameState implements Screen, ContactListener {
     private Texture texture2 = new Texture(Gdx.files.internal("images/images.png"));
     private Sprite sprite = new Sprite(texture);
 	int count = 0;
+	private float[] verts = new float[16];
 	
 	
     
@@ -120,7 +121,7 @@ public class Play extends GameState implements Screen, ContactListener {
 						}
 					}
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						batch.draw(texture2, ((Asteroid)entityDataA.getObject()).getVerts(), 0, 16);						
+						batch.draw(texture2, (WorldUtils.moveVerts(((Asteroid)entityDataA.getObject()).getVerts(),body)), 0, 16);						
 					}
 				}
 			}
