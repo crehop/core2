@@ -2,6 +2,7 @@ package gdx.orion.entities;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -20,7 +21,7 @@ public class Ball {
 	FixtureDef fdef;
 	Random rand = new Random();
 
-	public Ball(World world, Location position, float density, int size){
+	public Ball(World world, Location position, float density, float size){
 		this.location = position;
 		def = new BodyDef();
 		def.position.set(location.x, location.y);
@@ -42,7 +43,9 @@ public class Ball {
 		fdef.shape = shape2;
 		fdef.density = density;
 		fdef.friction = 1;
+		fdef.restitution = 0.75f;
 		body = world.createBody(def);
 		body.createFixture(fdef);
+		body.setUserData(new EntityData(MathUtils.random(3),EntityType.BULLET,null));
 	}
 }

@@ -15,7 +15,6 @@ import com.gdx.orion.utils.Console;
 
 public class PlayerShip {
 	private float offset = (float) Math.toRadians(90);
-	private ArrayList<Ball> bullets = new ArrayList<Ball>();
 	PolygonShape shape = new PolygonShape();
 	Body body;
 	BodyDef def;
@@ -36,9 +35,9 @@ public class PlayerShip {
 		float[] creature = new float[6];
 		creature[0] = 0f;
 		creature[1] = 0;
-		creature[2] = 5;
-		creature[3] = 20; 
-		creature[4] = 10;
+		creature[2] = 0.5f;
+		creature[3] = 2.0f; 
+		creature[4] = 1.0f;
 		creature[5] = 0;
 		shape.set(creature);
 		
@@ -49,6 +48,7 @@ public class PlayerShip {
 		fdef.restitution = 0;
 		body = world.createBody(def);
 		body.createFixture(fdef);
+		body.setUserData(new EntityData(1000,EntityType.SHIP,this            ));
 	}
 
 	public Location getLocation() {
@@ -59,8 +59,8 @@ public class PlayerShip {
 		return this.body;
 	}
 	
-	public void turn(int force){
-		body.applyAngularImpulse(force, false);
+	public void turn(float f){
+		body.applyAngularImpulse(f, false);
 	}
 	public void forward(int strength){
 		force.x = (float) (Math.cos(body.getAngle() + offset) * strength);
@@ -68,18 +68,12 @@ public class PlayerShip {
 		body.applyForceToCenter(force, false);
 	}
 	public void fire(){
-		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 19.5);
-		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 19.5);
+		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
+		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
 		Console.setLine10("BULLET X/Y:" + (body.getPosition().x  + (float) (Math.cos(body.getAngle() + offset)) + "/" +  (body.getPosition().y  + (float) (Math.cos(body.getAngle() + offset)))));
-		Ball ball = new Ball(this.world,fireSpot,100000,1);
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 2000000000 * 20000000 + body.getLocalCenter().x);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 2000000000 * 20000000+ body.getLocalCenter().y);
-		ball.body.setBullet(true);
+		Ball ball = new Ball(this.world,fireSpot,5000,.05f);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * 2000 + body.getLocalCenter().x);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * 2000 + body.getLocalCenter().y);
 		ball.body.setLinearVelocity(force);
-		bullets.add(ball);
-		if(bullets.size() > 100){
-			world.destroyBody(bullets.get(0).body);
-			bullets.remove(0);
-		}
 	}
 }

@@ -1,7 +1,11 @@
 package com.gdx.orion.utils;
 
 
+import gdx.orion.entities.EntityData;
+import gdx.orion.entities.EntityType;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -38,6 +42,7 @@ public class WorldUtils {
 		worldBorder[7] = y1;
 		shape.set(worldBorder);
 		fdef.shape = shape;
+		fdef.restitution = 2;
 		body.createFixture(fdef);
 		
 		worldBorder[0] = x1;
@@ -50,6 +55,7 @@ public class WorldUtils {
 		worldBorder[7] = y1 - 2;
 		shape.set(worldBorder);
 		fdef.shape = shape;
+		fdef.restitution = 2;
 		body.createFixture(fdef);		
 		
 		worldBorder[0] = x1;
@@ -62,6 +68,7 @@ public class WorldUtils {
 		worldBorder[7] = y2 - 2;
 		shape.set(worldBorder);
 		fdef.shape = shape;
+		fdef.restitution = 2;
 		body.createFixture(fdef);
 		
 		worldBorder[0] = x2;
@@ -74,8 +81,10 @@ public class WorldUtils {
 		worldBorder[7] = y1;
 		shape.set(worldBorder);
 		fdef.shape = shape;
+		fdef.restitution = 2;
 		body.createFixture(fdef);
 		body.setSleepingAllowed(false);
+		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null));
 	}
 	
 	public static void createAsteroid(Vector3 position, int size, int composition){

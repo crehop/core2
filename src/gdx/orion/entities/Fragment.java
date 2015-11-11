@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.screens.GameStateManager;
-
+//TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
 public class Fragment {
 	private World world;
 	private float[] vertices;
@@ -46,6 +46,7 @@ public class Fragment {
 		body.getPosition().set(location.x, location.y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
+		body.setUserData(new EntityData(MathUtils.random(30),EntityType.FRAGMENT,null));
 		GameStateManager.play.frags.add(this);
 		if(GameStateManager.play.frags.size() > 1000){
 			world.destroyBody(GameStateManager.play.frags.get(0).body);

@@ -1,11 +1,12 @@
 package com.gdx.orion.screens;
 
 import gdx.orion.entities.Asteroid;
+import gdx.orion.entities.EntityData;
+import gdx.orion.entities.EntityType;
 import gdx.orion.entities.Fragment;
 import gdx.orion.entities.PlayerShip;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import com.badlogic.gdx.Game;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -26,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
@@ -34,36 +37,39 @@ import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
 public class Play extends GameState implements Screen, ContactListener {
-	public String test;
+	public EntityData entityDataA;
+	public EntityData entityDataB;
 	public Game game;
 	public OrthographicCamera cam;
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
-	public final float GAME_WORLD_WIDTH = 1080000;
-	public final float GAME_WORLD_HEIGHT = 7200000;
+	public final float GAME_WORLD_WIDTH = 1080;
+	public final float GAME_WORLD_HEIGHT = 720;
 	private static PlayController playController = new PlayController();
-	private Stage stage;
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	private ShapeRenderer sr = new ShapeRenderer();
 	private PlayerShip ship;
-	private Vector2 data;
+	private Stage stage;
 	Random rand = new Random();
+	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	public ArrayList<Fragment> frags = new ArrayList<Fragment>();
-	public HashMap<String,Asteroid> asteroidMap = new HashMap<String,Asteroid>();
 	private SpriteBatch batch = new SpriteBatch();
-    private Texture texture = new Texture(Gdx.files.internal("images/starfield_by_phillipsj2.png"));
+    private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Sprite sprite = new Sprite(texture);
+	int count = 0;
 	
 	
     
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
+		sprite.scale(10f);
+		sprite.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
-		viewport = new ScalingViewport(Scaling.stretch, 640, 480, cam);
+		viewport = new ScalingViewport(Scaling.stretch, 60, 40, cam);
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
 		consoleViewport.apply();
 		viewport.apply();
@@ -75,8 +81,8 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
-		Asteroid roid = new Asteroid(getGameWorld(), new Location(0,0,0),1,1);
-		asteroidMap.put("" + roid.getBody().getUserData(), roid);	}
+		cam.zoom = 2.0f;
+	}
 	
 	@Override
 	public void render(float delta) {
@@ -85,8 +91,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
 			while(getGameWorld().getBodyCount() < 500) {
-				Asteroid roid = new Asteroid(getGameWorld(), new Location(MathUtils.random(0,10000) ,MathUtils.random(-100,6200), 0),MathUtils.random(0.1f,10f),MathUtils.random(1,3));
-				asteroidMap.put("" + roid.getBody().getUserData(), roid);
+				new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 			}
 			for(Asteroid asteroid: asteroids){
 				if(asteroid.getBody().getUserData() instanceof Vector2)asteroid.fragment(10);
@@ -94,8 +99,9 @@ public class Play extends GameState implements Screen, ContactListener {
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			//sprite.draw(batch);
+			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 			batch.end();
 			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
@@ -106,9 +112,27 @@ public class Play extends GameState implements Screen, ContactListener {
 			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
 			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
 			cam.update();
+			
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
-			
+			gameWorld.getBodies(bodies);
+			for(Body body:bodies){
+				if(body.getUserData() instanceof EntityData){
+					entityDataA = (EntityData)body.getUserData();
+					if(entityDataA.getType() == EntityType.DESTROYME){
+						((Asteroid)entityDataA.getObject()).fragment(10);
+					}
+					if(entityDataA.getType() == EntityType.DELETEME){
+						gameWorld.destroyBody(body);
+					}
+					if(entityDataA.getType() == EntityType.BULLET ){
+						entityDataA.alive();
+						if(entityDataA.getAliveTime() > 50){
+							gameWorld.destroyBody(body);
+						}
+					}
+				}
+			}
 			
 			//MUST BE LAST
 			Console.render(consoleCam);
@@ -173,22 +197,36 @@ public class Play extends GameState implements Screen, ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
-		if(contact.getFixtureA().getBody().getUserData() != null && contact.getFixtureB().getBody().getUserData() == null){
-			test =  "" + contact.getFixtureA().getBody().getUserData();
-			if(asteroidMap.containsKey(test)){
-					data = contact.getFixtureA().getBody().getPosition();
-					asteroidMap.get(test).getBody().setUserData(data);
-					asteroids.add(asteroidMap.get(test));
-					asteroidMap.remove(test);
+		if(contact.getFixtureA().getBody().getUserData() instanceof EntityData && contact.getFixtureB().getBody().getUserData() instanceof EntityData){
+			entityDataA = (EntityData)contact.getFixtureA().getBody().getUserData();
+			entityDataB = (EntityData)contact.getFixtureB().getBody().getUserData();
+			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.BULLET){
+				entityDataA.damage(1);
+				System.out.println("BOOM 1");
+				if(entityDataA.getLife() < 1){
+					entityDataA.setType(EntityType.DESTROYME);
+				}
 			}
-		}
-		if(contact.getFixtureB().getBody().getUserData() != null && contact.getFixtureA().getBody().getUserData() == null){
-			test =  "" + contact.getFixtureB().getBody().getUserData();
-			if(asteroidMap.containsKey(test)){
-				data = contact.getFixtureA().getBody().getPosition();
-				asteroidMap.get(test).getBody().setUserData(data);
-				asteroids.add(asteroidMap.get(test));
-				asteroidMap.remove(test);
+			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.BULLET){
+				entityDataB.damage(1);
+				System.out.println("BOOM 2");
+				if(entityDataB.getLife() < 1){
+					entityDataB.setType(EntityType.DESTROYME);
+				}
+			}
+			if(entityDataA.getType() == EntityType.FRAGMENT && entityDataB.getType() == EntityType.BULLET){
+				entityDataA.damage(1);
+				System.out.println("BOOM 3");
+				if(entityDataA.getLife() < 1){
+					entityDataA.setType(EntityType.DELETEME);
+				}
+			}
+			if(entityDataB.getType() == EntityType.FRAGMENT && entityDataA.getType() == EntityType.BULLET){
+				entityDataB.damage(1);
+				System.out.println("BOOM 4");
+				if(entityDataB.getLife()  < 1){
+					entityDataB.setType(EntityType.DELETEME);
+				}
 			}
 		}
 	}

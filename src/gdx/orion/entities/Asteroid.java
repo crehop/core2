@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.UIDGetter;
-
+//TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
 public class Asteroid {
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
@@ -25,7 +25,7 @@ public class Asteroid {
 	private float ymin;
 	private float ymax;
 	int numpoints = 0;
-	float[] shapeVerts;
+	public float[] shapeVerts;
 	private World world;
 	private float density;
 
@@ -38,7 +38,7 @@ public class Asteroid {
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		body = world.createBody(def);
-
+		this.density = density;
 		shape.set(setShape(size));
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
@@ -46,8 +46,8 @@ public class Asteroid {
 		fdef.friction = 1;
 		body.createFixture(fdef);
 		body.applyForce(speed,body.getWorldCenter(), false);
-		body.applyAngularImpulse(MathUtils.random(40000000,90000000), false);
-		body.setUserData(new String("" + UIDGetter.getID()));
+		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
+		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this));
 	}
 
 	private float[] setShape(int size) {
@@ -55,21 +55,21 @@ public class Asteroid {
 		numpoints = 8;
 		float force = 0;
 		if(this.size == 1){
-			force = MathUtils.random(-1000,1000);
-			width = MathUtils.random(15,50);
+			force = MathUtils.random(-1.0f,1.0f);
+			width = MathUtils.random(0.1f,3.0f);
 			numpoints = 8;
 		}
 		if(this.size == 2){
-			force = MathUtils.random(-750,750);
-			width = MathUtils.random(45,75);
+			force = MathUtils.random(-7.50f,7.50f);
+			width = MathUtils.random(4.5f,7.5f);
 			numpoints = 8;
 		}
 		if(this.size == 3){
 			numpoints = 8;
-			force = MathUtils.random(-600,600);
-			width = MathUtils.random(60,160);
+			force = MathUtils.random(-60.0f,60.0f);
+			width = MathUtils.random(6,16);
 		}
-		this.speed = new Vector2((location.x + MathUtils.random(force * 10000)),(location.y + MathUtils.random(force *10000)));
+		this.speed = new Vector2((location.x + MathUtils.random(force * 10000 * size * density)),(location.y + MathUtils.random(force *100)));
 		float radians = (float) (Math.toRadians(360)/numpoints);
 		float[] shapex = new float[numpoints];
 		float[] shapey = new float[numpoints];
@@ -133,5 +133,9 @@ public class Asteroid {
 
 	public Body getBody() {
 		return body;
+	}
+
+	public float[] getVerts() {
+		return shapeVerts;
 	}
 }
