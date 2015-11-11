@@ -12,19 +12,12 @@ import java.util.Random;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -34,18 +27,13 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.PlayController;
-import com.gdx.orion.utils.Scene2dUtils;
 import com.gdx.orion.utils.WorldUtils;
 
 public class Play extends GameState implements Screen, ContactListener {
@@ -154,18 +142,6 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 			batch.end();
-			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
-			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
-			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
-			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
-			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
-			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
-			cam.update();
-			renderer.render(getGameWorld(), viewport.getCamera().combined);
-			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
-			gameWorld.getBodies(bodies);
 			
 			//MUST BE LAST
 			Console.render(consoleCam);

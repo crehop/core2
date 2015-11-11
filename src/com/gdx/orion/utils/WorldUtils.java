@@ -1,19 +1,24 @@
 package com.gdx.orion.utils;
 
 
+import java.util.Random;
+
 import gdx.orion.entities.EntityData;
 import gdx.orion.entities.EntityType;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.orion.gamevars.Location;
 
 public class WorldUtils {
 	static PolygonShape shape = new PolygonShape();
@@ -23,6 +28,9 @@ public class WorldUtils {
 	private static Array<Body> bodies = new Array<Body>();
 	private static float[] temp = new float[16];
 	private static int count = 0;
+	static CircleShape shape2 = new CircleShape();
+	static Location location;
+	static Random rand = new Random();
 
 
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
@@ -100,5 +108,23 @@ public class WorldUtils {
 			count++;
 		}
 		return temp;
+	}
+
+	public static void fireBullet(World world, Location position, float density, float size, Vector2 directionalForce){
+		location = position;
+		def = new BodyDef();
+		def.position.set(location.x, location.y);
+		def.type = BodyType.DynamicBody;
+		def.angle = 200;
+		shape2.setRadius(size);
+		
+		fdef.shape = shape2;
+		fdef.density = density;
+		fdef.friction = 1;
+		fdef.restitution = 0.75f;
+		body = world.createBody(def);
+		body.createFixture(fdef);
+		body.setUserData(new EntityData(MathUtils.random(3),EntityType.BULLET,null));
+		body.setLinearVelocity(directionalForce);
 	}
 }

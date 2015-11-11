@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
+import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
 	private float offset = (float) Math.toRadians(90);
@@ -71,9 +72,8 @@ public class PlayerShip {
 		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
 		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
 		Console.setLine10("BULLET X/Y:" + (body.getPosition().x  + (float) (Math.cos(body.getAngle() + offset)) + "/" +  (body.getPosition().y  + (float) (Math.cos(body.getAngle() + offset)))));
-		Ball ball = new Ball(this.world,fireSpot,5000,.05f);
 		force.x = (float) (Math.cos(body.getAngle() + offset) * 2000 + body.getLocalCenter().x);
 		force.y = (float) (Math.sin(body.getAngle() + offset) * 2000 + body.getLocalCenter().y);
-		ball.body.setLinearVelocity(force);
+		WorldUtils.fireBullet(this.world,fireSpot,5000,.05f,force);
 	}
 }
