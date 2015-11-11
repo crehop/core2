@@ -121,7 +121,7 @@ public class Play extends GameState implements Screen, ContactListener {
 						}
 					}
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						batch.draw(texture2, (WorldUtils.moveVerts(((Asteroid)entityDataA.getObject()).getVerts(),body)), 0, 16);						
+						//batch.draw(texture2, (WorldUtils.moveVerts(((Asteroid)entityDataA.getObject()).getVerts(),body)), 0, 16);						
 					}
 				}
 			}

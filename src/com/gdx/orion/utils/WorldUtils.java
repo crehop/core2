@@ -93,9 +93,9 @@ public class WorldUtils {
 		count = 0;
 		for(float vert:verts){
 			if(count%2 == 0){
-				temp[count] = vert + body.getWorldCenter().x;
-			}else{
 				temp[count] = vert + body.getWorldCenter().y;
+			}else{
+				temp[count] = vert + body.getWorldCenter().x;
 			}
 			count++;
 		}
