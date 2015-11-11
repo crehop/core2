@@ -27,7 +27,7 @@ public class Pause extends GameState implements Screen {
 	private Game game;
 	private OrthographicCamera cam;
 	private ScalingViewport viewport;
-	private Texture texture = new Texture(Gdx.files.internal("starfield_by_phillipsj2.png"));
+	private Pixmap pixmap;
 	private Stage stage;
 	private Skin skin;
 	private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
@@ -47,7 +47,12 @@ public class Pause extends GameState implements Screen {
 		viewport = new ScalingViewport(Scaling.stretch, 100, 70, cam);
 		stage = new Stage(viewport);
 		skin = new Skin();
-		skin.add("white", texture);
+		pixmap = new Pixmap(120, 100, Format.RGBA8888);
+		pixmap.setColor(Color.GRAY);
+		pixmap.fill();
+		pixmap.setColor(Color.BLACK);
+		pixmap.drawRectangle(0, 0, 120, 100);
+		skin.add("white", new Texture(pixmap));
 		font= generator.generateFont(parameter);
 		skin.add("default",font);
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
@@ -84,7 +89,6 @@ public class Pause extends GameState implements Screen {
 	}
 	
 	public void dispose() {
-		texture.dispose();
 		skin.dispose();
 		stage.dispose();
 	}
