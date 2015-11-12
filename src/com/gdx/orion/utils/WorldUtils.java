@@ -7,6 +7,10 @@ import gdx.orion.entities.EntityData;
 import gdx.orion.entities.EntityType;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -27,14 +31,22 @@ public class WorldUtils {
 	private static Body body;
 	private static BodyDef def = new BodyDef();
 	private static Array<Body> bodies = new Array<Body>();
-	private static float[] temp = new float[16];
 	private static int count = 0;
 	static CircleShape shape2 = new CircleShape();
 	static Location location;
 	static Random rand = new Random();
 	private static World world;
-	private static float[] vertices = new float  [6];
+	public static final int POSITION_COMPONENTS = 2;
+	public static final int COLOR_COMPONENTS = 4;
+	private static float[] temp = new float[8*(COLOR_COMPONENTS+POSITION_COMPONENTS)];
+	private static float[] vertices = new float[6];
 	private static float offset = (float) Math.toRadians(180f);
+	private static boolean even = true;
+	private static Vector2 tempV2 = new Vector2();
+	private static Color asteroid = Color.GRAY;
+	private static Mesh mesh = new Mesh(true, (8*(COLOR_COMPONENTS+POSITION_COMPONENTS)), 0,  
+            new VertexAttribute(Usage.Position, POSITION_COMPONENTS, "a_position"),
+            new VertexAttribute(Usage.ColorPacked, COLOR_COMPONENTS, "a_color"));
 
 
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
@@ -101,23 +113,19 @@ public class WorldUtils {
 		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null));
 	}
 	
-	public static float[] moveVerts(float[] verts, Body body){
+	public static float[] moveVerts(Body body){
 		count = 0;
-		for(float vert:verts){
-			if(count%2 == 0){
-				temp[count] = vert + body.getWorldCenter().y;
-			}else{
-				temp[count] = vert + body.getWorldCenter().x;
-			}
-			count++;
+		for(int i = 0; i < ((PolygonShape)body.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			temp[count++] = tempV2.x;
+			temp[count++] = tempV2.y;
 		}
 		return temp;
 	}
 
 	public static void fireBullet(World world, Location position, float density, float size, Vector2 directionalForce){
 		location = position;
-		def = new BodyDef();
-		def.position.set(location.x, location.y);
+		def.position.set(location.x, location.y); 
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		shape2.setRadius(size);
@@ -137,7 +145,6 @@ public class WorldUtils {
 		vertices[3] = points4;
 		vertices[4] = points5;
 		vertices[5] = points6;
-		def = new BodyDef();
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		def.position.set(body2.getPosition());
@@ -158,6 +165,21 @@ public class WorldUtils {
 	}
 	public Body getBody() {
 		return body;
+	}
+
+	public static Mesh createMesh(Body body2) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			temp[count++] = tempV2.x;
+			temp[count++] = tempV2.y;
+			temp[count++] = asteroid.r;
+			temp[count++] = asteroid.g;
+			temp[count++] = asteroid.b;
+			temp[count++] = asteroid.a;
+		}
+		mesh.setVertices(temp);
+		return mesh;
 	}
 }
 

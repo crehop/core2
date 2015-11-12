@@ -12,10 +12,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -28,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
@@ -58,11 +61,12 @@ public class Play extends GameState implements Screen, ContactListener {
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/images.png"));
     private Sprite sprite = new Sprite(texture);
+    private Mesh mesh;
+    private String fragmentShader;
+    private String vertexShader;
 	int count = 0;
-	private float[] verts = new float[16];
+	private ShaderProgram shader;
 	
-	
-    
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
 		sprite.scale(10f);
@@ -85,6 +89,11 @@ public class Play extends GameState implements Screen, ContactListener {
 		while(getGameWorld().getBodyCount() < 500) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 		}
+        vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
+        fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
+		shader = new ShaderProgram(vertexShader, fragmentShader);
+		System.out.println(shader.isCompiled());
+		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 	}
 	
 	@Override
@@ -102,25 +111,33 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
-					entityDataA = (EntityData)body.getUserData();
+				entityDataA = (EntityData)body.getUserData();
 					if(entityDataA.getType() == EntityType.DESTROYME){
 						((Asteroid)entityDataA.getObject()).fragment(10);
 					}
 					if(entityDataA.getType() == EntityType.DELETEME){
 						gameWorld.destroyBody(body);
 					}
-					if(entityDataA.getType() == EntityType.BULLET ){
-						entityDataA.alive();
-						if(entityDataA.getAliveTime() > 50){
-							gameWorld.destroyBody(body);
-						}
-					}
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						//batch.draw(texture2, (WorldUtils.moveVerts(((Asteroid)entityDataA.getObject()).getVerts(),body)), 0, 16);						
 					}
 				}
 			}
 			batch.end();
+			shader.begin();
+			for(Body body:bodies){
+				if(body.getUserData() instanceof EntityData){
+					entityDataA = (EntityData)body.getUserData();
+					if(entityDataA.getType() == EntityType.ASTEROID){
+						mesh = WorldUtils.createMesh(body);	
+						//update the projection matrix so our triangles are rendered in 2D
+					    shader.setUniformMatrix("u_projTrans", cam.combined);
+					    mesh.render(shader, GL20.GL_TRIANGLES, 0, mesh.getNumVertices()/6);
+					    System.out.println("SHADER WORKING" + mesh.getNumVertices());
+					}
+				}
+			}
+			shader.end();
+
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
