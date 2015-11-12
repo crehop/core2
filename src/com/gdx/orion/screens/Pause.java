@@ -36,6 +36,7 @@ public class Pause extends GameState implements Screen {
 	private BitmapFont font;
 	private TextButton.TextButtonStyle style;
 	private TextButton resume;
+	private TextButton mainmenu;
 	private TextButton quit;
 	private final float GAME_WORLD_WIDTH = 1000;
 	private final float GAME_WORLD_HEIGHT = 700;
@@ -57,9 +58,12 @@ public class Pause extends GameState implements Screen {
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 		resume = new TextButton("RESUME", style);
 		resume.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 + 200);
+		mainmenu = new TextButton("MAIN MENU", style);
+		mainmenu.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2);
 		quit = new TextButton("QUIT", style);
 		quit.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 - 200);
 		stage.addActor(resume);
+		stage.addActor(mainmenu);
 		stage.addActor(quit);
 		
 		resume.addListener(new ClickListener(){
@@ -69,16 +73,24 @@ public class Pause extends GameState implements Screen {
             }
         });
 		
-		quit.addListener(new ClickListener(){
+		mainmenu.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
             	GameStateManager.setScreen(0);
+            }
+        });
+		
+		quit.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	Gdx.app.exit();
             }
         });
 	}
 
 	public void render(float delta) {
 		if (active) {
+		Gdx.input.setInputProcessor(stage);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();

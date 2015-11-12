@@ -46,7 +46,9 @@ public class Menu extends GameState implements Screen {
 	private static BitmapFont font;
 	private SpriteBatch batch;
 	private Texture title = new Texture(Gdx.files.internal("images/TitleScreen.png"));
+	private Texture asteroids = new Texture(Gdx.files.internal("images/AsteroidsText.png"));
 	private Sprite titleS = new Sprite(title);
+	private Sprite text = new Sprite(asteroids);
     
 	protected Menu(Game game, int level) {
 		super(GameStateManager.MENU);
@@ -123,6 +125,7 @@ public class Menu extends GameState implements Screen {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
 			batch.draw(titleS, 0, 100, viewport.getWorldWidth() + 100, viewport.getWorldHeight());
+			batch.draw(text, 20, 120, 300, 200);
 			batch.end();
 			Gdx.input.setInputProcessor(stage);
 			stage.act();
