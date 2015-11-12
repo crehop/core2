@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.UIDGetter;
+import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
 public class Asteroid {
 	private PolygonShape shape = new PolygonShape();
@@ -119,15 +120,15 @@ public class Asteroid {
 		for(int i = 0; i < points.length; i+=6){
 			count++;
 			if(count <= 3){
-				new Fragment(points[i], points[i+1], points[i+2],
+				WorldUtils.Fragment(points[i], points[i+1], points[i+2],
 						points[i+3], points[i+4], points[i+5], world, body);
 			}
 		}
-		new Fragment(points[16],points[17],points[6],points[7],points[10], points[11],world, body);
-		new Fragment(points[0],points[1],points[6],points[7],points[16], points[17],world, body);
-		new Fragment(points[6],points[7],points[4],points[5],points[0], points[1],world, body);
-		new Fragment(points[16],points[17],points[0],points[1],points[14], points[15],world, body);
-		new Fragment(points[10],points[11],points[12],points[13],points[16], points[17],world, body);
+		WorldUtils.Fragment(points[16],points[17],points[6],points[7],points[10], points[11],world, body);
+		WorldUtils.Fragment(points[0],points[1],points[6],points[7],points[16], points[17],world, body);
+		WorldUtils.Fragment(points[6],points[7],points[4],points[5],points[0], points[1],world, body);
+		WorldUtils.Fragment(points[16],points[17],points[0],points[1],points[14], points[15],world, body);
+		WorldUtils.Fragment(points[10],points[11],points[12],points[13],points[16], points[17],world, body);
 		world.destroyBody(body);
 	}
 

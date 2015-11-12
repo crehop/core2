@@ -3,7 +3,6 @@ package com.gdx.orion.screens;
 import gdx.orion.entities.Asteroid;
 import gdx.orion.entities.EntityData;
 import gdx.orion.entities.EntityType;
-import gdx.orion.entities.Fragment;
 import gdx.orion.entities.PlayerShip;
 
 import java.util.ArrayList;
@@ -55,7 +54,6 @@ public class Play extends GameState implements Screen, ContactListener {
 	Random rand = new Random();
 	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
-	public ArrayList<Fragment> frags = new ArrayList<Fragment>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/images.png"));
@@ -84,43 +82,24 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
 		cam.zoom = 2.0f;
+		while(getGameWorld().getBodyCount() < 500) {
+			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
+		}
 	}
 	
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
+			gameWorld.getBodies(bodies);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
-			while(getGameWorld().getBodyCount() < 500) {
-				new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
-			}
-			for(Asteroid asteroid: asteroids){
-				if(asteroid.getBody().getUserData() instanceof Vector2)asteroid.fragment(10);
-			}
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
-			batch.end();
-			stage.act();
-			stage.draw();
-			Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
-			Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
-			Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
-			Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
-			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-			Console.setLine6("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine7("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
-			Console.setLine11("SHIP ANGLE:" + ship.getBody().getWorldVector(Vector2.Y).angle());
-			cam.update();
-			
-			renderer.render(getGameWorld(), viewport.getCamera().combined);
-			getGameWorld().step(Gdx.graphics.getDeltaTime(), 8, 3);
-			gameWorld.getBodies(bodies);
-			batch.begin();
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 					entityDataA = (EntityData)body.getUserData();
@@ -142,7 +121,12 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 			batch.end();
-			
+			renderer.render(getGameWorld(), viewport.getCamera().combined);
+			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
+			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
+			Console.setLine3("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
+			cam.update();
+			getGameWorld().step(Gdx.graphics.getDeltaTime(), 2, 2);			
 			//MUST BE LAST
 			Console.render(consoleCam);
 			consoleCam.update();

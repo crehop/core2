@@ -37,7 +37,6 @@ public class Pause extends GameState implements Screen {
 	private TextButton.TextButtonStyle style;
 	private TextButton resume;
 	private TextButton quit;
-	
 	private final float GAME_WORLD_WIDTH = 1000;
 	private final float GAME_WORLD_HEIGHT = 700;
 	
@@ -80,7 +79,6 @@ public class Pause extends GameState implements Screen {
 
 	public void render(float delta) {
 		if (active) {
-		Gdx.input.setInputProcessor(stage);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();

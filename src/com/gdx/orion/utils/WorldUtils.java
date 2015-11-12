@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.gamevars.Location;
+import com.gdx.orion.screens.GameStateManager;
 
 public class WorldUtils {
 	static PolygonShape shape = new PolygonShape();
@@ -31,6 +32,9 @@ public class WorldUtils {
 	static CircleShape shape2 = new CircleShape();
 	static Location location;
 	static Random rand = new Random();
+	private static World world;
+	private static float[] vertices = new float  [6];
+	private static float offset = (float) Math.toRadians(180f);
 
 
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
@@ -125,4 +129,35 @@ public class WorldUtils {
 		body.createFixture(fdef);
 		body.setLinearVelocity(directionalForce);
 	}
+	public static void Fragment(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
+		shape = new PolygonShape();
+		vertices[0] = points;
+		vertices[1] = points2;
+		vertices[2] = points3;
+		vertices[3] = points4;
+		vertices[4] = points5;
+		vertices[5] = points6;
+		def = new BodyDef();
+		def.type = BodyType.DynamicBody;
+		def.angle = 200;
+		def.position.set(body2.getPosition());
+		body	 = world.createBody(def);
+		shape.set(vertices);
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.density = 10;
+		fdef.friction = 1;
+		body.createFixture(fdef);
+		//hit.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * force * MathUtils.random(100));
+		//hit.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * force * MathUtils.random(100));
+		location.set(body.getPosition().x, body.getPosition().y,0);
+		body.getPosition().set(location.x, location.y);
+		body.setLinearVelocity(body2.getLinearVelocity());
+		body.setAngularVelocity(body2.getAngularVelocity());
+		body.setUserData(new EntityData(MathUtils.random(30),EntityType.FRAGMENT,null));
+	}
+	public Body getBody() {
+		return body;
+	}
 }
+
