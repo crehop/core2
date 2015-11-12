@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,22 +45,21 @@ public class Pause extends GameState implements Screen {
 		super(GameStateManager.PAUSE);
 		this.game = game;
 		cam = new OrthographicCamera();
-		viewport = new ScalingViewport(Scaling.stretch, 100, 70, cam);
+		viewport = new ScalingViewport(Scaling.stretch, 1000, 700, cam);
+		viewport.apply();
 		stage = new Stage(viewport);
 		skin = new Skin();
-		pixmap = new Pixmap(120, 100, Format.RGBA8888);
-		pixmap.setColor(Color.GRAY);
+		pixmap = new Pixmap(200, 100, Format.RGBA8888);
+		pixmap.setColor(Color.GOLD);
 		pixmap.fill();
-		pixmap.setColor(Color.BLACK);
-		pixmap.drawRectangle(0, 0, 120, 100);
 		skin.add("white", new Texture(pixmap));
 		font= generator.generateFont(parameter);
 		skin.add("default",font);
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 		resume = new TextButton("RESUME", style);
-		resume.setPosition(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2 + 200);
+		resume.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 + 200);
 		quit = new TextButton("QUIT", style);
-		quit.setPosition(GAME_WORLD_WIDTH/2 + 100, GAME_WORLD_HEIGHT/2 + 100);
+		quit.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 - 200);
 		stage.addActor(resume);
 		stage.addActor(quit);
 		
@@ -79,13 +79,19 @@ public class Pause extends GameState implements Screen {
 	}
 
 	public void render(float delta) {
+		if (active) {
 		Gdx.input.setInputProcessor(stage);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
+		cam.update();
+		}
 	}
 
 	public void resize(int width, int height) {
-		
+		stage.getViewport().update(width, height);
+		stage.getViewport().apply();
 	}
 	
 	public void dispose() {

@@ -15,8 +15,8 @@ public class PlayController extends InputAdapter {
 	public void checkInput() {
 		if(exitKey){
 			if (GameStateManager.play.isActive()){
-				GameStateManager.play.dispose();
 				GameStateManager.setScreen(5);
+				exitKey = false;
 			}
 		}
 		if(forward){
