@@ -208,28 +208,38 @@ public class Play extends GameState implements Screen, ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
-		if(contact.getFixtureA().getBody().getUserData() instanceof EntityData && contact.getFixtureB().getBody().getUserData() instanceof EntityData){
+		entityDataA = null;
+		entityDataB = null;
+		if(contact.getFixtureA().getBody().getUserData() != null){
 			entityDataA = (EntityData)contact.getFixtureA().getBody().getUserData();
+		}
+		if(contact.getFixtureB().getBody().getUserData() != null){
 			entityDataB = (EntityData)contact.getFixtureB().getBody().getUserData();
-			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.BULLET){
+		}
+		if(entityDataA != null){
+			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB == null){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DESTROYME);
-				}
+					}
 			}
-			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.BULLET){
-				entityDataB.damage(1);
-				if(entityDataB.getLife() < 1){
-					entityDataB.setType(EntityType.DESTROYME);
-				}
-			}
-			if(entityDataA.getType() == EntityType.FRAGMENT && entityDataB.getType() == EntityType.BULLET){
+			if(entityDataA.getType() == EntityType.FRAGMENT && entityDataB == null){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DELETEME);
 				}
 			}
-			if(entityDataB.getType() == EntityType.FRAGMENT && entityDataA.getType() == EntityType.BULLET){
+
+		}		
+		if(entityDataB != null){
+			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA == null){
+				entityDataB.damage(1);
+				if(entityDataB.getLife() < 1){
+					entityDataB.setType(EntityType.DESTROYME);
+				}
+			}
+			
+			if(entityDataB.getType() == EntityType.FRAGMENT && entityDataA == null){
 				entityDataB.damage(1);
 				if(entityDataB.getLife()  < 1){
 					entityDataB.setType(EntityType.DELETEME);

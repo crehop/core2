@@ -117,14 +117,12 @@ public class WorldUtils {
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		shape2.setRadius(size);
-		
 		fdef.shape = shape2;
 		fdef.density = density;
 		fdef.friction = 1;
 		fdef.restitution = 0.75f;
 		body = world.createBody(def);
 		body.createFixture(fdef);
-		body.setUserData(new EntityData(MathUtils.random(3),EntityType.BULLET,null));
 		body.setLinearVelocity(directionalForce);
 	}
 }

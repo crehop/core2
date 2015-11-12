@@ -72,8 +72,8 @@ public class PlayerShip {
 		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
 		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
 		Console.setLine10("BULLET X/Y:" + (body.getPosition().x  + (float) (Math.cos(body.getAngle() + offset)) + "/" +  (body.getPosition().y  + (float) (Math.cos(body.getAngle() + offset)))));
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 2000 + body.getLocalCenter().x);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 2000 + body.getLocalCenter().y);
-		WorldUtils.fireBullet(this.world,fireSpot,5000,.05f,force);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * 200 + body.getLocalCenter().x);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * 200 + body.getLocalCenter().y);
+		WorldUtils.fireBullet(this.world,fireSpot,100,.02f,force);
 	}
 }
