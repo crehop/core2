@@ -38,17 +38,13 @@ public class WorldUtils {
 	private static World world;
 	public static final int POSITION_COMPONENTS = 2;
 	public static final int COLOR_COMPONENTS = 4;
-	private static float[] temp = new float[8*(COLOR_COMPONENTS+POSITION_COMPONENTS)];
+	private static float[] temp = new float[48];
 	private static float[] vertices = new float[6];
 	private static float offset = (float) Math.toRadians(180f);
 	private static boolean even = true;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
-	private static Mesh mesh = new Mesh(true, (8*(COLOR_COMPONENTS+POSITION_COMPONENTS)), 0,  
-            new VertexAttribute(Usage.Position, POSITION_COMPONENTS, "a_position"),
-            new VertexAttribute(Usage.ColorPacked, COLOR_COMPONENTS, "a_color"));
-
-
+	private static Mesh mesh;
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
 		def.position.set(0 - Gdx.graphics.getWidth()/2,0 - Gdx.graphics.getHeight()/2);
 		def.type = BodyType.StaticBody;
@@ -178,8 +174,30 @@ public class WorldUtils {
 			temp[count++] = asteroid.b;
 			temp[count++] = asteroid.a;
 		}
+		if(mesh == null){
+			mesh = new Mesh(true, temp.length/6, 0,  
+		            new VertexAttribute(Usage.Position, POSITION_COMPONENTS, "a_position"),
+		            new VertexAttribute(Usage.ColorUnpacked, COLOR_COMPONENTS, "a_color"));
+		}
+		System.out.println("COUNT" + count + " TEMP:" + mesh.getMaxVertices() + "Mesh Verts" + mesh.getNumVertices());
 		mesh.setVertices(temp);
 		return mesh;
+	}
+
+	public static float[] getRenderData(Body body2) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			temp[count++] = asteroid.r;
+			temp[count++] = asteroid.g;
+			temp[count++] = asteroid.b;
+			temp[count++] = asteroid.a;
+			temp[count++] = tempV2.x + 10;
+			//System.out.println("" + temp[count - 1]);
+			temp[count++] = tempV2.y + 10;
+			//System.out.println("" + temp[count - 1]);
+		}
+		return temp;
 	}
 }
 

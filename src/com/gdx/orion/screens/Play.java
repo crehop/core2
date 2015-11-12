@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -48,6 +49,7 @@ public class Play extends GameState implements Screen, ContactListener {
 	public ScalingViewport consoleViewport;  
 	public final float GAME_WORLD_WIDTH = 1080;
 	public final float GAME_WORLD_HEIGHT = 720;
+	private float[] tempAsteroid = new float[48];
 	private static PlayController playController = new PlayController();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
@@ -66,6 +68,7 @@ public class Play extends GameState implements Screen, ContactListener {
     private String vertexShader;
 	int count = 0;
 	private ShaderProgram shader;
+	private ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
 	
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
@@ -86,7 +89,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 500) {
+		while(getGameWorld().getBodyCount() < 3) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -123,20 +126,18 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 			batch.end();
-			shader.begin();
+			r.begin(cam.combined,GL20.GL_TRIANGLES);
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
+					count = 0;
 					entityDataA = (EntityData)body.getUserData();
+					tempAsteroid = WorldUtils.getRenderData(body);
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						mesh = WorldUtils.createMesh(body);	
-						//update the projection matrix so our triangles are rendered in 2D
-					    shader.setUniformMatrix("u_projTrans", cam.combined);
-					    mesh.render(shader, GL20.GL_TRIANGLES, 0, mesh.getNumVertices()/6);
-					    System.out.println("SHADER WORKING" + mesh.getNumVertices());
+						((Asteroid)entityDataA.getObject()).draw(r);
 					}
 				}
 			}
-			shader.end();
+			r.end();
 
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());

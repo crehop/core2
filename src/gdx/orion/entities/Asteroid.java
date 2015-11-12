@@ -1,5 +1,7 @@
 package gdx.orion.entities;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -26,9 +28,11 @@ public class Asteroid {
 	private float ymin;
 	private float ymax;
 	int numpoints = 0;
-	public float[] shapeVerts;
+	private float[] shapeVerts;
 	private World world;
+	private float[] points;
 	private float density;
+	private float radianDeg;
 
 	public Asteroid(World world, Location position, float density, int size){
 		this.density = density;
@@ -76,6 +80,7 @@ public class Asteroid {
 		float[] shapey = new float[numpoints];
 		float[] dists = new float[numpoints];
 		shapeVerts = new float[numpoints * 2];
+		points = new float[shapeVerts.length * 2];
 		float radius = width/2;
 		for(int i = 0; i < numpoints; i++){
 			dists[i] = MathUtils.random(radius /.75f, radius);
@@ -108,7 +113,6 @@ public class Asteroid {
 		return shapeVerts;
 	}
 	public void fragment(int force){
-		float[] points = new float[shapeVerts.length * 2];
 		for(int i = 0; i < shapeVerts.length; i++){
 			points[i] = shapeVerts[i];
 		}
@@ -132,6 +136,57 @@ public class Asteroid {
 		world.destroyBody(body);
 	}
 
+	public void draw(ImmediateModeRenderer20 r){
+		for(int i = 0; i < shapeVerts.length; i++){
+			points[i] = shapeVerts[i];
+		}
+		//Vector2 impact = new Vector2(impactx,impacty);
+		//Vector2 exit = new Vector2((impactx-xmin)/(xmax - xmin),(impacty - ymin)/(ymax-ymin));
+		DelaunayTriangulator triangulator = new DelaunayTriangulator();
+		triangulator.computeTriangles(points, 0, 10, true);
+		int count = 0;
+		for(int i = 0; i < points.length; i+=6){
+			count++;
+			if(count <= 3){
+				r.color(Color.GRAY);
+				r.vertex(points[i], points[i+1], 0);
+				r.color(Color.GRAY);
+				r.vertex(points[i+2],points[i+3], 0);
+				r.color(Color.GRAY);
+				r.vertex(points[i+4],points[i+5], 0);
+			}
+		}
+		r.color(Color.BLUE);
+		r.vertex((float)(points[16] * Math.sin(body.getAngle())) + body.getWorldCenter().x,(float)(points[17] * Math.cos(body.getAngle()))  + body.getWorldCenter().y, 0);
+		r.color(Color.BLUE);
+		r.vertex((float)(points[6] * Math.sin(body.getAngle()))  + body.getWorldCenter().x,(float)(points[7] * Math.cos(body.getAngle()))  + body.getWorldCenter().y, 0);
+		r.color(Color.BLUE);
+		r.vertex((float)(points[10] * Math.sin(body.getAngle()))  + body.getWorldCenter().x,(float)(points[11] * Math.cos(body.getAngle()))  + body.getWorldCenter().y, 0);
+		r.color(Color.GRAY);
+		r.vertex(points[0],points[1], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[6],points[7], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[16], points[17], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[6],points[7], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[4],points[5], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[0], points[1], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[16],points[17], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[0],points[1], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[14], points[15], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[10],points[11], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[12],points[13], 0);
+		r.color(Color.GRAY);
+		r.vertex(points[16], points[17], 0);
+	}
 	public Body getBody() {
 		return body;
 	}
