@@ -89,7 +89,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 3) {
+		while(getGameWorld().getBodyCount() < 2000) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -126,18 +126,16 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 			batch.end();
-			r.begin(cam.combined,GL20.GL_TRIANGLES);
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 					count = 0;
 					entityDataA = (EntityData)body.getUserData();
 					tempAsteroid = WorldUtils.getRenderData(body);
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						((Asteroid)entityDataA.getObject()).draw(r);
+						((Asteroid)entityDataA.getObject()).draw(r,cam);
 					}
 				}
 			}
-			r.end();
 
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
