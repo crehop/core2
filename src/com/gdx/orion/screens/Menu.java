@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -42,10 +44,14 @@ public class Menu extends GameState implements Screen {
 	private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
 	private static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 	private static BitmapFont font;
+	private SpriteBatch batch;
+	private Texture title = new Texture(Gdx.files.internal("images/TitleScreen.png"));
+	private Sprite titleS = new Sprite(title);
     
 	protected Menu(Game game, int level) {
 		super(GameStateManager.MENU);
 		this.game = game;
+		batch = new SpriteBatch();
 		cam = new OrthographicCamera();
 		viewport = new ScalingViewport(Scaling.stretch, 600, 400, cam);
 		viewport.apply();
@@ -115,7 +121,9 @@ public class Menu extends GameState implements Screen {
 		if(active){
 			Gdx.gl.glClearColor(0, 0, 0, 0);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			
+			batch.begin();
+			batch.draw(titleS, 0, 100, viewport.getWorldWidth() + 100, viewport.getWorldHeight());
+			batch.end();
 			Gdx.input.setInputProcessor(stage);
 			stage.act();
 			stage.draw();
