@@ -41,7 +41,7 @@ public class Pause extends GameState implements Screen {
 	private final float GAME_WORLD_HEIGHT = 700;
 	
 	protected Pause(Game game, int ID) {
-		super(ID);
+		super(GameStateManager.PAUSE);
 		this.game = game;
 		cam = new OrthographicCamera();
 		viewport = new ScalingViewport(Scaling.stretch, 100, 70, cam);
