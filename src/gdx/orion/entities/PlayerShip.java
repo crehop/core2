@@ -44,7 +44,7 @@ public class PlayerShip {
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
-		fdef.density = 5;
+		fdef.density = 55;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body = world.createBody(def);

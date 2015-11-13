@@ -58,6 +58,7 @@ public class Play extends GameState implements Screen, ContactListener {
 	private Stage stage;
 	Random rand = new Random();
 	private Array<Body> bodies = new Array<Body>();
+	private Array<Body> destroy = new Array<Body>();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
@@ -67,8 +68,11 @@ public class Play extends GameState implements Screen, ContactListener {
     private String fragmentShader;
     private String vertexShader;
 	int count = 0;
+	int maxAliveTime = 30;
+	int aliveTime = 0;
 	private ShaderProgram shader;
 	private ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
+	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
@@ -89,7 +93,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 2000) {
+		while(getGameWorld().getBodyCount() < 500) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -102,6 +106,11 @@ public class Play extends GameState implements Screen, ContactListener {
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
+			aliveTime++;
+			System.out.println(aliveTime);
+			if(aliveTime > maxAliveTime){
+				aliveTime = 0;
+			}
 			gameWorld.getBodies(bodies);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
@@ -135,7 +144,17 @@ public class Play extends GameState implements Screen, ContactListener {
 						((Asteroid)entityDataA.getObject()).draw(r,cam);
 					}
 				}
+				if(body.getUserData() instanceof Integer){
+					count = (Integer)body.getUserData();
+					if(count == aliveTime){
+						destroy.add(body);
+					}
+				}
 			}
+			for(Body body:destroy){
+				gameWorld.destroyBody(body);
+			}
+			destroy.clear();
 
 			renderer.render(getGameWorld(), viewport.getCamera().combined);
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
@@ -210,20 +229,20 @@ public class Play extends GameState implements Screen, ContactListener {
 	public void beginContact(Contact contact) {
 		entityDataA = null;
 		entityDataB = null;
-		if(contact.getFixtureA().getBody().getUserData() != null){
+		if(contact.getFixtureA().getBody().getUserData() instanceof EntityData){
 			entityDataA = (EntityData)contact.getFixtureA().getBody().getUserData();
 		}
-		if(contact.getFixtureB().getBody().getUserData() != null){
+		if(contact.getFixtureB().getBody().getUserData() instanceof EntityData){
 			entityDataB = (EntityData)contact.getFixtureB().getBody().getUserData();
 		}
 		if(entityDataA != null){
-			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB == null){
+			if(entityDataA.getType() == EntityType.ASTEROID && contact.getFixtureB().getBody().getUserData() instanceof Integer){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DESTROYME);
 					}
 			}
-			if(entityDataA.getType() == EntityType.FRAGMENT && entityDataB == null){
+			if(entityDataA.getType() == EntityType.FRAGMENT && contact.getFixtureB().getBody().getUserData() instanceof Integer){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DELETEME);
@@ -232,14 +251,14 @@ public class Play extends GameState implements Screen, ContactListener {
 
 		}		
 		if(entityDataB != null){
-			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA == null){
+			if(entityDataB.getType() == EntityType.ASTEROID && contact.getFixtureA().getBody().getUserData() instanceof Integer){
 				entityDataB.damage(1);
 				if(entityDataB.getLife() < 1){
 					entityDataB.setType(EntityType.DESTROYME);
 				}
 			}
 			
-			if(entityDataB.getType() == EntityType.FRAGMENT && entityDataA == null){
+			if(entityDataB.getType() == EntityType.FRAGMENT && contact.getFixtureA().getBody().getUserData() instanceof Integer){
 				entityDataB.damage(1);
 				if(entityDataB.getLife()  < 1){
 					entityDataB.setType(EntityType.DELETEME);
@@ -264,5 +283,8 @@ public class Play extends GameState implements Screen, ContactListener {
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		// TODO Auto-generated method stub
 		
+	}
+	public int getAliveTime() {
+		return aliveTime;
 	}
 }

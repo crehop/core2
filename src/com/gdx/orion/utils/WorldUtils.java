@@ -132,6 +132,8 @@ public class WorldUtils {
 		body = world.createBody(def);
 		body.createFixture(fdef);
 		body.setLinearVelocity(directionalForce);
+		int data = GameStateManager.play.getAliveTime();
+		body.setUserData((data));
 	}
 	public static void Fragment(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
 		shape = new PolygonShape();

@@ -31,12 +31,12 @@ public class PlayController extends InputAdapter {
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(.06f);
+				GameStateManager.play.getPlayerShip().turn(1.06f);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(-.06f);
+				GameStateManager.play.getPlayerShip().turn(-1.06f);
 			}
 		}
 		if(stop){
