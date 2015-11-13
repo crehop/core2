@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -46,6 +48,7 @@ public class WorldUtils {
 	private static float[] vertices = new float[6];
 	private static float offset = (float) Math.toRadians(180f);
 	private static boolean even = true;
+	private static boolean wireframe = true;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
 	private static Mesh mesh;
@@ -214,15 +217,53 @@ public class WorldUtils {
 		}	
 		r.begin(cam.combined, GL20.GL_TRIANGLES);
 		r.color(Color.GRAY);
-		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
-				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.color(Color.GRAY);
-		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
-				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
+				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.color(Color.GRAY);
-		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
-				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.end();
 	}
+
+	public static void drawFragment(Body body2, ImmediateModeRenderer20 r, OrthographicCamera cam, Color color) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			vertices[count++] = tempV2.x;
+			vertices[count++] = tempV2.y;
+		}
+		r.begin(cam.combined, GL20.GL_TRIANGLES);
+		r.color(color);
+		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.color(Color.BLACK);
+		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
+				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.color(color);
+		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.end();
+		
+	}
+
+	public static void drawBullet(Body body2, ShapeRenderer r, OrthographicCamera cam, Color color) {
+		r.begin(ShapeType.Filled);
+		r.setProjectionMatrix(cam.combined);
+		r.setColor(color);
+		r.circle(body2.getPosition().x, body2.getPosition().y,0.15f);
+		r.end();
+	}
+	public static boolean isWireframe() {
+		return wireframe;
+	}
+
+	public static void setWireframe(boolean wireframe) {
+		WorldUtils.wireframe = wireframe;
+	}
+
+	
 }
 

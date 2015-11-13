@@ -11,6 +11,7 @@ import java.util.Random;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -146,23 +147,31 @@ public class Play extends GameState implements Screen, ContactListener {
 					if(entityDataA.getType() == EntityType.FRAGMENT){
 						WorldUtils.drawFragment(body,r,cam);
 					}
+					if(entityDataA.getType() == EntityType.SHIP){
+						WorldUtils.drawFragment(body,r,cam,Color.RED);
+					}
 				}
 				if(body.getUserData() instanceof Integer){
 					count = (Integer)body.getUserData();
 					if(count == aliveTime){
 						destroy.add(body);
 					}
+					WorldUtils.drawBullet(body,sr,cam,Color.RED);
 				}
 			}
 			for(Body body:destroy){
-				gameWorld.destroyBody(body);
+				gameWorld.destroyBody(body);    
 			}
 			destroy.clear();
 
-			renderer.render(getGameWorld(), viewport.getCamera().combined);
+			if(WorldUtils.isWireframe()){
+				renderer.render(getGameWorld(), viewport.getCamera().combined);
+			}
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
 			Console.setLine3("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
+			Console.setLine11("PRESS F1 TO TOGGLE WIREFRAME:" + WorldUtils.isWireframe());
+
 			cam.update();
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 2, 2);			
 			//MUST BE LAST

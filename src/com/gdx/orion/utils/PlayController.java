@@ -10,7 +10,8 @@ public class PlayController extends InputAdapter {
 	private boolean back = false;
 	private boolean strafeLeft = false;
 	private boolean strafeRight = false;
-	private boolean stop;
+	private boolean stop = false;
+	private boolean wireFrame = false;
 	
 	public void checkInput() {
 		if(exitKey){
@@ -89,6 +90,12 @@ public class PlayController extends InputAdapter {
 			case Input.Keys.SPACE:
 				stop = false;
 				break;
+			case Input.Keys.F1:
+				if(WorldUtils.isWireframe()){
+					WorldUtils.setWireframe(false);
+				}else{
+					WorldUtils.setWireframe(true);
+				}
 		}
 		return super.keyUp(keycode);
 	}
