@@ -143,6 +143,9 @@ public class Play extends GameState implements Screen, ContactListener {
 					if(entityDataA.getType() == EntityType.ASTEROID){
 						((Asteroid)entityDataA.getObject()).draw(r,cam);
 					}
+					if(entityDataA.getType() == EntityType.FRAGMENT){
+						WorldUtils.drawFragment(body,r,cam);
+					}
 				}
 				if(body.getUserData() instanceof Integer){
 					count = (Integer)body.getUserData();

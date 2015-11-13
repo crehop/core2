@@ -8,9 +8,13 @@ import gdx.orion.entities.EntityType;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -199,6 +203,26 @@ public class WorldUtils {
 			//System.out.println("" + temp[count - 1]);
 		}
 		return temp;
+	}
+
+	public static void drawFragment(Body body2, ImmediateModeRenderer20 r, OrthographicCamera cam) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			vertices[count++] = tempV2.x;
+			vertices[count++] = tempV2.y;
+		}	
+		r.begin(cam.combined, GL20.GL_TRIANGLES);
+		r.color(Color.GRAY);
+		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
+				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.color(Color.GRAY);
+		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
+				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.color(Color.GRAY);
+		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().x,
+				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getWorldCenter().y,0);
+		r.end();
 	}
 }
 
