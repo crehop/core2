@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.gamevars.Location;
-import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
@@ -36,15 +35,15 @@ public class PlayerShip {
 		float[] creature = new float[6];
 		creature[0] = 0f;
 		creature[1] = 0;
-		creature[2] = 0.5f;
-		creature[3] = 2.0f; 
-		creature[4] = 1.0f;
+		creature[2] = 2.5f;
+		creature[3] = 3.5f; 
+		creature[4] = 5.0f;
 		creature[5] = 0;
 		shape.set(creature);
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
-		fdef.density = 55;
+		fdef.density = 200;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body = world.createBody(def);
@@ -71,8 +70,12 @@ public class PlayerShip {
 	public void fire(){
 		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
 		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 200 + body.getLocalCenter().x);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 200 + body.getLocalCenter().y);
-		WorldUtils.fireBullet(this.world,fireSpot,100,.02f,force);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * 200 + body.getLocalCenter().x + body.getLinearVelocity().x);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * 200 + body.getLocalCenter().y) + body.getLinearVelocity().y;
+		WorldUtils.fireBullet(this.world,fireSpot,10,.0002f,force);
+	}
+
+	public Vector2 getPosition() {
+		return location.getPosition();
 	}
 }

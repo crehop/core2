@@ -48,10 +48,11 @@ public class WorldUtils {
 	private static float[] vertices = new float[6];
 	private static float offset = (float) Math.toRadians(180f);
 	private static boolean even = true;
-	private static boolean wireframe = true;
+	private static boolean wireframe = false;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
 	private static Mesh mesh;
+	private static int force;
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
 		def.position.set(0 - Gdx.graphics.getWidth()/2,0 - Gdx.graphics.getHeight()/2);
 		def.type = BodyType.StaticBody;
@@ -139,6 +140,7 @@ public class WorldUtils {
 		body = world.createBody(def);
 		body.createFixture(fdef);
 		body.setLinearVelocity(directionalForce);
+		body.setBullet(true);
 		int data = GameStateManager.play.getAliveTime();
 		body.setUserData((data));
 	}
@@ -165,7 +167,9 @@ public class WorldUtils {
 		body.getPosition().set(location.x, location.y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
-		body.setUserData(new EntityData(MathUtils.random(30),EntityType.FRAGMENT,null));
+		force = 10;
+		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
+		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG,null));
 	}
 	public Body getBody() {
 		return body;
@@ -262,6 +266,12 @@ public class WorldUtils {
 
 	public static void setWireframe(boolean wireframe) {
 		WorldUtils.wireframe = wireframe;
+	}
+
+	public static void Fragment(float f, float g, float h, float i, float j,
+			float k, World gameWorld) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

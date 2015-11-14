@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -63,15 +65,23 @@ public class Play extends GameState implements Screen, ContactListener {
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
-    private Texture texture2 = new Texture(Gdx.files.internal("images/images.png"));
+    private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
     private Sprite sprite = new Sprite(texture);
+    private Sprite shipSprite = new Sprite(texture2);
     private Mesh mesh;
+    private Vector2 tempV2 = new Vector2(0,0);
+    private Vector2 midPoint = new Vector2(0,0);
+    private Vector2 midPoint2 = new Vector2(0,0);
+    private Vector2 midPoint3 = new Vector2(0,0);
     private String fragmentShader;
     private String vertexShader;
+    private PolygonShape ps;
 	int count = 0;
 	int maxAliveTime = 30;
+	int maxFragmentSize = 5;
 	int aliveTime = 0;
 	private ShaderProgram shader;
+	private final int VIEW_DISTANCE = 150;
 	private ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	
@@ -93,14 +103,14 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		ship.getBody().setAngularDamping(2.00f);
 		World.setVelocityThreshold(12.0f);
+		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 500) {
+		while(getGameWorld().getBodyCount() < 100) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(700,1000),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
-		System.out.println(shader.isCompiled());
 		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 	}
 	
@@ -108,12 +118,12 @@ public class Play extends GameState implements Screen, ContactListener {
 	public void render(float delta) {
 		if(isActive()) {
 			aliveTime++;
-			System.out.println(aliveTime);
 			if(aliveTime > maxAliveTime){
 				aliveTime = 0;
 			}
 			gameWorld.getBodies(bodies);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
+			
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
 			asteroids.clear();
@@ -122,6 +132,12 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+			shipSprite.setOriginCenter();
+			shipSprite.setRotation((float)(ship.getBody().getAngle() * 57.2958));
+			shipSprite.setCenterX(ship.getBody().getWorldCenter().x);
+			shipSprite.setCenterY(ship.getBody().getWorldCenter().y);
+			//shipSprite.setRotation(ship.getBody().getAngle());
+			shipSprite.draw(batch);	
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 				entityDataA = (EntityData)body.getUserData();
@@ -142,13 +158,41 @@ public class Play extends GameState implements Screen, ContactListener {
 					entityDataA = (EntityData)body.getUserData();
 					tempAsteroid = WorldUtils.getRenderData(body);
 					if(entityDataA.getType() == EntityType.ASTEROID){
-						((Asteroid)entityDataA.getObject()).draw(r,cam);
+						if(isOnScreen(ship.getBody().getPosition(),body.getPosition())){
+							((Asteroid)entityDataA.getObject()).draw(r,cam);
+						}
+					}
+					if(entityDataA.getType() == EntityType.PRE_FRAG){
+						ps = (PolygonShape)body.getFixtureList().get(0).getShape();
+						ps.getVertex(0, midPoint);
+						ps.getVertex(1, tempV2);
+						if((int)midPoint.x - (int)tempV2.x > maxFragmentSize ||(int)midPoint.y - (int)tempV2.y > maxFragmentSize  ){
+							count = 0;
+							for(int i = 0; i < ps.getVertexCount(); i++){
+								ps.getVertex(i, tempV2);
+								tempAsteroid[count++] = tempV2.x;
+								tempAsteroid[count++] = tempV2.y;
+							}
+							midPoint.x = ((tempAsteroid[0] + tempAsteroid[2])/2);
+							midPoint.y = ((tempAsteroid[1] + tempAsteroid[3])/2);
+							midPoint2.x = ((tempAsteroid[2] + tempAsteroid[4])/2);
+							midPoint2.y = ((tempAsteroid[3] + tempAsteroid[5])/2);
+							midPoint3.x = ((tempAsteroid[0] + tempAsteroid[4])/2);
+							midPoint3.y = ((tempAsteroid[1] + tempAsteroid[5])/2);
+							WorldUtils.Fragment(midPoint2.x, midPoint2.y, midPoint.x, midPoint.y, tempAsteroid[2], tempAsteroid[3], gameWorld,body);
+							WorldUtils.Fragment(midPoint2.x, midPoint2.y, tempAsteroid[4], tempAsteroid[5], midPoint3.x, midPoint3.y,  gameWorld,body);
+							WorldUtils.Fragment(midPoint.x, midPoint.y, midPoint3.x, midPoint3.y, tempAsteroid[0], tempAsteroid[1], gameWorld,body);
+							WorldUtils.Fragment(midPoint.x, midPoint.y, midPoint2.x, midPoint2.y, midPoint3.x, midPoint3.y, gameWorld,body);
+							
+							destroy.add(body);
+						}else{
+							entityDataA.setType(EntityType.FRAGMENT);
+						}
 					}
 					if(entityDataA.getType() == EntityType.FRAGMENT){
-						WorldUtils.drawFragment(body,r,cam);
-					}
-					if(entityDataA.getType() == EntityType.SHIP){
-						WorldUtils.drawFragment(body,r,cam,Color.RED);
+						if(isOnScreen(ship.getBody().getPosition(),body.getPosition())){
+							WorldUtils.drawFragment(body,r,cam);
+						}
 					}
 				}
 				if(body.getUserData() instanceof Integer){
@@ -156,7 +200,9 @@ public class Play extends GameState implements Screen, ContactListener {
 					if(count == aliveTime){
 						destroy.add(body);
 					}
-					WorldUtils.drawBullet(body,sr,cam,Color.RED);
+					if(isOnScreen(ship.getBody().getPosition(),body.getPosition())){
+						WorldUtils.drawBullet(body,sr,cam,Color.YELLOW);
+					}
 				}
 			}
 			for(Body body:destroy){
@@ -298,5 +344,11 @@ public class Play extends GameState implements Screen, ContactListener {
 	}
 	public int getAliveTime() {
 		return aliveTime;
+	}
+	public boolean isOnScreen(Vector2 point, Vector2 check){
+		if(check.x - point.x < VIEW_DISTANCE && check.y - point.y < VIEW_DISTANCE && point.x - check.x < VIEW_DISTANCE && point.y - check.y < VIEW_DISTANCE){
+			return true;
+		}
+		return false;
 	}
 }
