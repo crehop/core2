@@ -153,60 +153,60 @@ public class Asteroid {
 		for(int i = 0; i < points.length; i+=6){
 			count++;
 			if(count <= 3){
-				r.color(randomColor());
+				r.color(Color.GRAY);
 				r.vertex((float)(((points[i]) * Math.cos(body.getAngle())) - ((points[i+1]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 						(float)(((points[i + 1]) * Math.cos(body.getAngle())) + ((points[i]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-				r.color(randomColor());
+				r.color(Color.GRAY);
 				r.vertex((float)(((points[i+2]) * Math.cos(body.getAngle())) - ((points[i+3]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 						(float)(((points[i+3]) * Math.cos(body.getAngle())) + ((points[i+2]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-				r.color(randomColor());
+				r.color(Color.GRAY);
 				r.vertex((float)(((points[i+4]) * Math.cos(body.getAngle())) - ((points[i+5]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 						(float)(((points[i+5]) * Math.cos(body.getAngle())) + ((points[i+4]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
 			}
 		}
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[16]) * Math.cos(body.getAngle())) - ((points[17]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[17]) * Math.cos(body.getAngle())) + ((points[16]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[6]) * Math.cos(body.getAngle())) - ((points[7]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[7]) * Math.cos(body.getAngle())) + ((points[6]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[10]) * Math.cos(body.getAngle())) - ((points[11]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[11]) * Math.cos(body.getAngle())) + ((points[10]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);	
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[0]) * Math.cos(body.getAngle())) - ((points[1]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[1]) * Math.cos(body.getAngle())) + ((points[0]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[6]) * Math.cos(body.getAngle())) - ((points[7]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[7]) * Math.cos(body.getAngle())) + ((points[6]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[16]) * Math.cos(body.getAngle())) - ((points[17]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[17]) * Math.cos(body.getAngle())) + ((points[16]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[6]) * Math.cos(body.getAngle())) - ((points[7]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[7]) * Math.cos(body.getAngle())) + ((points[6]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[4]) * Math.cos(body.getAngle())) - ((points[5]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[5]) * Math.cos(body.getAngle())) + ((points[4]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[0]) * Math.cos(body.getAngle())) - ((points[1]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[1]) * Math.cos(body.getAngle())) + ((points[0]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[16]) * Math.cos(body.getAngle())) - ((points[17]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[17]) * Math.cos(body.getAngle())) + ((points[16]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[0]) * Math.cos(body.getAngle())) - ((points[1]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[1]) * Math.cos(body.getAngle())) + ((points[0]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[14]) * Math.cos(body.getAngle())) - ((points[15]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[15]) * Math.cos(body.getAngle())) + ((points[14]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[10]) * Math.cos(body.getAngle())) - ((points[11]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[11]) * Math.cos(body.getAngle())) + ((points[10]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[12]) * Math.cos(body.getAngle())) - ((points[13]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[13]) * Math.cos(body.getAngle())) + ((points[12]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
-		r.color(randomColor());
+		r.color(Color.GRAY);
 		r.vertex((float)(((points[16]) * Math.cos(body.getAngle())) - ((points[17]) * Math.sin(body.getAngle()))) + body.getPosition().x,
 				(float)(((points[17]) * Math.cos(body.getAngle())) + ((points[16]) * Math.sin(body.getAngle()))) + body.getPosition().y,0);
 		r.end();
