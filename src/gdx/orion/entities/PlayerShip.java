@@ -70,9 +70,9 @@ public class PlayerShip {
 	public void fire(){
 		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
 		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 200 + body.getLocalCenter().x + body.getLinearVelocity().x);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 200 + body.getLocalCenter().y) + body.getLinearVelocity().y;
-		WorldUtils.fireBullet(this.world,fireSpot,10,.0002f,force);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * 200000 + body.getLocalCenter().x + body.getLinearVelocity().x);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * 200000 + body.getLocalCenter().y) + body.getLinearVelocity().y;
+		WorldUtils.fireBullet(this.world,fireSpot,10,.01f,force);
 	}
 
 	public Vector2 getPosition() {
