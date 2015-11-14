@@ -77,6 +77,9 @@ public class Play extends GameState implements Screen, ContactListener {
     private String vertexShader;
     private PolygonShape ps;
 	int count = 0;
+	final int MAX_BODIES = 1500;
+	final int FRAGMENT_CULL_PER_FRAME = 10;
+	int fragmentsCulled = 0;
 	int maxAliveTime = 30;
 	int maxFragmentSize = 5;
 	int aliveTime = 0;
@@ -105,7 +108,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		World.setVelocityThreshold(12.0f);
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 100) {
+		while(getGameWorld().getBodyCount() < 1000) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -152,6 +155,7 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 			batch.end();
+			fragmentsCulled = 0;
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
 					count = 0;
@@ -192,6 +196,19 @@ public class Play extends GameState implements Screen, ContactListener {
 					if(entityDataA.getType() == EntityType.FRAGMENT){
 						if(isOnScreen(ship.getBody().getPosition(),body.getPosition())){
 							WorldUtils.drawFragment(body,r,cam);
+							if(gameWorld.getBodyCount() > MAX_BODIES * 1.5){
+								if(fragmentsCulled < FRAGMENT_CULL_PER_FRAME){
+									destroy.add(body);
+									fragmentsCulled++;
+								}
+							}
+						}else{
+							if(gameWorld.getBodyCount() > MAX_BODIES){
+								if(fragmentsCulled < FRAGMENT_CULL_PER_FRAME){
+									destroy.add(body);
+									fragmentsCulled++;
+								}
+							}
 						}
 					}
 				}
