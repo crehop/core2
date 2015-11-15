@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
+import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
@@ -111,6 +112,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		while(getGameWorld().getBodyCount() < 1000) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
+		GravityUtils.addGravityWell(700, -200, 300, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
@@ -222,6 +224,7 @@ public class Play extends GameState implements Screen, ContactListener {
 					}
 				}
 			}
+			GravityUtils.applyGravity(gameWorld,bodies);
 			for(Body body:destroy){
 				gameWorld.destroyBody(body);    
 			}

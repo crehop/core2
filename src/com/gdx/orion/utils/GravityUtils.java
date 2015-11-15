@@ -17,14 +17,14 @@ public class GravityUtils{
 	private static Vector2 forceVector = new Vector2();
 	private static Vector2 planetPosition = new Vector2();
 	private static Vector2 planetDistance = new Vector2();
-	private static FixtureDef fixtureDef;
+	private static FixtureDef fixtureDef = new FixtureDef();
 	private static CircleShape circleShape;
-	private static BodyDef bodyDef;
+	private static BodyDef bodyDef = new BodyDef();
 	private static Body thePlanet;
 	private static float radius;
 	private static float finalDistance;
 	private static float vecSum;
-	private static final int GRAVITATIONAL_REACH = 3;
+	private static final int GRAVITATIONAL_REACH = 300;
 	
 	public static void addGravityWell(float px,float py, float r, World world, boolean inWardForce) {
 		fixtureDef.restitution=0;
@@ -42,7 +42,7 @@ public class GravityUtils{
 		}
 		thePlanet.createFixture(fixtureDef);
 	}
-	public void applyGravity(World world,Array<Body> body){
+	public static void applyGravity(World world,Array<Body> body){
 		for (int i = 0; i < body.size; i++){
 			forceVector = body.get(i).getWorldCenter();
 			for (int j = 0; j <planetVector.size(); j++) {
@@ -57,8 +57,8 @@ public class GravityUtils{
 					planetDistance.x = planetDistance.x * -1;
 					planetDistance.y = planetDistance.y * -1;
 					vecSum =Math.abs(planetDistance.x) + Math.abs(planetDistance.y);
-					planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance);
-					planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance);
+					planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass();
+					planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass();
 					body.get(i).applyForce(planetDistance,body.get(i).getWorldCenter(),false);
 						}
 				}	

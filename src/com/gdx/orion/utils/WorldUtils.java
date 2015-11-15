@@ -197,17 +197,19 @@ public class WorldUtils {
 	}
 
 	public static float[] getRenderData(Body body2) {
-		count = 0;
-		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
-			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
-			temp[count++] = asteroid.r;
-			temp[count++] = asteroid.g;
-			temp[count++] = asteroid.b;
-			temp[count++] = asteroid.a;
-			temp[count++] = tempV2.x + 10;
-			//System.out.println("" + temp[count - 1]);
-			temp[count++] = tempV2.y + 10;
-			//System.out.println("" + temp[count - 1]);
+		if(body2.getFixtureList().get(0).getShape() instanceof PolygonShape){
+			count = 0;
+			for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+				((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+				temp[count++] = asteroid.r;
+				temp[count++] = asteroid.g;
+				temp[count++] = asteroid.b;
+				temp[count++] = asteroid.a;
+				temp[count++] = tempV2.x + 10;
+				//System.out.println("" + temp[count - 1]);
+				temp[count++] = tempV2.y + 10;
+				//System.out.println("" + temp[count - 1]);
+			}
 		}
 		return temp;
 	}
