@@ -112,7 +112,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		while(getGameWorld().getBodyCount() < 10) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(300, 100, 30,10, gameWorld, true);
+		GravityUtils.addGravityWell(300, 100, 30,100, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
