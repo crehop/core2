@@ -108,7 +108,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		World.setVelocityThreshold(12.0f);
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 100) {
+		while(getGameWorld().getBodyCount() < 1000) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
