@@ -40,12 +40,14 @@ public class LevelEdit extends GameState implements Screen {
 	private BitmapFont font;
 	private TextButton.TextButtonStyle style;
 	private TextButton.TextButtonStyle editStyle;
+	private TextButton.TextButtonStyle wStyle;
 	
 	private TextButton worldBorder;
 	private TextButton asteroid;
 	private TextButton gravityWell;
 	private TextButton spawnPoint;
 	private TextButton back;
+	private Button worldScreen;
 	
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
@@ -66,6 +68,11 @@ public class LevelEdit extends GameState implements Screen {
 		pixmap.drawRectangle(0, 0, 100, 100);
 		skin.add("white", new Texture(pixmap));
 		
+		Pixmap pixmap2 = new Pixmap(1080, 720, Format.RGB888);
+		pixmap2.setColor(Color.YELLOW);
+		pixmap2.drawRectangle(0, 0, 1080, 720);
+		skin.add("world", new Texture(pixmap2));
+		
 		font = generator.generateFont(parameter);
 		skin.add("default", font);
 		
@@ -77,8 +84,16 @@ public class LevelEdit extends GameState implements Screen {
 		editStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
 		editStyle.font = skin.getFont("default");
 		
+		wStyle = new TextButtonStyle();
+		wStyle.up = skin.newDrawable("world", Color.DARK_GRAY);
+		wStyle.down = skin.newDrawable("world", Color.DARK_GRAY);
+		wStyle.checked = skin.newDrawable("world", Color.DARK_GRAY);
+		wStyle.over = skin.newDrawable("world", Color.LIGHT_GRAY);
+		wStyle.font = skin.getFont("default");
+		
 		skin.add("editStyle", editStyle);
 		skin.add("default", style);
+		skin.add("wstyle", wStyle);
 		
 		worldBorder = new TextButton("BORDER", editStyle);
 		worldBorder.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 100);
@@ -90,12 +105,22 @@ public class LevelEdit extends GameState implements Screen {
 		spawnPoint.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 400);
 		back = new TextButton("BACK", style);
 		back.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 700);
+		worldScreen = new Button(wStyle);
+		worldScreen.setPosition(0, 0);
 		
+		stage.addActor(worldScreen);
 		stage.addActor(worldBorder);
 		stage.addActor(asteroid);
 		stage.addActor(gravityWell);
 		stage.addActor(spawnPoint);
 		stage.addActor(back);
+		
+		worldScreen.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	System.out.println("This is the button over the entire editor!");
+            }
+        });
 		
 		back.addListener(new ClickListener(){
             @Override 

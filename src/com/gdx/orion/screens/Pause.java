@@ -31,6 +31,11 @@ public class Pause extends GameState implements Screen {
 	private Pixmap pixmap;
 	private Stage stage;
 	private Skin skin;
+	
+	private SpriteBatch batch;
+	private Texture s1 = new Texture(Gdx.files.internal("images/PauseImage.png"));
+	private Sprite pauseImage = new Sprite(s1);
+	
 	private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
 	private FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 	private BitmapFont font;
@@ -47,6 +52,7 @@ public class Pause extends GameState implements Screen {
 		cam = new OrthographicCamera();
 		viewport = new ScalingViewport(Scaling.stretch, 1000, 700, cam);
 		viewport.apply();
+		batch = new SpriteBatch();
 		stage = new Stage(viewport);
 		skin = new Skin();
 		pixmap = new Pixmap(200, 100, Format.RGBA8888);
@@ -95,6 +101,9 @@ public class Pause extends GameState implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
+		batch.begin();
+		batch.draw(pauseImage, 0, 0, 642, 480);
+		batch.end();
 		cam.update();
 		}
 	}
