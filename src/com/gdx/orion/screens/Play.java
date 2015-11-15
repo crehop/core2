@@ -81,7 +81,7 @@ public class Play extends GameState implements Screen, ContactListener {
 	final int FRAGMENT_CULL_PER_FRAME = 10;
 	int fragmentsCulled = 0;
 	int maxAliveTime = 30;
-	int maxFragmentSize = 5;
+	int MAX_FRAGMENT_SIZE = 3;
 	int aliveTime = 0;
 	private ShaderProgram shader;
 	private final int VIEW_DISTANCE = 150;
@@ -108,7 +108,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		World.setVelocityThreshold(12.0f);
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 1000) {
+		while(getGameWorld().getBodyCount() < 100) {
 			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -170,7 +170,7 @@ public class Play extends GameState implements Screen, ContactListener {
 						ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 						ps.getVertex(0, midPoint);
 						ps.getVertex(1, tempV2);
-						if((int)midPoint.x - (int)tempV2.x > maxFragmentSize ||(int)midPoint.y - (int)tempV2.y > maxFragmentSize  ){
+						if((int)midPoint.x - (int)tempV2.x > MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > MAX_FRAGMENT_SIZE  ){
 							count = 0;
 							for(int i = 0; i < ps.getVertexCount(); i++){
 								ps.getVertex(i, tempV2);

@@ -1,6 +1,5 @@
 package gdx.orion.entities;
 	
-import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.gamevars.Location;
+import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
@@ -24,6 +24,8 @@ public class PlayerShip {
 	Vector2 force = new Vector2();
 	Location fireSpot = new Location(0,0,0);
 	World world;
+	private int fire = 0;
+	private final int FIRE_DELAY = 2;
 	
 	public PlayerShip(World world, Location position){
 		this.world = world;
@@ -34,21 +36,41 @@ public class PlayerShip {
 		def.angle = 200;
 		float[] creature = new float[6];
 		creature[0] = 0f;
-		creature[1] = 0;
+		creature[1] = -1.2f;
 		creature[2] = 2.5f;
-		creature[3] = 3.5f; 
+		creature[3] = 3.0f; 
 		creature[4] = 5.0f;
-		creature[5] = 0;
+		creature[5] = -1.2f;
 		shape.set(creature);
-		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
-		fdef.density = 200;
+		fdef.density = 2650;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body = world.createBody(def);
 		body.createFixture(fdef);
-		body.setUserData(new EntityData(1000,EntityType.SHIP,this            ));
+		creature = new float[8];
+		creature[0] = 0f;
+		creature[1] = 0;
+		creature[2] = 0f;
+		creature[3] = -1.7f; 
+		creature[4] = -1.0f;
+		creature[5] = -1.7f;
+		creature[6] = -1.0f;
+		creature[7] = 0f;
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(2.1f,-.5f)));
+		fdef.shape = shape;
+		fdef.density = 10;
+		fdef.friction = .5f;
+		fdef.restitution = 0;
+		body.createFixture(fdef);
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(1.9f, 0f)));
+		fdef.shape = shape;
+		fdef.density = 100;
+		fdef.friction = .5f;
+		fdef.restitution = 0;
+		body.createFixture(fdef);
+		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 	}
 
 	public Location getLocation() {
@@ -68,11 +90,15 @@ public class PlayerShip {
 		body.applyForceToCenter(force, false);
 	}
 	public void fire(){
-		fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
-		fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
-		force.x = (float) (Math.cos(body.getAngle() + offset) * 200000 + body.getLocalCenter().x + body.getLinearVelocity().x);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * 200000 + body.getLocalCenter().y) + body.getLinearVelocity().y;
-		WorldUtils.fireBullet(this.world,fireSpot,10,.01f,force);
+		fire++;
+		if(fire > FIRE_DELAY){
+			fireSpot.x = body.getWorldCenter().x + (float) (Math.cos(body.getAngle() + offset) * 1.5);
+			fireSpot.y = body.getWorldCenter().y + (float) (Math.sin(body.getAngle() + offset) * 1.5);
+			force.x = (float) (Math.cos(body.getAngle() + offset) * 20000000 + body.getLocalCenter().x + body.getLinearVelocity().x);
+			force.y = (float) (Math.sin(body.getAngle() + offset) * 20000000 + body.getLocalCenter().y) + body.getLinearVelocity().y;
+			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
+			fire = 0;
+		}
 	}
 
 	public Vector2 getPosition() {
