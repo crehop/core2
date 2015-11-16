@@ -167,7 +167,7 @@ public class WorldUtils {
 		body.getPosition().set(location.x, location.y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
-		force = 10;
+		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
 		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG,null));
 	}

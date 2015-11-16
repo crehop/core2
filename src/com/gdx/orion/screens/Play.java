@@ -105,8 +105,6 @@ public class Play extends GameState implements Screen, ContactListener {
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(this);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
-		ship.getBody().setAngularDamping(2.00f);
-		World.setVelocityThreshold(12.0f);
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
 		while(getGameWorld().getBodyCount() < 1000) {

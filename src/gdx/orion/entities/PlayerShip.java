@@ -27,6 +27,8 @@ public class PlayerShip {
 	World world;
 	private int fire = 0;
 	private final int FIRE_DELAY = 2;
+	private float linearDamping = 0.4f;
+	private float angularDamping = 2.0f;
 	
 	public PlayerShip(World world, Location position){
 		this.world = world;
@@ -72,6 +74,8 @@ public class PlayerShip {
 		fdef.restitution = 0;
 		body.createFixture(fdef);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
+		body.setAngularDamping(angularDamping);
+		body.setLinearDamping(linearDamping);
 	}
 
 	public Location getLocation() {
@@ -94,15 +98,15 @@ public class PlayerShip {
 	public void fire(){
 		fire++;
 		if(fire > FIRE_DELAY){
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25))*1.25));
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25))*1.25));
-			force.x = (float) (Math.cos(body.getAngle() + offset) * 20000 + body.getLocalCenter().x + body.getLinearVelocity().x);
-			force.y = (float) (Math.sin(body.getAngle() + offset) * 20000 + body.getLocalCenter().y) + body.getLinearVelocity().y;
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25))));
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25))));
+			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
+			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))*1.25));
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))*1.25));
-			force.x = (float) (Math.cos(body.getAngle() + offset) * 20000 + body.getLocalCenter().x + body.getLinearVelocity().x);
-			force.y = (float) (Math.sin(body.getAngle() + offset) * 20000 + body.getLocalCenter().y) + body.getLinearVelocity().y;
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))));
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))));
+			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
+			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
 		}

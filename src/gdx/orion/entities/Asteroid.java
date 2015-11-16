@@ -120,8 +120,6 @@ public class Asteroid {
 		for(int i = 0; i < shapeVerts.length; i++){
 			points[i] = shapeVerts[i];
 		}
-		//Vector2 impact = new Vector2(impactx,impacty);
-		//Vector2 exit = new Vector2((impactx-xmin)/(xmax - xmin),(impacty - ymin)/(ymax-ymin));
 		DelaunayTriangulator triangulator = new DelaunayTriangulator();
 		triangulator.computeTriangles(points, 0, force, true);
 		int count = 0;
