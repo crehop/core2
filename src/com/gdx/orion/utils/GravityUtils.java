@@ -24,7 +24,7 @@ public class GravityUtils{
 	private static float radius;
 	private static float finalDistance;
 	private static float vecSum;
-	private static final int GRAVITATIONAL_REACH = 300;
+	private static final int GRAVITATIONAL_REACH = 15;
 	
 	public static void addGravityWell(float px,float py, float r, float density, World world, boolean inWardForce) {
 		fixtureDef.restitution=0;
@@ -45,23 +45,25 @@ public class GravityUtils{
 	public static void applyGravity(World world,Array<Body> body){
 		for (int i = 0; i < body.size; i++){
 			forceVector = body.get(i).getWorldCenter();
-			for (int j = 0; j <planetVector.size(); j++) {
-				circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
-				radius =circleShape.getRadius();
-				planetPosition = planetVector.get(j).getWorldCenter();
-				planetDistance =new Vector2(0,0);
-				planetDistance.add(forceVector);
-				planetDistance.sub(planetPosition);
-				finalDistance = planetDistance.len();
-				if(finalDistance <= radius * GRAVITATIONAL_REACH) {
-					planetDistance.x = planetDistance.x * -1;
-					planetDistance.y = planetDistance.y * -1;
-					vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
-					planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-					planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-					body.get(i).applyForce(planetDistance,body.get(i).getWorldCenter(),false);
-						}
-				}	
+			for (int j = 0; j < planetVector.size(); j++) {
+				if(planetVector.get(j).getFixtureList().size > 0){
+					circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
+					radius =circleShape.getRadius();
+					planetPosition = planetVector.get(j).getWorldCenter();
+					planetDistance =new Vector2(0,0);
+					planetDistance.add(forceVector);
+					planetDistance.sub(planetPosition);
+					finalDistance = planetDistance.len();
+					if(finalDistance <= radius * GRAVITATIONAL_REACH) {
+						planetDistance.x = planetDistance.x * -1;
+						planetDistance.y = planetDistance.y * -1;
+						vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
+						planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+						planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+						body.get(i).applyForce(planetDistance,body.get(i).getWorldCenter(),false);
+					}
+				}
 			}	
 		}	
-	}		
+	}	
+}		

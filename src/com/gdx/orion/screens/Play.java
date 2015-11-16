@@ -51,8 +51,8 @@ public class Play extends GameState implements Screen, ContactListener {
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
-	public final float GAME_WORLD_WIDTH = 1080;
-	public final float GAME_WORLD_HEIGHT = 720;
+	public final float GAME_WORLD_WIDTH = 10800;
+	public final float GAME_WORLD_HEIGHT = 7200;
 	private float[] tempAsteroid = new float[48];
 	private static PlayController playController = new PlayController();
 	private World gameWorld;
@@ -78,7 +78,7 @@ public class Play extends GameState implements Screen, ContactListener {
     private String vertexShader;
     private PolygonShape ps;
 	int count = 0;
-	final int MAX_BODIES = 1500;
+	final int MAX_BODIES = 2500;
 	final int FRAGMENT_CULL_PER_FRAME = 10;
 	int fragmentsCulled = 0;
 	int maxAliveTime = 30;
@@ -109,10 +109,12 @@ public class Play extends GameState implements Screen, ContactListener {
 		World.setVelocityThreshold(12.0f);
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 10) {
-			new Asteroid(getGameWorld(), new Location(MathUtils.random(-200,200) ,MathUtils.random(-100,400), 0),MathUtils.random(1,200),MathUtils.random(1,3));
+		while(getGameWorld().getBodyCount() < 1000) {
+			new Asteroid(getGameWorld(), new Location(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0),MathUtils.random(1,200),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(300, 100, 30,100, gameWorld, true);
+		GravityUtils.addGravityWell(300, 100, 30,6, gameWorld, true);
+		GravityUtils.addGravityWell(5000, 3000, 300,10, gameWorld, true);
+		GravityUtils.addGravityWell(2000, 3000, 300,20, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
@@ -136,7 +138,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(sprite, -200, -200, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+			batch.draw(sprite, 0 , 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(ship.getBody().getAngle() * 57.2958));
 			shipSprite.setCenterX(ship.getBody().getWorldCenter().x);
@@ -172,7 +174,7 @@ public class Play extends GameState implements Screen, ContactListener {
 						ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 						ps.getVertex(0, midPoint);
 						ps.getVertex(1, tempV2);
-						if((int)midPoint.x - (int)tempV2.x > MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > MAX_FRAGMENT_SIZE  ){
+						if((int)midPoint.x - (int)tempV2.x > MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > MAX_FRAGMENT_SIZE){
 							count = 0;
 							for(int i = 0; i < ps.getVertexCount(); i++){
 								ps.getVertex(i, tempV2);
@@ -326,6 +328,15 @@ public class Play extends GameState implements Screen, ContactListener {
 					entityDataA.setType(EntityType.DELETEME);
 				}
 			}
+			if(entityDataA.getType() == EntityType.GRAVITY_WELL){
+				if(entityDataB != null){
+					if(entityDataB.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
+						destroy.add(contact.getFixtureB().getBody());
+					}
+				}else{
+					destroy.add(contact.getFixtureB().getBody());
+				}
+			}
 
 		}		
 		if(entityDataB != null){
@@ -340,6 +351,15 @@ public class Play extends GameState implements Screen, ContactListener {
 				entityDataB.damage(1);
 				if(entityDataB.getLife()  < 1){
 					entityDataB.setType(EntityType.DELETEME);
+				}
+			}
+			if(entityDataB.getType() == EntityType.GRAVITY_WELL){
+				if(entityDataA != null){
+					if(entityDataA.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
+						destroy.add(contact.getFixtureA().getBody());
+					}
+				}else{
+					destroy.add(contact.getFixtureA().getBody());
 				}
 			}
 		}

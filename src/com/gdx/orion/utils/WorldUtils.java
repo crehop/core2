@@ -54,7 +54,7 @@ public class WorldUtils {
 	private static Mesh mesh;
 	private static int force;
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
-		def.position.set(0 - Gdx.graphics.getWidth()/2,0 - Gdx.graphics.getHeight()/2);
+		def.position.set(0,0);
 		def.type = BodyType.StaticBody;
 		world.getBodies(bodies);
 		if(bodies.contains(body, false)){
