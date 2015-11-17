@@ -19,7 +19,7 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.setVSync(true);
 		Gdx.input.setCursorCatched(false);
-		GameStateManager.setScreen(0);
+		GameStateManager.setScreen(GameStateManager.MENU);
 		//music.play();
 	}
 

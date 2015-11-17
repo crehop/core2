@@ -75,14 +75,14 @@ public class Pause extends GameState implements Screen {
 		resume.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
-            	GameStateManager.setScreen(1);
+            	GameStateManager.setScreen(GameStateManager.PLAY); //1
             }
         });
 		
 		mainmenu.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
-            	GameStateManager.setScreen(0);
+            	GameStateManager.setScreen(GameStateManager.MENU); //0
             }
         });
 		
