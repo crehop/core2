@@ -87,6 +87,7 @@ public class Play extends GameState implements Screen, ContactListener {
 	int aliveTime = 0;
 	private ShaderProgram shader;
 	private final int VIEW_DISTANCE = 150;
+	private float velo = 0;
 	private ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	
@@ -368,15 +369,16 @@ public class Play extends GameState implements Screen, ContactListener {
 			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.SHIP){
 				tempV2 = contact.getFixtureA().getBody().getLinearVelocity();
 				midPoint = contact.getFixtureB().getBody().getLinearVelocity();
-				Console.setLine6("FORCE OF IMPACT" + tempV2.sub(midPoint).len());
-				if(tempV2.sub(midPoint).len() > 100){
+				velo =  tempV2.sub(midPoint).len();
+				if(velo > 110){
 					entityDataA.setType(EntityType.DESTROYME);
 				}
 			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.SHIP){
 				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
 				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
-				Console.setLine6("FORCE OF IMPACT" + tempV2.sub(midPoint).len());
-				if(tempV2.sub(midPoint).len() > 100){
+				velo = tempV2.sub(midPoint).len();
+				Console.setLine6("FORCE OF IMPACT" + velo);
+				if(velo > 110){
 					entityDataB.setType(EntityType.DESTROYME);
 				}
 			}
