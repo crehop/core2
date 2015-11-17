@@ -110,7 +110,7 @@ public class Play extends GameState implements Screen, ContactListener {
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 1000) {
+		while(getGameWorld().getBodyCount() < 3000) {
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
 			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
