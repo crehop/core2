@@ -24,7 +24,7 @@ public class GravityUtils{
 	private static float radius;
 	private static float finalDistance;
 	private static float vecSum;
-	private static final int GRAVITATIONAL_REACH = 15;
+	private static final int GRAVITATIONAL_REACH = 3000;
 	
 	public static void addGravityWell(float px,float py, float r, float density, World world, boolean inWardForce) {
 		fixtureDef.restitution=0;

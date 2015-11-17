@@ -51,8 +51,8 @@ public class Play extends GameState implements Screen, ContactListener {
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
-	public final float GAME_WORLD_WIDTH = 10800;
-	public final float GAME_WORLD_HEIGHT = 7200;
+	public final float GAME_WORLD_WIDTH = 1080;
+	public final float GAME_WORLD_HEIGHT = 720;
 	private float[] tempAsteroid = new float[48];
 	private static PlayController playController = new PlayController();
 	private World gameWorld;
@@ -106,17 +106,14 @@ public class Play extends GameState implements Screen, ContactListener {
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(this);
-		World.setVelocityThreshold(1000000000.0f);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 3000) {
+		while(getGameWorld().getBodyCount() < 50) {
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
 			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(300, 100, 30,6, gameWorld, true);
-		GravityUtils.addGravityWell(5000, 3000, 300,10, gameWorld, true);
-		GravityUtils.addGravityWell(2000, 3000, 300,20, gameWorld, true);
+		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 3,60, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
