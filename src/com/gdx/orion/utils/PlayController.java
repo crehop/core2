@@ -5,6 +5,9 @@ import com.badlogic.gdx.InputAdapter;
 import com.gdx.orion.screens.GameStateManager;
 
 public class PlayController extends InputAdapter {
+	public static final float TURN_RATE = 9000.06f;
+	public static final int THRUST_REVERSE_FACTOR = -1200000;
+	public static final int THRUST_FORWARD_FACTOR = 1200000;
 	private boolean exitKey = false;
 	private boolean forward = false;
 	private boolean back = false;
@@ -22,22 +25,22 @@ public class PlayController extends InputAdapter {
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward((800000  * GameStateManager.play.getPlayerShip().sizeMod));
+				GameStateManager.play.getPlayerShip().forward((THRUST_FORWARD_FACTOR  * GameStateManager.play.getPlayerShip().SIZE_MOD));
 			}
 		}
 		if(back){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(-800000 * GameStateManager.play.getPlayerShip().sizeMod);
+				GameStateManager.play.getPlayerShip().forward(THRUST_REVERSE_FACTOR * GameStateManager.play.getPlayerShip().SIZE_MOD);
 			}
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(3000.06f * GameStateManager.play.getPlayerShip().sizeMod);
+				GameStateManager.play.getPlayerShip().turn(TURN_RATE * GameStateManager.play.getPlayerShip().SIZE_MOD);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(-3000.06f * GameStateManager.play.getPlayerShip().sizeMod);
+				GameStateManager.play.getPlayerShip().turn(-TURN_RATE * GameStateManager.play.getPlayerShip().SIZE_MOD);
 			}
 		}
 		if(stop){

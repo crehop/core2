@@ -26,10 +26,10 @@ public class PlayerShip {
 	Location fireSpot = new Location(0,0,0);
 	World world;
 	private int fire = 0;
-	private final int FIRE_DELAY = 2;
-	private float linearDamping = 0.01f;
-	private float angularDamping = 2.0f;
-	public float sizeMod = 1.0f;
+	private static final int FIRE_DELAY = 2;
+	private static final float LINEAR_DAMPENING = 0.01f;
+	private static final float ANGULAR_DAMPENING = 3.0f;
+	public static final float SIZE_MOD = 1.0f;
 	
 	public PlayerShip(World world, Location position){
 		this.world = world;
@@ -39,12 +39,12 @@ public class PlayerShip {
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		float[] creature = new float[6];
-		creature[0] = 0f * sizeMod;
-		creature[1] = -1.2f * sizeMod;
-		creature[2] = 2.5f * sizeMod;
-		creature[3] = 3.0f * sizeMod; 
-		creature[4] = 5.0f * sizeMod;
-		creature[5] = -1.2f * sizeMod;
+		creature[0] = 0f * SIZE_MOD;
+		creature[1] = -1.2f * SIZE_MOD;
+		creature[2] = 2.5f * SIZE_MOD;
+		creature[3] = 3.0f * SIZE_MOD; 
+		creature[4] = 5.0f * SIZE_MOD;
+		creature[5] = -1.2f * SIZE_MOD;
 		shape.set(creature);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
@@ -54,28 +54,28 @@ public class PlayerShip {
 		body = world.createBody(def);
 		body.createFixture(fdef);
 		creature = new float[8];
-		creature[0] = 0f * sizeMod;
-		creature[1] = 0 * sizeMod;
-		creature[2] = 0f * sizeMod;
-		creature[3] = -1.7f * sizeMod; 
-		creature[4] = -1.0f * sizeMod;
-		creature[5] = -1.7f * sizeMod;
-		creature[6] = -1.0f * sizeMod;
+		creature[0] = 0f * SIZE_MOD;
+		creature[1] = 0 * SIZE_MOD;
+		creature[2] = 0f * SIZE_MOD;
+		creature[3] = -1.7f * SIZE_MOD; 
+		creature[4] = -1.0f * SIZE_MOD;
+		creature[5] = -1.7f * SIZE_MOD;
+		creature[6] = -1.0f * SIZE_MOD;
 		creature[7] = 0f;
-		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(2.1f * sizeMod,-.5f * sizeMod)));
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(2.1f * SIZE_MOD,-.5f * SIZE_MOD)));
 		fdef.shape = shape;
 		fdef.density = 10;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body.createFixture(fdef);
-		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(1.9f * sizeMod, 0f * sizeMod)));
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(1.9f * SIZE_MOD, 0f * SIZE_MOD)));
 		fdef.shape = shape;
 		fdef.density = 100;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body.createFixture(fdef);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
-		body.setAngularDamping(angularDamping);
+		body.setAngularDamping(ANGULAR_DAMPENING);
 	}
 
 	public Location getLocation() {
@@ -98,13 +98,13 @@ public class PlayerShip {
 	public void fire(){
 		fire++;
 		if(fire > FIRE_DELAY){
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f  * sizeMod;
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * sizeMod;
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f  * SIZE_MOD;
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * SIZE_MOD;
 			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
 			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * sizeMod);
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * sizeMod);
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
 		}
