@@ -77,6 +77,7 @@ public class Play extends GameState implements Screen, ContactListener {
     private String fragmentShader;
     private String vertexShader;
     private PolygonShape ps;
+    private Location location = new Location(0,0,0);
 	int count = 0;
 	final int MAX_BODIES = 2500;
 	final int FRAGMENT_CULL_PER_FRAME = 10;
@@ -104,11 +105,13 @@ public class Play extends GameState implements Screen, ContactListener {
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(this);
+		World.setVelocityThreshold(1000000000.0f);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
 		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
 		while(getGameWorld().getBodyCount() < 1000) {
-			new Asteroid(getGameWorld(), new Location(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0),MathUtils.random(1,200),MathUtils.random(1,3));
+			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
+			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
 		GravityUtils.addGravityWell(300, 100, 30,6, gameWorld, true);
 		GravityUtils.addGravityWell(5000, 3000, 300,10, gameWorld, true);
@@ -223,8 +226,8 @@ public class Play extends GameState implements Screen, ContactListener {
 						WorldUtils.drawBullet(body,sr,cam,Color.YELLOW);
 					}
 				}
+				GravityUtils.applyGravity(gameWorld,body);
 			}
-			GravityUtils.applyGravity(gameWorld,bodies);
 			for(Body body:destroy){
 				gameWorld.destroyBody(body);    
 			}
@@ -239,7 +242,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			Console.setLine11("PRESS F1 TO TOGGLE WIREFRAME:" + WorldUtils.isWireframe());
 
 			cam.update();
-			getGameWorld().step(Gdx.graphics.getDeltaTime(), 2, 2);			
+			getGameWorld().step(Gdx.graphics.getDeltaTime(), 16, 8);			
 			//MUST BE LAST
 			Console.render(consoleCam);
 			consoleCam.update();

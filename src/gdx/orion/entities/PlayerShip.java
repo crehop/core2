@@ -27,8 +27,9 @@ public class PlayerShip {
 	World world;
 	private int fire = 0;
 	private final int FIRE_DELAY = 2;
-	private float linearDamping = 0.4f;
+	private float linearDamping = 0.01f;
 	private float angularDamping = 2.0f;
+	public float sizeMod = 1.0f;
 	
 	public PlayerShip(World world, Location position){
 		this.world = world;
@@ -38,12 +39,12 @@ public class PlayerShip {
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		float[] creature = new float[6];
-		creature[0] = 0f;
-		creature[1] = -1.2f;
-		creature[2] = 2.5f;
-		creature[3] = 3.0f; 
-		creature[4] = 5.0f;
-		creature[5] = -1.2f;
+		creature[0] = 0f * sizeMod;
+		creature[1] = -1.2f * sizeMod;
+		creature[2] = 2.5f * sizeMod;
+		creature[3] = 3.0f * sizeMod; 
+		creature[4] = 5.0f * sizeMod;
+		creature[5] = -1.2f * sizeMod;
 		shape.set(creature);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
@@ -53,21 +54,21 @@ public class PlayerShip {
 		body = world.createBody(def);
 		body.createFixture(fdef);
 		creature = new float[8];
-		creature[0] = 0f;
-		creature[1] = 0;
-		creature[2] = 0f;
-		creature[3] = -1.7f; 
-		creature[4] = -1.0f;
-		creature[5] = -1.7f;
-		creature[6] = -1.0f;
+		creature[0] = 0f * sizeMod;
+		creature[1] = 0 * sizeMod;
+		creature[2] = 0f * sizeMod;
+		creature[3] = -1.7f * sizeMod; 
+		creature[4] = -1.0f * sizeMod;
+		creature[5] = -1.7f * sizeMod;
+		creature[6] = -1.0f * sizeMod;
 		creature[7] = 0f;
-		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(2.1f,-.5f)));
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(2.1f * sizeMod,-.5f * sizeMod)));
 		fdef.shape = shape;
 		fdef.density = 10;
 		fdef.friction = .5f;
 		fdef.restitution = 0;
 		body.createFixture(fdef);
-		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(1.9f, 0f)));
+		shape.set(Box2DUtils.setShapePosition(creature, new Vector2(1.9f * sizeMod, 0f * sizeMod)));
 		fdef.shape = shape;
 		fdef.density = 100;
 		fdef.friction = .5f;
@@ -75,7 +76,6 @@ public class PlayerShip {
 		body.createFixture(fdef);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(angularDamping);
-		body.setLinearDamping(linearDamping);
 	}
 
 	public Location getLocation() {
@@ -89,24 +89,22 @@ public class PlayerShip {
 	public void turn(float f){
 		body.applyAngularImpulse(f, false);
 	}
-	public void forward(int strength){
-		Console.setLine4("SPEED:" + body.getLinearVelocity());
-		force.x = (float) (Math.cos(body.getAngle() + offset) * strength);
-		force.y = (float) (Math.sin(body.getAngle() + offset) * strength);
+	public void forward(float f){
+		Console.setLine4("SPEED:" + (int)body.getLinearVelocity().x + "/" + (int)body.getLinearVelocity().y);
+		force.x = (float) (Math.cos(body.getAngle() + offset) * f);
+		force.y = (float) (Math.sin(body.getAngle() + offset) * f);
 		body.applyForceToCenter(force, false);
 	}
 	public void fire(){
 		fire++;
 		if(fire > FIRE_DELAY){
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25))));
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25))));
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f  * sizeMod;
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * sizeMod;
 			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
 			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))));
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))));
-			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
-			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
+			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * sizeMod);
+			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * sizeMod);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
 		}

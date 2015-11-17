@@ -44,6 +44,7 @@ public class WorldUtils {
 	private static World world;
 	public static final int POSITION_COMPONENTS = 2;
 	public static final int COLOR_COMPONENTS = 4;
+	public static final float LARGE_BODY_DAMPING = 0.45f;
 	private static float[] temp = new float[48];
 	private static float[] vertices = new float[6];
 	private static float offset = (float) Math.toRadians(180f);
@@ -135,7 +136,6 @@ public class WorldUtils {
 		shape2.setRadius(size);
 		fdef.shape = shape2;
 		fdef.density = density;
-		fdef.friction = 1;
 		fdef.restitution = 0.75f;
 		body = world.createBody(def);
 		body.createFixture(fdef);

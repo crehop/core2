@@ -42,28 +42,26 @@ public class GravityUtils{
 		}
 		thePlanet.createFixture(fixtureDef);
 	}
-	public static void applyGravity(World world,Array<Body> body){
-		for (int i = 0; i < body.size; i++){
-			forceVector = body.get(i).getWorldCenter();
-			for (int j = 0; j < planetVector.size(); j++) {
-				if(planetVector.get(j).getFixtureList().size > 0){
-					circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
-					radius =circleShape.getRadius();
-					planetPosition = planetVector.get(j).getWorldCenter();
-					planetDistance =new Vector2(0,0);
-					planetDistance.add(forceVector);
-					planetDistance.sub(planetPosition);
-					finalDistance = planetDistance.len();
-					if(finalDistance <= radius * GRAVITATIONAL_REACH) {
-						planetDistance.x = planetDistance.x * -1;
-						planetDistance.y = planetDistance.y * -1;
-						vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
-						planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-						planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.get(i).getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-						body.get(i).applyForce(planetDistance,body.get(i).getWorldCenter(),false);
-					}
+	public static void applyGravity(World world,Body body){
+		forceVector = body.getWorldCenter();
+		for (int j = 0; j < planetVector.size(); j++) {
+			if(planetVector.get(j).getFixtureList().size > 0){
+				circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
+				radius =circleShape.getRadius();
+				planetPosition = planetVector.get(j).getWorldCenter();
+				planetDistance =new Vector2(0,0);
+				planetDistance.add(forceVector);
+				planetDistance.sub(planetPosition);
+				finalDistance = planetDistance.len();
+				if(finalDistance <= radius * GRAVITATIONAL_REACH) {
+					planetDistance.x = planetDistance.x * -1;
+					planetDistance.y = planetDistance.y * -1;
+					vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
+					planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+					planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+					body.applyForce(planetDistance,body.getWorldCenter(),false);
 				}
-			}	
+			}
 		}	
 	}	
 }		

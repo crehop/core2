@@ -22,22 +22,22 @@ public class PlayController extends InputAdapter {
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(800000);
+				GameStateManager.play.getPlayerShip().forward((800000  * GameStateManager.play.getPlayerShip().sizeMod));
 			}
 		}
 		if(back){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(-800000);
+				GameStateManager.play.getPlayerShip().forward(-800000 * GameStateManager.play.getPlayerShip().sizeMod);
 			}
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(3000.06f);
+				GameStateManager.play.getPlayerShip().turn(3000.06f * GameStateManager.play.getPlayerShip().sizeMod);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(-3000.06f);
+				GameStateManager.play.getPlayerShip().turn(-3000.06f * GameStateManager.play.getPlayerShip().sizeMod);
 			}
 		}
 		if(stop){
