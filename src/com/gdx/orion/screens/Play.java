@@ -364,6 +364,23 @@ public class Play extends GameState implements Screen, ContactListener {
 				}
 			}
 		}
+		if(entityDataA != null && entityDataB != null){
+			if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.SHIP){
+				tempV2 = contact.getFixtureA().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureB().getBody().getLinearVelocity();
+				Console.setLine6("FORCE OF IMPACT" + tempV2.sub(midPoint).len());
+				if(tempV2.sub(midPoint).len() > 100){
+					entityDataA.setType(EntityType.DESTROYME);
+				}
+			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.SHIP){
+				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
+				Console.setLine6("FORCE OF IMPACT" + tempV2.sub(midPoint).len());
+				if(tempV2.sub(midPoint).len() > 100){
+					entityDataB.setType(EntityType.DESTROYME);
+				}
+			}
+		}
 	}
 
 	@Override

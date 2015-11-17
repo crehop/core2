@@ -163,8 +163,7 @@ public class WorldUtils {
 		fdef.friction = body2.getFixtureList().get(0).getFriction();
 		fdef.restitution = body2.getFixtureList().get(0).getRestitution();
 		body.createFixture(fdef);
-		location.set(body.getPosition().x, body.getPosition().y,0);
-		body.getPosition().set(location.x, location.y);
+		body.getPosition().set(body.getPosition().x, body.getPosition().y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
