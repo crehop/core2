@@ -1,6 +1,7 @@
 package com.gdx.orion.gamemodel;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Represents the current game campaign.  This represents the player's current progress!  This
@@ -14,6 +15,7 @@ public class Campaign implements Serializable {
 	
 	public int level = 1;
 	public int livesRemaining = 2;
+	public BigDecimal moneyBalance = BigDecimal.ZERO;
 	public ShipModel shipModel;
 	
 	/**
@@ -46,6 +48,14 @@ public class Campaign implements Serializable {
 	
 	public void setLivesRemaining(int livesRemaining) {
 		this.livesRemaining = livesRemaining;
+	}
+	
+	public BigDecimal getMoneyBalance() {
+		return moneyBalance;
+	}
+
+	public void setMoneyBalance(BigDecimal moneyBalance) {
+		this.moneyBalance = moneyBalance;
 	}
 	
 	public ShipModel getShipModel() {
