@@ -40,6 +40,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.GravityUtils;
+import com.gdx.orion.utils.Map;
 import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
@@ -48,9 +49,11 @@ public class Play extends GameState implements Screen, ContactListener {
 	public EntityData entityDataB;
 	public Game game;
 	public OrthographicCamera cam;
+	public OrthographicCamera mapCam;
 	public OrthographicCamera consoleCam;
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
+	public ScalingViewport mapViewport;  
 	public final float GAME_WORLD_WIDTH = 1080;
 	public final float GAME_WORLD_HEIGHT = 720;
 	private float[] tempAsteroid = new float[48];
@@ -97,8 +100,11 @@ public class Play extends GameState implements Screen, ContactListener {
 		sprite.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
+		mapCam = new OrthographicCamera();
 		viewport = new ScalingViewport(Scaling.stretch, 60, 40, cam);
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
+		mapViewport = new ScalingViewport(Scaling.stretch, GAME_WORLD_WIDTH * 4, GAME_WORLD_HEIGHT * 4, mapCam);
+		mapViewport.apply();
 		consoleViewport.apply();
 		viewport.apply();
 		this.stage = new Stage(viewport);
@@ -113,7 +119,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
 			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 3,60, gameWorld, true);
+		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 3,660, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
@@ -129,7 +135,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			}
 			gameWorld.getBodies(bodies);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
-			
+			mapCam.position.set(ship.getBody().getWorldCenter(), 0);
 			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
 			asteroids.clear();
@@ -242,6 +248,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			cam.update();
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 16, 8);			
 			//MUST BE LAST
+			Map.render(batch,cam,mapCam,gameWorld,renderer);
 			Console.render(consoleCam);
 			consoleCam.update();
 		}
