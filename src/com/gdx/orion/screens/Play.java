@@ -40,7 +40,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.GravityUtils;
-import com.gdx.orion.utils.Map;
 import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
@@ -255,7 +254,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			cam.update();
 			getGameWorld().step(Gdx.graphics.getDeltaTime(), 16, 8);			
 			//MUST BE LAST
-			Map.render(batch,cam,mapCam,gameWorld,renderer);
+			renderer.render(gameWorld, mapCam.combined);              
 			Console.render(consoleCam);
 			consoleCam.update();
 		}
@@ -393,7 +392,17 @@ public class Play extends GameState implements Screen, ContactListener {
 					entityDataB.setType(EntityType.DESTROYME);
 				}
 			}
-		}
+			}
+		//TODO get this to work and limit the prefrag to 3 pass integer to prefrag object
+			//else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID){
+			//	tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
+			//	midPoint = contact.getFixtureA().getBody().getLinearVelocity();
+			//	velo = tempV2.sub(midPoint).len();
+			//	Console.setLine6("FORCE OF IMPACT" + velo);
+			//	if(velo > 110){
+			//		//entityDataA.setType(EntityType.DESTROYME);
+			//	}
+			//}
 	}
 
 	@Override

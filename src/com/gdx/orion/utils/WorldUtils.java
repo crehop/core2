@@ -269,12 +269,6 @@ public class WorldUtils {
 		WorldUtils.wireframe = wireframe;
 	}
 
-	public static void Fragment(float f, float g, float h, float i, float j,
-			float k, World gameWorld) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	
 }
 
