@@ -24,13 +24,13 @@ public class GravityUtils{
 	private static float radius;
 	private static float finalDistance;
 	private static float vecSum;
-	private static final int GRAVITATIONAL_REACH = 3000;
+	private static final int GRAVITATIONAL_REACH = 3000000;
 	
-	public static void addGravityWell(float px,float py, float r, float density, World world, boolean inWardForce) {
+	public static void addGravityWell(float px,float py, float d, float density, World world, boolean inWardForce) {
 		fixtureDef.restitution=0;
 		fixtureDef.density = density;
 		circleShape =new CircleShape();
-		circleShape.setRadius(r);
+		circleShape.setRadius(d);
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
 		bodyDef.position.set(px,py);

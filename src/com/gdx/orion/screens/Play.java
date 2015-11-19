@@ -101,7 +101,8 @@ public class Play extends GameState implements Screen, ContactListener {
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
 		mapCam = new OrthographicCamera();
-		viewport = new ScalingViewport(Scaling.stretch, 60, 40, cam);
+		mapCam.translate(-GAME_WORLD_WIDTH,-GAME_WORLD_HEIGHT);
+		viewport = new ScalingViewport(Scaling.stretch, 60, 40,cam);
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
 		mapViewport = new ScalingViewport(Scaling.stretch, GAME_WORLD_WIDTH * 4, GAME_WORLD_HEIGHT * 4, mapCam);
 		mapViewport.apply();
@@ -119,7 +120,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
 			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 3,660, gameWorld, true);
+		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, .03f,66000, gameWorld, true);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
