@@ -114,7 +114,6 @@ public class Play extends GameState implements Screen, ContactListener {
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(this);
 		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
-		shipSprite.setSize(5, 5);
 		cam.zoom = 2.0f;
 		while(getGameWorld().getBodyCount() < 50) {
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
@@ -145,6 +144,7 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, 0 , 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+			shipSprite.setSize(5, 5);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(ship.getBody().getAngle() * 57.2958));
 			shipSprite.setCenterX(ship.getBody().getWorldCenter().x);
@@ -164,6 +164,10 @@ public class Play extends GameState implements Screen, ContactListener {
 					}
 				}
 			}
+			batch.setProjectionMatrix(mapCam.combined);
+			shipSprite.setSize(50,50);
+			shipSprite.setOriginCenter();
+			shipSprite.draw(batch);	
 			batch.end();
 			fragmentsCulled = 0;
 			for(Body body:bodies){
