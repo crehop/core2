@@ -167,6 +167,8 @@ public class Play extends GameState implements Screen, ContactListener {
 			batch.setProjectionMatrix(mapCam.combined);
 			shipSprite.setSize(50,50);
 			shipSprite.setOriginCenter();
+			shipSprite.setCenterX(ship.getBody().getWorldCenter().x);
+			shipSprite.setCenterY(ship.getBody().getWorldCenter().y);
 			shipSprite.draw(batch);	
 			batch.end();
 			fragmentsCulled = 0;
