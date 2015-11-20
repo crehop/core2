@@ -92,6 +92,8 @@ public class Play extends GameState implements Screen, ContactListener {
 	private float velo = 0;
 	private ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
+	//TODO, COMMENT AND CLEAN PLAY.JAVA CODE
+	//TODO, FIX CRASH WITH GRAVITY WELL, most likely due to static body and bullets.
 	
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
