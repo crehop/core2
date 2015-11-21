@@ -58,7 +58,9 @@ public class Play extends GameState implements Screen{
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
+    private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
     private Sprite sprite = new Sprite(texture);
+    private Sprite sprite2 = new Sprite(texture2);
     private String fragmentShader;
     private String vertexShader;
     private Location location = new Location(0,0,0);
@@ -69,7 +71,7 @@ public class Play extends GameState implements Screen{
 	public int MAX_FRAGMENT_SIZE = 3;
 	public int aliveTime = 0;
 	private ShaderProgram shader;
-	private final int VIEW_DISTANCE = 150;
+	private final int VIEW_DISTANCE = 300;
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	//TODO, COMMENT CODE
 	//TODO, FIX CRASH WITH GRAVITY WELL, most likely due to static body and bullets.
@@ -99,7 +101,7 @@ public class Play extends GameState implements Screen{
 			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
 			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, .03f,66000, gameWorld, true);
+		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 40.03f,66, gameWorld, true, sprite2);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
@@ -124,6 +126,7 @@ public class Play extends GameState implements Screen{
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, 0 , 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+			GravityUtils.renderWells(batch);
 			ship.draw(batch,false);
 			for(Body body:bodies){
 				if(body.getUserData() instanceof EntityData){
@@ -139,6 +142,7 @@ public class Play extends GameState implements Screen{
 				}
 			}
 			batch.setProjectionMatrix(mapCam.combined);
+			GravityUtils.renderWells(batch);
 			ship.draw(batch, true);
 			batch.end();
 			BodyHandler.update(cam, gameWorld, bodies);

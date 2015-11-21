@@ -4,6 +4,9 @@ import gdx.orion.entities.EntityType;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class GravityUtils{
 	private static ArrayList<Body> planetVector = new ArrayList<Body>();
+	private static ArrayList<Sprite> gravitySprites = new ArrayList<Sprite>();
 	private static Vector2 forceVector = new Vector2();
 	private static Vector2 planetPosition = new Vector2();
 	private static Vector2 planetDistance = new Vector2();
@@ -25,17 +29,21 @@ public class GravityUtils{
 	private static float vecSum;
 	private static final int GRAVITATIONAL_REACH = 3000000;
 	
-	public static void addGravityWell(float px,float py, float d, float density, World world, boolean inWardForce) {
+	public static void addGravityWell(float x,float y, float radius, float density, World world, boolean inWardForce, Sprite sprite) {
+		sprite.setPosition(x - radius, y - radius);
+		sprite.setSize(radius * 2, radius * 2);
+		sprite.setOriginCenter();
 		fixtureDef.restitution=0;
 		fixtureDef.density = density;
 		circleShape =new CircleShape();
-		circleShape.setRadius(d);
+		circleShape.setRadius(radius);
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
-		bodyDef.position.set(px,py);
+		bodyDef.position.set(x,y);
 		bodyDef.type = BodyType.StaticBody;
 		thePlanet = world.createBody(bodyDef);
 		planetVector.add(thePlanet);
+		gravitySprites.add(sprite);
 		if(inWardForce)thePlanet.setUserData(new EntityData(1000, EntityType.GRAVITY_WELL, null));
 		else{
 		}
@@ -62,5 +70,10 @@ public class GravityUtils{
 				}
 			}
 		}	
-	}	
+	}
+	public static void renderWells(Batch batch){
+		for(Sprite sprite:gravitySprites){
+			sprite.draw(batch);
+		}
+	}
 }		
