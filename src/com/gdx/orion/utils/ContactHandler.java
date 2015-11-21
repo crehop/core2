@@ -43,10 +43,8 @@ public class ContactHandler implements ContactListener {
 			if(entityDataA.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataB != null){
 					if(entityDataB.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
-						GameStateManager.play.destroy.add(contact.getFixtureB().getBody());
+						entityDataB.setType(EntityType.DELETEME);
 					}
-				}else{
-					GameStateManager.play.destroy.add(contact.getFixtureB().getBody());
 				}
 			}
 
@@ -68,10 +66,8 @@ public class ContactHandler implements ContactListener {
 			if(entityDataB.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataA != null){
 					if(entityDataA.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
-						GameStateManager.play.destroy.add(contact.getFixtureA().getBody());
+						entityDataA.setType(EntityType.DELETEME);
 					}
-				}else{
-					GameStateManager.play.destroy.add(contact.getFixtureA().getBody());
 				}
 			}
 		}
