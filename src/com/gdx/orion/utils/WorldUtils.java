@@ -6,7 +6,6 @@ import java.util.Random;
 import gdx.orion.entities.EntityData;
 import gdx.orion.entities.EntityType;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -16,10 +15,8 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -41,14 +38,13 @@ public class WorldUtils {
 	static CircleShape shape2 = new CircleShape();
 	static Location location;
 	static Random rand = new Random();
+	@SuppressWarnings("unused")
 	private static World world;
 	public static final int POSITION_COMPONENTS = 2;
 	public static final int COLOR_COMPONENTS = 4;
 	public static final float LARGE_BODY_DAMPING = 0.45f;
 	private static float[] temp = new float[48];
 	private static float[] vertices = new float[6];
-	private static float offset = (float) Math.toRadians(180f);
-	private static boolean even = true;
 	private static boolean wireframe = false;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;

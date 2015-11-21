@@ -2,7 +2,6 @@ package com.gdx.orion.utils;
 //import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.gdx.orion.gamevars.Location;
 
 public class CameraUtils {
 	static protected Vector3 position = null;

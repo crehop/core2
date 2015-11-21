@@ -2,6 +2,10 @@ package gdx.orion.entities;
 	
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -30,6 +34,9 @@ public class PlayerShip {
 	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
 	public static final float SIZE_MOD = 1.0f;
+    private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
+    private Sprite shipSprite = new Sprite(texture2);
+
 	
 	public PlayerShip(World world, Location position){
 		this.world = world;
@@ -112,5 +119,24 @@ public class PlayerShip {
 
 	public Vector2 getPosition() {
 		return location.getPosition();
+	}
+
+	public void draw(Batch batch, boolean map) {
+		if(!map){
+			shipSprite.setSize(5, 5);
+			shipSprite.setOriginCenter();
+			shipSprite.setRotation((float)(this.getBody().getAngle() * 57.2958));
+			shipSprite.setCenterX(this.getBody().getWorldCenter().x);
+			shipSprite.setCenterY(this.getBody().getWorldCenter().y);
+			//shipSprite.setRotation(ship.getBody().getAngle());
+			shipSprite.draw(batch);
+		}
+		else{
+			shipSprite.setSize(50,50);
+			shipSprite.setOriginCenter();
+			shipSprite.setCenterX(this.getBody().getWorldCenter().x);
+			shipSprite.setCenterY(this.getBody().getWorldCenter().y);
+			shipSprite.draw(batch);	
+		}
 	}
 }

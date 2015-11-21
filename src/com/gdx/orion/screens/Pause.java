@@ -25,6 +25,7 @@ import com.gdx.orion.utils.Scene2dUtils;
 
 public class Pause extends GameState implements Screen {
 
+	@SuppressWarnings("unused")
 	private Game game;
 	private OrthographicCamera cam;
 	private ScalingViewport viewport;

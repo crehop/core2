@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 
 public class Store extends GameState implements Screen {
+	@SuppressWarnings("unused")
 	private Game game;
 	protected Store(Game game) {
 		super(GameStateManager.STORE);

@@ -26,7 +26,8 @@ import com.gdx.orion.utils.Scene2dUtils;
 
 public class Menu extends GameState implements Screen {
 
-    private Game game;
+    @SuppressWarnings("unused")
+	private Game game;
     private static OrthographicCamera consoleCam;
     private static ScalingViewport consoleViewport;  
     
