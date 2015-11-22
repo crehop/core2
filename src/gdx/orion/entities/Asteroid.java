@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.UIDGetter;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
@@ -23,7 +22,6 @@ public class Asteroid {
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
 	private BodyDef def;
-	private Location location;
 	private Vector2 speed;
 	private float width;
 	private int size;
@@ -39,10 +37,9 @@ public class Asteroid {
 	private float radianDeg;
 	private Color[] colors = new Color[15];
 
-	public Asteroid(World world, Location position, float density, int size){
+	public Asteroid(World world, Vector2 position, float density, int size){
 		this.density = density;
 		this.world = world;
-		this.location = position;
 		for(int i = 0; i < colors.length; i++){
 			switch(MathUtils.random(1,4)){
 				case 1:
@@ -60,12 +57,12 @@ public class Asteroid {
 			}
 		}
 		def = new BodyDef();
-		def.position.set(location.x, location.y);
+		def.position.set(position.x, position.y);
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		body = world.createBody(def);
 		this.density = density;
-		shape.set(setShape(size));
+		shape.set(setShape(size,position));
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
 		fdef.density = density;
@@ -77,7 +74,7 @@ public class Asteroid {
 		this.size = size;
 	}
 
-	private float[] setShape(int size) {
+	private float[] setShape(int size, Vector2 position) {
 		this.size = size;
 		numpoints = 8;
 		float force = 0;
@@ -96,7 +93,7 @@ public class Asteroid {
 			force = MathUtils.random(-60.0f,60.0f);
 			width = MathUtils.random(15,25);
 		}
-		this.speed = new Vector2((location.x + MathUtils.random(force * 10000 * size * density)),(location.y + MathUtils.random(force *100)));
+		this.speed = new Vector2((position.x + MathUtils.random(force * 10000 * size * density)),(position.y + MathUtils.random(force *100)));
 		float radians = (float) (Math.toRadians(360)/numpoints);
 		float[] shapex = new float[numpoints];
 		float[] shapey = new float[numpoints];

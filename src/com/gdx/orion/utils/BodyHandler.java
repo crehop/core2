@@ -94,7 +94,6 @@ public class BodyHandler {
 					WorldUtils.drawBullet(body,sr,cam,Color.YELLOW);
 				}
 			}
-			GravityUtils.applyGravity(gameWorld,body);
 		}
 	}
 }

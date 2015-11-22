@@ -25,7 +25,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
-import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.screens.GameStateManager;
 
 public class WorldUtils {
@@ -36,7 +35,6 @@ public class WorldUtils {
 	private static Array<Body> bodies = new Array<Body>();
 	private static int count = 0;
 	static CircleShape shape2 = new CircleShape();
-	static Location location;
 	static Random rand = new Random();
 	@SuppressWarnings("unused")
 	private static World world;
@@ -124,9 +122,8 @@ public class WorldUtils {
 		return temp;
 	}
 
-	public static void fireBullet(World world, Location position, float density, float size, Vector2 directionalForce){
-		location = position;
-		def.position.set(location.x, location.y); 
+	public static void fireBullet(World world, Vector2 position, float density, float size, Vector2 directionalForce){
+		def.position.set(position.x, position.y); 
 		def.type = BodyType.DynamicBody;
 		def.angle = 200;
 		shape2.setRadius(size);

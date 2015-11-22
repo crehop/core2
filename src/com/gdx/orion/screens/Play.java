@@ -26,11 +26,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.gdx.orion.gamevars.Location;
 import com.gdx.orion.utils.BodyHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.ContactHandler;
+import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
@@ -63,7 +64,7 @@ public class Play extends GameState implements Screen{
     private Sprite sprite2 = new Sprite(texture2);
     private String fragmentShader;
     private String vertexShader;
-    private Location location = new Location(0,0,0);
+    private Vector2 position = new Vector2(0,0);
 	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
 	int fragmentsCulled = 0;
@@ -75,6 +76,13 @@ public class Play extends GameState implements Screen{
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	//TODO, COMMENT CODE
 	//TODO, FIX CRASH WITH GRAVITY WELL, most likely due to static body and bullets.
+	double newTime;
+    double frameTime;
+    private double accumulator = 0;
+    private double currentTime;
+    private float step = 1.0f / 60.0f;
+    float deltaTime = (float)frameTime;
+
 	
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
@@ -95,11 +103,11 @@ public class Play extends GameState implements Screen{
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, GAME_WORLD_WIDTH, 0, GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
-		ship = new PlayerShip(getGameWorld(),new Location(140,140,0));
+		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
 		while(getGameWorld().getBodyCount() < 50) {
-			location.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT), 0);
-			new Asteroid(getGameWorld(), location,MathUtils.random(5,500),MathUtils.random(1,3));
+			position.set(MathUtils.random(0,GAME_WORLD_WIDTH) ,MathUtils.random(0,GAME_WORLD_HEIGHT));
+			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
 		GravityUtils.addGravityWell(GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2, 40.03f,66, gameWorld, true, sprite2);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
@@ -110,6 +118,7 @@ public class Play extends GameState implements Screen{
 	
 	@Override
 	public void render(float delta) {
+		accumulator += delta;
 		if(isActive()) {
 			aliveTime++;
 			if(aliveTime > maxAliveTime){
@@ -126,9 +135,13 @@ public class Play extends GameState implements Screen{
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, 0 , 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+			batch.end();
+			EffectUtils.drawGrid(cam);
+			batch.begin();
 			GravityUtils.renderWells(batch);
-			ship.draw(batch,false);
+			ship.draw(batch,false,cam.position);
 			for(Body body:bodies){
+				GravityUtils.applyGravity(gameWorld,body);
 				if(body.getUserData() instanceof EntityData){
 				entityDataA = (EntityData)body.getUserData();
 					if(entityDataA.getType() == EntityType.DESTROYME){
@@ -143,7 +156,7 @@ public class Play extends GameState implements Screen{
 			}
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
-			ship.draw(batch, true);
+			ship.draw(batch, true,mapCam.position);
 			batch.end();
 			BodyHandler.update(cam, gameWorld, bodies);
 			for(Body body:destroy){
@@ -160,10 +173,18 @@ public class Play extends GameState implements Screen{
 			Console.setLine11("PRESS F1 TO TOGGLE WIREFRAME:" + WorldUtils.isWireframe());
 
 			cam.update();
-			getGameWorld().step(Gdx.graphics.getDeltaTime(), 16, 8);			
+			newTime = TimeUtils.millis() / 1000.0;
+		    currentTime = newTime;
+		    frameTime = Math.min(newTime - currentTime, 0.25);
+		    deltaTime = (float)frameTime;
+		    while (accumulator >= step) {
+		        gameWorld.step(step, 8, 6);
+		        accumulator -= step;
+		    }
 			//MUST BE LAST
 			renderer.render(gameWorld, mapCam.combined);              
 			Console.render(consoleCam);
+			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			consoleCam.update();
 		}
 	}
