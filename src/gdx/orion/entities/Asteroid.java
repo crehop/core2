@@ -79,19 +79,19 @@ public class Asteroid {
 		numpoints = 8;
 		float force = 0;
 		if(this.size == 1){
-			force = MathUtils.random(-1.0f,1.0f);
-			width = MathUtils.random(2.0f,5.0f);
+			force = MathUtils.random(-5.0f,5.0f);
+			width = MathUtils.random(7.0f,10.0f);
 			numpoints = 8;
 		}
 		if(this.size == 2){
 			force = MathUtils.random(-7.50f,7.50f);
-			width = MathUtils.random(7.5f,9.5f);
+			width = MathUtils.random(10.5f,15.5f);
 			numpoints = 8;
 		}
 		if(this.size == 3){
 			numpoints = 8;
 			force = MathUtils.random(-60.0f,60.0f);
-			width = MathUtils.random(15,25);
+			width = MathUtils.random(17,25);
 		}
 		this.speed = new Vector2((position.x + MathUtils.random(force * 10000 * size * density)),(position.y + MathUtils.random(force *100)));
 		float radians = (float) (Math.toRadians(360)/numpoints);
