@@ -31,7 +31,9 @@ public class EffectUtils {
 		thrust.load(Gdx.files.internal("emitters/mainThrust"), Gdx.files.internal("images"));
 		thrust.scaleEffect(.04f);
 		rotationThrusters.load(Gdx.files.internal("emitters/rotationThrusters"), Gdx.files.internal("images"));
+		rotationThrusters.scaleEffect(.05f);
 		bulletHit.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
+		bulletHit.scaleEffect(.01f);
 		particles.add(thrust);
 		particles.add(rotationThrusters);
 		particles.add(bulletHit);
@@ -75,6 +77,32 @@ public class EffectUtils {
 		thrust.setPosition(position.x, position.y);
 		thrust.start();
 		thrust.draw(batch);
+	}
+	public static void rotationThrustEffect(Vector2 position, Batch batch, float rotation){
+		emitters = rotationThrusters.getEmitters();
+		for(int i = 0; i< emitters.size; i++){
+			val = emitters.get(i).getAngle();
+			h1 = rotation - 90f;
+			h2 = rotation - 90f;
+			val.setHigh(h1,h2);
+			val.setLow(h1,h2);
+		}
+		rotationThrusters.setPosition(position.x, position.y);
+		rotationThrusters.start();
+		rotationThrusters.draw(batch);
+	}
+	public static void fire(Vector2 position, Batch batch, float rotation){
+		emitters = bulletHit.getEmitters();
+		for(int i = 0; i< emitters.size; i++){
+			val = emitters.get(i).getAngle();
+			h1 = rotation;
+			h2 = rotation;
+			val.setHigh(h1,h2);
+			val.setLow(h1,h2);
+		}
+		bulletHit.setPosition(position.x, position.y);
+		bulletHit.start();
+		bulletHit.draw(batch);
 	}
 	public static void updateEffects(float delta){
 		for(ParticleEffect effect:particles){

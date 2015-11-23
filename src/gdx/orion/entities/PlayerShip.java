@@ -32,6 +32,9 @@ public class PlayerShip {
 	World world;
 	private int fire = 0;
 	private boolean forward = false;
+	private boolean left = false;
+	private boolean right = false;
+	private boolean fired = false;
 	private static final int FIRE_DELAY = 2;
 	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
@@ -93,6 +96,16 @@ public class PlayerShip {
 	}
 	
 	public void turn(float f){
+		if(f > 0){
+			if(!right){
+				right  = true;
+			}
+		}else if(f < 0){
+			if(!left){
+				left  = true;
+			}
+		}
+
 		body.applyAngularImpulse(f, false);
 	}
 	public void forward(float f){
@@ -118,6 +131,7 @@ public class PlayerShip {
 			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
 			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
+			fired = true;
 		}
 	}
 
@@ -134,8 +148,28 @@ public class PlayerShip {
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
 				EffectUtils.thrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958));
-				forward = false;
 			}
+			if(left){
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.7f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.7f * SIZE_MOD;
+				EffectUtils.rotationThrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) - 90);
+			}else if(right){
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.7f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.7f * SIZE_MOD);
+				EffectUtils.rotationThrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+			}
+			if(fired){
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(12)))) * 2.2f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(12)))) * 2.2f * SIZE_MOD;
+				EffectUtils.fire(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
+				EffectUtils.fire(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+			}
+			left = false;
+			right = false;
+			forward = false;
+			fired = false;
 			shipSprite.setSize(5, 5);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(this.getBody().getAngle() * 57.2958));

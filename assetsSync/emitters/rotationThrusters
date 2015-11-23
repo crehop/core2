@@ -34,27 +34,9 @@ timeline2: 0.5753425
 - Life Offset - 
 active: false
 - X Offset - 
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 0.0
-highMax: 0.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
+active: false
 - Y Offset - 
-active: true
-lowMin: -150.0
-lowMax: -150.0
-highMin: 0.0
-highMax: 0.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
+active: false
 - Spawn Shape - 
 shape: point
 - Spawn Width - 
@@ -100,12 +82,12 @@ highMax: 100.0
 relative: true
 scalingCount: 3
 scaling0: 0.0
-scaling1: 0.27450982
-scaling2: 0.3529412
+scaling1: 0.33333334
+scaling2: 1.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.51369864
-timeline2: 0.96575344
+timeline1: 0.42465752
+timeline2: 1.0
 - Angle - 
 active: true
 lowMin: 90.0
@@ -145,7 +127,7 @@ timeline0: 0.0
 timeline1: 0.48630136
 timeline2: 1.0
 - Options - 
-attached: false
+attached: true
 continuous: true
 aligned: true
 additive: true
