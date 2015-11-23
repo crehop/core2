@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
+import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
@@ -30,6 +31,7 @@ public class PlayerShip {
 	Vector2 position = new Vector2(0,0);
 	World world;
 	private int fire = 0;
+	private boolean forward = false;
 	private static final int FIRE_DELAY = 2;
 	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
@@ -94,6 +96,11 @@ public class PlayerShip {
 		body.applyAngularImpulse(f, false);
 	}
 	public void forward(float f){
+		if(f > 0){
+			if(!forward){
+				forward = true;
+			}
+		}
 		Console.setLine4("SPEED:" + (int)body.getLinearVelocity().x + "/" + (int)body.getLinearVelocity().y);
 		force.x = (float) (Math.cos(body.getAngle() + offset) * f);
 		force.y = (float) (Math.sin(body.getAngle() + offset) * f);
@@ -120,12 +127,20 @@ public class PlayerShip {
 
 	public void draw(Batch batch, boolean map, Vector3 position) {
 		if(!map){
+			if(forward){
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(20)))) * -2.75f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(20)))) * -2.75f * SIZE_MOD;
+				EffectUtils.thrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958));
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
+				EffectUtils.thrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958));
+				forward = false;
+			}
 			shipSprite.setSize(5, 5);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(this.getBody().getAngle() * 57.2958));
 			shipSprite.setCenterX(position.x);
 			shipSprite.setCenterY(position.y);
-			//shipSprite.setRotation(ship.getBody().getAngle());
 			shipSprite.draw(batch);
 		}
 		else{
@@ -135,5 +150,6 @@ public class PlayerShip {
 			shipSprite.setCenterY(position.y);
 			shipSprite.draw(batch);	
 		}
+
 	}
 }

@@ -114,6 +114,7 @@ public class Play extends GameState implements Screen{
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
 		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
+		EffectUtils.initilize();
 	}
 	
 	@Override
@@ -179,6 +180,7 @@ public class Play extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 		    while (accumulator >= step) {
 		        gameWorld.step(step, 8, 6);
+		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
 			//MUST BE LAST

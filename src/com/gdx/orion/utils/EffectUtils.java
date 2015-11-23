@@ -1,15 +1,41 @@
 package com.gdx.orion.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.screens.GameStateManager;
 
 public class EffectUtils {
+	static ParticleEffect thrust = new ParticleEffect();
+	static ParticleEffect rotationThrusters = new ParticleEffect();
+	static ParticleEffect bulletHit = new ParticleEffect();
 	static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 	static float spacingH = 0;
 	static float spacingW = 0;
+	static Array<ParticleEffect> particles = new Array<ParticleEffect>();
+	static Array<ParticleEmitter> emitters;
+	static ScaledNumericValue val;
+	static float h1;
+	static float h2;
+	static float angle;
+	public static void initilize(){
+		thrust.load(Gdx.files.internal("emitters/mainThrust"), Gdx.files.internal("images"));
+		thrust.scaleEffect(.04f);
+		rotationThrusters.load(Gdx.files.internal("emitters/rotationThrusters"), Gdx.files.internal("images"));
+		bulletHit.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
+		particles.add(thrust);
+		particles.add(rotationThrusters);
+		particles.add(bulletHit);
+	}
 	public static void line(float x1, float y1, float z1,
 			float x2, float y2, float z2,
 			float r, float g, float b, float a) {
@@ -37,4 +63,25 @@ public class EffectUtils {
 		grid(GameStateManager.play.GAME_WORLD_WIDTH,GameStateManager.play.GAME_WORLD_HEIGHT,Color.DARK_GRAY,25);		
 		lineRenderer.end();		
 	}
+	public static void thrustEffect(Vector2 position, Batch batch, float rotation){
+		emitters = thrust.getEmitters();
+		for(int i = 0; i< emitters.size; i++){
+			val = emitters.get(i).getAngle();
+			h1 = rotation - 90f;
+			h2 = rotation - 90f;
+			val.setHigh(h1,h2);
+			val.setLow(h1,h2);
+		}
+		thrust.setPosition(position.x, position.y);
+		thrust.start();
+		thrust.draw(batch);
+	}
+	public static void updateEffects(float delta){
+		for(ParticleEffect effect:particles){
+			effect.update(delta);
+		}
+	}
+	
+	
+	
 }
