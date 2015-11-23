@@ -78,7 +78,7 @@ public class Play extends GameState implements Screen{
 	//TODO, FIX CRASH WITH GRAVITY WELL, most likely due to static body and bullets.
 	double newTime;
     double frameTime;
-    private double accumulator = 10;
+    private double accumulator = 1.0f / 60.0f;
     private double currentTime;
     private float step = 1.0f / 60.0f;
     float deltaTime = (float)frameTime;
