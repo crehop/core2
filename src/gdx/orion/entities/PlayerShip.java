@@ -32,6 +32,7 @@ public class PlayerShip {
 	World world;
 	private int fire = 0;
 	private boolean forward = false;
+	private boolean backward = false;
 	private boolean left = false;
 	private boolean right = false;
 	private boolean fired = false;
@@ -113,6 +114,10 @@ public class PlayerShip {
 			if(!forward){
 				forward = true;
 			}
+		}else if(f < 0){
+			if(!backward){
+				backward = true;
+			}
 		}
 		Console.setLine4("SPEED:" + (int)body.getLinearVelocity().x + "/" + (int)body.getLinearVelocity().y);
 		force.x = (float) (Math.cos(body.getAngle() + offset) * f);
@@ -148,6 +153,13 @@ public class PlayerShip {
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-20))) * -2.75f * SIZE_MOD);
 				EffectUtils.thrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958));
+			}else if(backward){
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(5)))) * 2.5f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(5)))) * 2.5f * SIZE_MOD;
+				EffectUtils.rotationThrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) - 180);
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-5))) * 2.5f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-5))) * 2.5f * SIZE_MOD);
+				EffectUtils.rotationThrustEffect(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) - 180);
 			}
 			if(left){
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.7f  * SIZE_MOD;
@@ -169,6 +181,7 @@ public class PlayerShip {
 			left = false;
 			right = false;
 			forward = false;
+			backward = false;
 			fired = false;
 			shipSprite.setSize(5, 5);
 			shipSprite.setOriginCenter();
