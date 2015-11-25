@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.systems.Rope;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
@@ -41,6 +42,7 @@ public class PlayerShip {
 	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
 	public static final float SIZE_MOD = 1.0f;
+	private Array<Rope> ropes = new Array<Rope>();
     private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
     private Sprite shipSprite = new Sprite(texture2);
 
@@ -93,7 +95,7 @@ public class PlayerShip {
 		body.setAngularDamping(ANGULAR_DAMPENING);
 		fireSpot.x = body.getLocalCenter().x;
 		fireSpot.y = body.getLocalCenter().y + 2.3f;
-		new Rope(body,fireSpot,world,22);
+		ropes.add(new Rope(body,fireSpot,world,12));
 	}
 
 	public Body getBody() {
@@ -201,6 +203,5 @@ public class PlayerShip {
 			shipSprite.setCenterY(position.y);
 			shipSprite.draw(batch);	
 		}
-
 	}
 }
