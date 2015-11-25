@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gdx.orion.systems.Rope;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
@@ -90,6 +91,9 @@ public class PlayerShip {
 		body.setBullet(true);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(ANGULAR_DAMPENING);
+		fireSpot.x = body.getLocalCenter().x;
+		fireSpot.y = body.getLocalCenter().y + 2.3f;
+		new Rope(body,fireSpot,world,22);
 	}
 
 	public Body getBody() {

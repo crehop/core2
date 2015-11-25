@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.gdx.orion.systems.Rope;
 import com.gdx.orion.utils.BodyHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.ContactHandler;
@@ -82,6 +84,7 @@ public class Play extends GameState implements Screen{
     private double currentTime;
     private float step = 1.0f / 60.0f;
     float deltaTime = (float)frameTime;
+	public Array<Joint> clearJoint = new Array<Joint>();
 
 	
 	protected Play (Game game, int level) {
