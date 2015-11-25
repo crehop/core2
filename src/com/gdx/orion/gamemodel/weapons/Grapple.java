@@ -1,4 +1,4 @@
-package com.gdx.orion.systems;
+package com.gdx.orion.gamemodel.weapons;
 
 import gdx.orion.entities.EntityData;
 import gdx.orion.entities.EntityType;
@@ -21,7 +21,7 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.gdx.orion.screens.GameStateManager;
 
-public class Rope {
+public class Grapple {
 	private float widthSeg = 0.1f;
 	private float heightSeg = 1f;
 	private Body anchor;
@@ -32,7 +32,7 @@ public class Rope {
 	private Joint grappleJointRev;
 	private Joint grappleJointRope;
 	private Joint anchorJointRev;
-	private Joint anchorJointRope;
+	private RopeJointDef anchorJointRope;
 	private BodyDef def;
 	private RevoluteJointDef revDef;
 	private RopeJointDef ropeDef;
@@ -41,7 +41,7 @@ public class Rope {
 	private ShapeRenderer sr;
 	float stretch = 0.01f;
 	Vector2 fireSpot;
-	public Rope(Body anchor,Vector2 fireSpot,World world, int length){
+	public Grapple(Body anchor,Vector2 fireSpot,World world, int length){
 		this.anchor = anchor;
 		this.world = world;
 		this.fireSpot = fireSpot;
@@ -72,7 +72,8 @@ public class Rope {
 		ropeDef.bodyB = grapple;
 		ropeDef.localAnchorA.set(fireSpot);
 		ropeDef.localAnchorB.set(grapple.getLocalCenter().x,0);
-		anchorJointRope = world.createJoint(ropeDef);
+		anchorJointRope = ropeDef;
+		world.createJoint(ropeDef);
 		return segments;
 	}
 	public Joint getGrappleJointRev() {
@@ -93,10 +94,10 @@ public class Rope {
 	public void setAnchorJointRev(Joint anchorJointRev) {
 		this.anchorJointRev = anchorJointRev;
 	}
-	public Joint getAnchorJointRope() {
+	public RopeJointDef getAnchorJointRope() {
 		return anchorJointRope;
 	}
-	public void setAnchorJointRope(Joint anchorJointRope) {
+	public void setAnchorJointRope(RopeJointDef anchorJointRope) {
 		this.anchorJointRope = anchorJointRope;
 	}
 	public void changeAnchor(Body body){

@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.gdx.orion.systems.Rope;
+import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.utils.BodyHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.ContactHandler;
@@ -148,7 +148,7 @@ public class Play extends GameState implements Screen{
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
 			for(Body body:bodies){
-				//GravityUtils.applyGravity(gameWorld,body);
+				GravityUtils.applyGravity(gameWorld,body);
 				if(body.getUserData() instanceof EntityData){
 				entityDataA = (EntityData)body.getUserData();
 					if(entityDataA.getType() == EntityType.DESTROYME){
@@ -165,8 +165,21 @@ public class Play extends GameState implements Screen{
 				gameWorld.createJoint(def);
 			}
 			addJoint.clear();
-			for(Joint joint:clearJoint){
-				gameWorld.destroyJoint(joint);
+			gameWorld.getJoints(clearJoint);
+			for(Joint joint: clearJoint){
+				if(!ship.ropeFired){
+					if(joint.getBodyA().getUserData() instanceof EntityData){
+						entityDataA = (EntityData)joint.getBodyA().getUserData();
+						if(entityDataA.getType() == EntityType.SHIP){
+							gameWorld.destroyJoint(joint);
+						}
+					}else if(joint.getBodyB().getUserData() instanceof EntityData){
+						entityDataA = (EntityData)joint.getBodyB().getUserData();
+						if(entityDataA.getType() == EntityType.SHIP){
+							gameWorld.destroyJoint(joint);
+						}
+					}
+				}
 			}
 			clearJoint.clear();
 			batch.setProjectionMatrix(mapCam.combined);

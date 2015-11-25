@@ -92,18 +92,16 @@ public class ContactHandler implements ContactListener {
 				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureB().getBody());
 			}else if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.GRAPPLE){
 				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureA().getBody());
+			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID){
+				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
+				velo = tempV2.sub(midPoint).len();
+				Console.setLine6("FORCE OF IMPACT" + velo);
+				if(velo > 110){
+					entityDataA.setType(EntityType.DESTROYME);
+				}
 			}
 		}
-		//TODO get this to work and limit the prefrag to 3 pass integer to prefrag object
-			//else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID){
-			//	tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
-			//	midPoint = contact.getFixtureA().getBody().getLinearVelocity();
-			//	velo = tempV2.sub(midPoint).len();
-			//	Console.setLine6("FORCE OF IMPACT" + velo);
-			//	if(velo > 110){
-			//		//entityDataA.setType(EntityType.DESTROYME);
-			//	}
-			//}
 	}
 
 	@Override

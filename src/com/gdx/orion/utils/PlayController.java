@@ -15,7 +15,7 @@ public class PlayController extends InputAdapter {
 	private boolean back = false;
 	private boolean strafeLeft = false;
 	private boolean strafeRight = false;
-	private boolean stop = false;
+	private boolean fired = false;
 	
 	public void checkInput() {
 		if(exitKey){
@@ -26,29 +26,28 @@ public class PlayController extends InputAdapter {
 		}
 		if(forward){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip();
 				GameStateManager.play.getPlayerShip().forward((THRUST_FORWARD_FACTOR  * PlayerShip.SIZE_MOD));
 			}
 		}
 		if(back){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip();
 				GameStateManager.play.getPlayerShip().forward(THRUST_REVERSE_FACTOR * PlayerShip.SIZE_MOD);
 			}
 		}
 		if(strafeLeft){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip();
 				GameStateManager.play.getPlayerShip().turn(TURN_RATE * PlayerShip.SIZE_MOD);
 			}
 		}
 		if(strafeRight){
 			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip();
 				GameStateManager.play.getPlayerShip().turn(-TURN_RATE * PlayerShip.SIZE_MOD);
 			}
 		}
-		if(stop){
+		if(fired){
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.getPlayerShip().fire();  
+			}
 		}
 	}
 	
@@ -71,7 +70,7 @@ public class PlayController extends InputAdapter {
 				exitKey = true;
 				break;
 			case Input.Keys.SPACE:
-				stop = true;
+				fired = true;
 				break;
 		}
 		return super.keyDown(keycode);
@@ -93,10 +92,10 @@ public class PlayController extends InputAdapter {
 				strafeRight = false;
 				break;
 			case Input.Keys.SPACE:
-				stop = false;
-				if(GameStateManager.play.isActive()){
-					GameStateManager.play.getPlayerShip().fire();  
-				}
+				fired = false;
+				break;
+			case Input.Keys.E:
+				GameStateManager.play.getPlayerShip().fireGrapple();
 				break;
 			case Input.Keys.F1:
 				if(WorldUtils.isWireframe()){
