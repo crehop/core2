@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.orion.screens.GameStateManager;
 import com.gdx.orion.systems.Rope;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
@@ -38,6 +39,9 @@ public class PlayerShip {
 	private boolean left = false;
 	private boolean right = false;
 	private boolean fired = false;
+	private boolean ropeFired = false;
+	private EntityData entityData;
+	Rope rope;
 	private static final int FIRE_DELAY = 2;
 	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
@@ -93,9 +97,6 @@ public class PlayerShip {
 		body.setBullet(true);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(ANGULAR_DAMPENING);
-		fireSpot.x = body.getLocalCenter().x;
-		fireSpot.y = body.getLocalCenter().y + 2.3f;
-		ropes.add(new Rope(body,fireSpot,world,12));
 	}
 
 	public Body getBody() {
@@ -132,6 +133,28 @@ public class PlayerShip {
 	}
 	public void fire(){
 		fire++;
+		if(ropeFired){
+			ropeFired = false;
+			if(rope.getGrapple().getUserData() instanceof EntityData){
+				entityData = (EntityData)rope.getGrapple().getUserData();
+				if(entityData.getType() == EntityType.ASTEROID){
+					GameStateManager.play.clearJoint.add(rope.getAnchorJointRope());
+				}else if(entityData.getType() == EntityType.GRAPPLE){
+					entityData.setType(EntityType.DELETEME);
+				}
+			}else{
+				rope.getGrapple().setUserData(new EntityData(0,EntityType.DELETEME,null));
+			}
+		}else{
+			fireSpot.x = body.getLocalCenter().x;
+			fireSpot.y = body.getLocalCenter().y + 2.7f;
+			rope = new Rope(body,fireSpot,world,60);
+			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999 + body.getWorldCenter().x);
+			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999 + body.getWorldCenter().y);
+			rope.getGrapple().applyForceToCenter(force, false);
+			ropes.add(rope);
+			ropeFired = true;
+		}
 		if(fire > FIRE_DELAY){
 			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f  * SIZE_MOD;
 			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * SIZE_MOD;
@@ -203,5 +226,9 @@ public class PlayerShip {
 			shipSprite.setCenterY(position.y);
 			shipSprite.draw(batch);	
 		}
+	}
+
+	public Rope getRope() {
+		return rope;
 	}
 }

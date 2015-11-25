@@ -49,9 +49,6 @@ public class PlayController extends InputAdapter {
 			}
 		}
 		if(stop){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().fire();  
-			}
 		}
 	}
 	
@@ -97,6 +94,9 @@ public class PlayController extends InputAdapter {
 				break;
 			case Input.Keys.SPACE:
 				stop = false;
+				if(GameStateManager.play.isActive()){
+					GameStateManager.play.getPlayerShip().fire();  
+				}
 				break;
 			case Input.Keys.F1:
 				if(WorldUtils.isWireframe()){

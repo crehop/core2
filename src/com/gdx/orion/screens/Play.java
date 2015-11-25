@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -84,7 +85,9 @@ public class Play extends GameState implements Screen{
     private double currentTime;
     private float step = 1.0f / 60.0f;
     float deltaTime = (float)frameTime;
+	public Array<JointDef> addJoint = new Array<JointDef>();
 	public Array<Joint> clearJoint = new Array<Joint>();
+	
 
 	
 	protected Play (Game game, int level) {
@@ -158,6 +161,14 @@ public class Play extends GameState implements Screen{
 					}
 				}
 			}
+			for(JointDef def:addJoint){
+				gameWorld.createJoint(def);
+			}
+			addJoint.clear();
+			for(Joint joint:clearJoint){
+				gameWorld.destroyJoint(joint);
+			}
+			clearJoint.clear();
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
 			ship.draw(batch, true,mapCam.position);

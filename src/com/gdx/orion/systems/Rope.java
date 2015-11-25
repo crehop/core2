@@ -23,7 +23,7 @@ import com.gdx.orion.screens.GameStateManager;
 
 public class Rope {
 	private float widthSeg = 0.1f;
-	private float heightSeg = 3f;
+	private float heightSeg = 1f;
 	private Body anchor;
 	private Body grapple;
 	private Body[] segments;
@@ -67,43 +67,12 @@ public class Rope {
 		createRope();
 	}
 	private Body[] createRope(){
-		for(int i = 0; i < segments.length; i++){
-			segments[i] = world.createBody(def);
-			segments[i].createFixture(shape,2);
-		}
-		for(int i = 0; i < segments.length - 1; i++){
-			revDef.bodyA = segments[i];
-			revDef.bodyB = segments[i+1];
-			revJoints[i] = (RevoluteJoint) world.createJoint(revDef);
-			ropeDef.bodyA = anchor;
-			ropeDef.maxLength = ((i + 1) * (heightSeg + stretch)) + (heightSeg/2);
-			ropeDef.bodyB = segments[i + 1];
-			ropeDef.localAnchorA.set(fireSpot);
-			ropeDef.localAnchorB.set(segments[i+1].getLocalCenter().x,heightSeg/2);
-			ropeJoints[i] = (RopeJoint) world.createJoint(ropeDef);
-		}
-		revDef.bodyA = anchor;
-		revDef.localAnchorA.set(fireSpot);
-		revDef.localAnchorB.set(segments[0].getLocalCenter().x,heightSeg/2);
-		revDef.bodyB = segments[0];
-		anchorJointRev = world.createJoint(revDef);
-		revDef.bodyA = segments[segments.length - 1];
-		revDef.localAnchorA.set(segments[segments.length - 1].getLocalCenter().x, -heightSeg/2);
-		revDef.localAnchorB.set(grapple.getLocalCenter());
-		revDef.bodyB = grapple;
-		grappleJointRev = world.createJoint(revDef);
 		ropeDef.bodyA = anchor;
-		ropeDef.maxLength = segments.length * (heightSeg + stretch) +heightSeg/2;
+		ropeDef.maxLength = 100f;
 		ropeDef.bodyB = grapple;
 		ropeDef.localAnchorA.set(fireSpot);
 		ropeDef.localAnchorB.set(grapple.getLocalCenter().x,0);
-		grappleJointRope = world.createJoint(ropeDef);
-		ropeDef.bodyA = anchor;
-		ropeDef.bodyB = segments[0];
-		ropeDef.localAnchorA.set(fireSpot);
-		ropeDef.localAnchorB.set(segments[0].getLocalCenter().x,heightSeg/2);
 		anchorJointRope = world.createJoint(ropeDef);
-
 		return segments;
 	}
 	public Joint getGrappleJointRev() {
@@ -132,25 +101,26 @@ public class Rope {
 	}
 	public void changeAnchor(Body body){
 		anchor = body;
-		GameStateManager.play.clearJoint.add(anchorJointRev);
-		GameStateManager.play.clearJoint.add(anchorJointRope);
 		ropeDef.bodyA = anchor;
 		ropeDef.bodyB = segments[0];
-		anchorJointRope = world.createJoint(ropeDef);
 		revDef.bodyA = anchor;
 		revDef.bodyB = segments[0];
-		anchorJointRev = world.createJoint(revDef);
+		GameStateManager.play.addJoint.add(ropeDef);
+		GameStateManager.play.addJoint.add(revDef);
 	}
 	public void changeGrapple(Body body){
+		this.grapple.setUserData(new EntityData(0,EntityType.DELETEME,null));
 		grapple = body;
-		GameStateManager.play.clearJoint.add(grappleJointRev);
-		GameStateManager.play.clearJoint.add(grappleJointRope);
-		revDef.bodyA = segments[segments.length - 1];
-		revDef.bodyB = grapple;
-		grappleJointRev = world.createJoint(revDef);
 		ropeDef.bodyA = anchor;
-		ropeDef.maxLength = segments.length * (heightSeg + stretch);
+		ropeDef.maxLength = 100f;
 		ropeDef.bodyB = grapple;
-		grappleJointRope = world.createJoint(ropeDef);
+		GameStateManager.play.addJoint.add(ropeDef);
+		
+	}
+	public Body getGrapple() {
+		return grapple;
+	}
+	public void destroyRope() {
+		this.grapple.setUserData(new EntityData(0,EntityType.DELETEME,null));
 	}
 }

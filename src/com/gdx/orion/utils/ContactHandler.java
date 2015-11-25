@@ -88,7 +88,12 @@ public class ContactHandler implements ContactListener {
 					entityDataB.setType(EntityType.DESTROYME);
 				}
 			}
+			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.GRAPPLE){
+				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureB().getBody());
+			}else if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.GRAPPLE){
+				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureA().getBody());
 			}
+		}
 		//TODO get this to work and limit the prefrag to 3 pass integer to prefrag object
 			//else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID){
 			//	tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
