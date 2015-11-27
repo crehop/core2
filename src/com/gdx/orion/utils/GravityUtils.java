@@ -4,7 +4,6 @@ import gdx.orion.entities.EntityType;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;

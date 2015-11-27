@@ -3,9 +3,8 @@ package com.gdx.orion;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+//import com.badlogic.gdx.audio.Music;
 import com.gdx.orion.screens.GameStateManager;
-import com.gdx.orion.utils.PlayController;
 
 public class Main extends Game implements ApplicationListener{
 	

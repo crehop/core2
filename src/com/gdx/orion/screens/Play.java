@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.utils.BodyHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.ContactHandler;

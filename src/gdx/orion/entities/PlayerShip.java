@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.gamemodel.weapons.Grapple;
-import com.gdx.orion.screens.GameStateManager;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
@@ -43,7 +42,6 @@ public class PlayerShip {
 	private EntityData entityData;
 	Grapple rope;
 	private static final int FIRE_DELAY = 2;
-	private static final float LINEAR_DAMPENING = 0.01f;
 	private static final float ANGULAR_DAMPENING = 3.0f;
 	public static final float SIZE_MOD = 1.0f;
 	private Array<Grapple> ropes = new Array<Grapple>();

@@ -1,6 +1,5 @@
 package gdx.orion.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,11 +13,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.gdx.orion.utils.UIDGetter;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
 public class Asteroid {
-	private float offset = (float) Math.toRadians(90);
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
 	private BodyDef def;
@@ -34,7 +31,6 @@ public class Asteroid {
 	private World world;
 	private float[] points;
 	private float density;
-	private float radianDeg;
 	private Color[] colors = new Color[15];
 
 	public Asteroid(World world, Vector2 position, float density, int size){

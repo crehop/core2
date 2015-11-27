@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.screens.GameStateManager;

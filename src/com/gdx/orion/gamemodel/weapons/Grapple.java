@@ -26,9 +26,6 @@ public class Grapple {
 	private float heightSeg = 1f;
 	private Body anchor;
 	private Body grapple;
-	private Body[] segments;
-	private RevoluteJoint[] revJoints;
-	private RopeJoint[] ropeJoints;
 	private Joint grappleJointRev;
 	private Joint grappleJointRope;
 	private Joint anchorJointRev;
@@ -38,7 +35,6 @@ public class Grapple {
 	private RopeJointDef ropeDef;
 	private World world;
 	private PolygonShape shape;
-	private ShapeRenderer sr;
 	float stretch = 0.01f;
 	Vector2 fireSpot;
 	public Grapple(Body anchor,Vector2 fireSpot,World world, int length){
@@ -61,12 +57,9 @@ public class Grapple {
 		grapple.setUserData(new EntityData(0,EntityType.GRAPPLE,null));
 		shape = new PolygonShape();
 		shape.setAsBox(widthSeg/2, heightSeg/2);
-		segments = new Body[length];
-		revJoints = new RevoluteJoint[segments.length - 1];
-		ropeJoints = new RopeJoint[segments.length - 1] ;
 		createRope();
 	}
-	private Body[] createRope(){
+	private void createRope(){
 		ropeDef.bodyA = anchor;
 		ropeDef.maxLength = 100f;
 		ropeDef.bodyB = grapple;
@@ -74,7 +67,6 @@ public class Grapple {
 		ropeDef.localAnchorB.set(grapple.getLocalCenter().x,0);
 		anchorJointRope = ropeDef;
 		world.createJoint(ropeDef);
-		return segments;
 	}
 	public Joint getGrappleJointRev() {
 		return grappleJointRev;
@@ -103,11 +95,8 @@ public class Grapple {
 	public void changeAnchor(Body body){
 		anchor = body;
 		ropeDef.bodyA = anchor;
-		ropeDef.bodyB = segments[0];
-		revDef.bodyA = anchor;
-		revDef.bodyB = segments[0];
+		ropeDef.bodyB = grapple;
 		GameStateManager.play.addJoint.add(ropeDef);
-		GameStateManager.play.addJoint.add(revDef);
 	}
 	public void changeGrapple(Body body){
 		this.grapple.setUserData(new EntityData(0,EntityType.DELETEME,null));
