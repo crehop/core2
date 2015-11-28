@@ -9,6 +9,8 @@ import com.gdx.orion.screens.GameStateManager;
 public class Main extends Game implements ApplicationListener{
 	
 	public static boolean console = true;
+	public static final float GAME_WORLD_WIDTH = 1080;
+	public static final float GAME_WORLD_HEIGHT = 720;
 	
 	@Override
 	public void create() {

@@ -38,7 +38,7 @@ public class Menu extends GameState implements Screen {
     private static Pixmap pixmap;
     private static TextButton.TextButtonStyle style;
     private static TextButton playButton;
-    private static TextButton hanger;
+    private static TextButton hangar;
     private static TextButton levelEditor;
     private static TextButton settings;
     private static TextButton exit;
@@ -77,8 +77,8 @@ public class Menu extends GameState implements Screen {
 
 		playButton = new TextButton("PLAY", style);
 		playButton.setPosition(0, 0);
-		hanger = new TextButton("HANGER", style);
-		hanger.setPosition(120, 0);
+		hangar = new TextButton("HANGAR", style);
+		hangar.setPosition(120, 0);
 		settings = new TextButton("SETTINGS", style);
 		settings.setPosition(240, 0);
 		levelEditor = new TextButton("EDITOR", style);
@@ -87,7 +87,7 @@ public class Menu extends GameState implements Screen {
 		exit.setPosition(480, 0);
 		
 		stage.addActor(playButton);
-		stage.addActor(hanger);
+		stage.addActor(hangar);
 		stage.addActor(settings);
 		stage.addActor(levelEditor);
 		stage.addActor(exit);
@@ -95,14 +95,21 @@ public class Menu extends GameState implements Screen {
 		playButton.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
-            	GameStateManager.setScreen(1);
+            	GameStateManager.setScreen(GameStateManager.PLAY);
+            }
+        });
+		
+		hangar.addListener(new ClickListener(){
+            @Override 
+            public void clicked(InputEvent event, float x, float y){
+            	GameStateManager.setScreen(GameStateManager.HANGAR);
             }
         });
 		
 		levelEditor.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
-            	GameStateManager.setScreen(2);
+            	GameStateManager.setScreen(GameStateManager.LEVELEDIT);
             }
         });
 		

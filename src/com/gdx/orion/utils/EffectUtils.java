@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.orion.Main;
 import com.gdx.orion.screens.GameStateManager;
 
 public class EffectUtils {
@@ -61,7 +62,7 @@ public class EffectUtils {
 	}		
 	public static void drawGrid(Camera cam){				
 		lineRenderer.begin(cam.combined, GL20.GL_LINES);		
-		grid(GameStateManager.play.GAME_WORLD_WIDTH,GameStateManager.play.GAME_WORLD_HEIGHT,Color.DARK_GRAY,25);		
+		grid(Main.GAME_WORLD_WIDTH,Main.GAME_WORLD_HEIGHT,Color.DARK_GRAY,25);		
 		lineRenderer.end();		
 	}
 	public static void thrustEffect(Vector2 position, Batch batch, float rotation){
