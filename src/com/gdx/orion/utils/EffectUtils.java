@@ -18,6 +18,7 @@ public class EffectUtils {
 	static ParticleEffect thrust = new ParticleEffect();
 	static ParticleEffect rotationThrusters = new ParticleEffect();
 	static ParticleEffect bulletHit = new ParticleEffect();
+	static ParticleEffect shieldMain = new ParticleEffect();
 	static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 	static float spacingH = 0;
 	static float spacingW = 0;
@@ -34,9 +35,12 @@ public class EffectUtils {
 		rotationThrusters.scaleEffect(.05f);
 		bulletHit.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
 		bulletHit.scaleEffect(.01f);
+		shieldMain.load(Gdx.files.internal("emitters/shieldsMain"), Gdx.files.internal("images"));
+		shieldMain.scaleEffect(.21f);
 		particles.add(thrust);
 		particles.add(rotationThrusters);
 		particles.add(bulletHit);
+		particles.add(shieldMain);
 	}
 	public static void line(float x1, float y1, float z1,
 			float x2, float y2, float z2,
@@ -109,7 +113,10 @@ public class EffectUtils {
 			effect.update(delta);
 		}
 	}
-	
-	
-	
+	public static void inverterMainShieldEffect(Vector2 position, Batch batch){
+		shieldMain.setPosition(position.x, position.y);
+		shieldMain.start();
+		shieldMain.draw(batch);
+		
+	}
 }
