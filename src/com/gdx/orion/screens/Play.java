@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
+import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -147,7 +148,7 @@ public class Play extends GameState implements Screen{
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
 			for(Body body:bodies){
-				GravityUtils.applyGravity(gameWorld,body);
+				//GravityUtils.applyGravity(gameWorld,body);
 				if(body.getUserData() instanceof EntityData){
 				entityDataA = (EntityData)body.getUserData();
 					if(entityDataA.getType() == EntityType.DESTROYME){
@@ -169,12 +170,12 @@ public class Play extends GameState implements Screen{
 				if(!ship.ropeFired){
 					if(joint.getBodyA().getUserData() instanceof EntityData){
 						entityDataA = (EntityData)joint.getBodyA().getUserData();
-						if(entityDataA.getType() == EntityType.SHIP){
+						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
 							gameWorld.destroyJoint(joint);
 						}
 					}else if(joint.getBodyB().getUserData() instanceof EntityData){
 						entityDataA = (EntityData)joint.getBodyB().getUserData();
-						if(entityDataA.getType() == EntityType.SHIP){
+						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
 							gameWorld.destroyJoint(joint);
 						}
 					}

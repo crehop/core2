@@ -15,10 +15,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.orion.gamemodel.shields.InverterShield;
 import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
+import com.gdx.orion.utils.ShipLoadout;
 import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
@@ -47,6 +49,7 @@ public class PlayerShip {
 	private Array<Grapple> ropes = new Array<Grapple>();
     private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
     private Sprite shipSprite = new Sprite(texture2);
+    private InverterShield shield;
 
 	
 	public PlayerShip(World world, Vector2 position){
@@ -95,6 +98,7 @@ public class PlayerShip {
 		body.setBullet(true);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(ANGULAR_DAMPENING);
+		shield = new InverterShield(world,this,10,1000,10);
 	}
 
 	public Body getBody() {
@@ -206,6 +210,7 @@ public class PlayerShip {
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
 				EffectUtils.fire(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 			}
+			EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
 			left = false;
 			right = false;
 			forward = false;
