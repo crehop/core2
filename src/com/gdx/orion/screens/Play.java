@@ -171,13 +171,30 @@ public class Play extends GameState implements Screen{
 					if(joint.getBodyA().getUserData() instanceof EntityData){
 						entityDataA = (EntityData)joint.getBodyA().getUserData();
 						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-							gameWorld.destroyJoint(joint);
+							if(joint.getBodyB().getUserData() instanceof EntityData){
+								entityDataA = (EntityData)joint.getBodyB().getUserData();
+								if(entityDataA.getType() == EntityType.SHIELD){
+									
+								}else{
+									gameWorld.destroyJoint(joint);
+								}
+							}else{
+								gameWorld.destroyJoint(joint);
+							}
 						}
 					}else if(joint.getBodyB().getUserData() instanceof EntityData){
 						entityDataA = (EntityData)joint.getBodyB().getUserData();
 						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-							gameWorld.destroyJoint(joint);
-						}
+							if(joint.getBodyA().getUserData() instanceof EntityData){
+								entityDataA = (EntityData)joint.getBodyA().getUserData();
+								if(entityDataA.getType() == EntityType.SHIELD){
+									
+								}else{
+									gameWorld.destroyJoint(joint);
+								}
+							}else{
+								gameWorld.destroyJoint(joint);
+							}						}
 					}
 				}
 			}

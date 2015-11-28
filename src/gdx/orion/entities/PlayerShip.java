@@ -20,7 +20,6 @@ import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
-import com.gdx.orion.utils.ShipLoadout;
 import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {

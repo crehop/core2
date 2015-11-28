@@ -1,6 +1,7 @@
 package com.gdx.orion.gamemodel.shields;
 
 import gdx.orion.entities.EntityData;
+import gdx.orion.entities.EntityType;
 import gdx.orion.entities.PlayerShip;
 
 import com.badlogic.gdx.math.Vector2;
@@ -52,12 +53,13 @@ public class InverterShield extends Shield {
 		shields.setRadius(radius);
 		bdef.position.set(ship.getBody().getWorldCenter());
 		shieldBody = world.createBody(bdef);
-		shieldBody.createFixture(shields,0.1f);
+		shieldBody.createFixture(shields,0.5f);
+		shieldBody.setUserData(new EntityData(1000,EntityType.SHIELD,null));
 		springDef.localAnchorB.x = ship.getBody().getLocalCenter().x;
 		springDef.localAnchorB.y = ship.getBody().getLocalCenter().y;
 		springDef.localAnchorA.x = radius;
 		springDef.localAnchorA.y = 0;
-		springDef.frequencyHz = 30f;
+		springDef.frequencyHz = 3f;
 		springDef.bodyA = shieldBody;
 		springDef.bodyB = ship.getBody();
 		springDef.length = radius;
@@ -73,9 +75,22 @@ public class InverterShield extends Shield {
 		world.createJoint(springDef);
 		ropeDef.bodyA = ship.getBody();
 		ropeDef.bodyB = shieldBody;
-		ropeDef.maxLength = radius - (radius/2);
+		ropeDef.maxLength = 1;
 		ropeDef.localAnchorA.x = ship.getBody().getLocalCenter().x;
 		ropeDef.localAnchorA.y = ship.getBody().getLocalCenter().y;
+		ropeDef.localAnchorB.x = radius;
+		ropeDef.localAnchorB.y = 0;
+		world.createJoint(ropeDef);
+		ropeDef.localAnchorB.x = -radius;
+		ropeDef.localAnchorB.y = 0;
+		world.createJoint(ropeDef);
+		ropeDef.localAnchorB.x = 0;
+		ropeDef.localAnchorB.y = -radius;
+		world.createJoint(ropeDef);
+		ropeDef.localAnchorB.x = 0;
+		ropeDef.localAnchorB.y = radius;
+		world.createJoint(ropeDef);
+
 		
 		this.ship = ship;
 		this.setRadius(radius);
