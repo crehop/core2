@@ -27,7 +27,7 @@ import com.gdx.orion.screens.GameStateManager;
  */
 @SuppressWarnings("serial")
 public class InverterShield extends Shield {
-	CircleShape shields;
+	CircleShape shields = new CircleShape();
 	Body shieldBody;
 	JointDef[] disJoints;
 	float[] degrees;
@@ -38,6 +38,8 @@ public class InverterShield extends Shield {
 	private	BodyDef bdef = new BodyDef();
 	private RopeJointDef ropeDef = new RopeJointDef();
 	private DistanceJointDef springDef = new DistanceJointDef();
+	private boolean enabled = false;
+	private World world;
 	
 
 	
@@ -46,10 +48,35 @@ public class InverterShield extends Shield {
 		return "Inverter Shield";
 	}
 	public InverterShield(World world,PlayerShip ship, float radius, float power, float distance){
+		this.setEnabled(false);
+		this.ship = ship;
+		this.setRadius(radius);
+		this.setPower(power);
+		this.world = world;
+	}
+	private void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	public float getPower() {
+		return power;
+	}
+	public void setPower(float power) {
+		this.power = power;
+	}
+	public float getRadius() {
+		return radius;
+	}
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+	public Body getBody() {
+		return shieldBody;
+	}
+	public void enable() {
+		System.out.println("ENABLED");
 		bdef.bullet = true;
 		bdef.angularDamping = 100.5f;
 		bdef.type = BodyType.DynamicBody;
-		shields = new CircleShape();
 		shields.setRadius(radius);
 		bdef.position.set(ship.getBody().getWorldCenter());
 		shieldBody = world.createBody(bdef);
@@ -90,26 +117,15 @@ public class InverterShield extends Shield {
 		ropeDef.localAnchorB.x = 0;
 		ropeDef.localAnchorB.y = radius;
 		world.createJoint(ropeDef);
-
-		
-		this.ship = ship;
-		this.setRadius(radius);
-		this.setPower(power);
+		this.setEnabled(true);
 	}
-	public float getPower() {
-		return power;
+	public void disable(){
+		((EntityData)shieldBody.getUserData()).setType(EntityType.DELETEME);
+		this.setEnabled(false);
+		System.out.println("DISABLED");
 	}
-	public void setPower(float power) {
-		this.power = power;
-	}
-	public float getRadius() {
-		return radius;
-	}
-	public void setRadius(float radius) {
-		this.radius = radius;
-	}
-	public Body getBody() {
-		return shieldBody;
+	public boolean enabled(){
+		return this.enabled;
 	}
 }
 

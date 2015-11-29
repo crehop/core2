@@ -97,7 +97,6 @@ public class PlayerShip {
 		body.setBullet(true);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(ANGULAR_DAMPENING);
-		//shield = new InverterShield(world,this,10,1000,10);
 	}
 
 	public Body getBody() {
@@ -215,7 +214,7 @@ public class PlayerShip {
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-10))) * 5.5f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 			}
-			//EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
+			if(this.shield != null && this.shield.enabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
 			left = false;
 			right = false;
 			forward = false;
@@ -239,5 +238,17 @@ public class PlayerShip {
 
 	public Grapple getRope() {
 		return rope;
+	}
+
+	public void shieldToggle() {
+		if(shield == null){
+			shield = new InverterShield(world,this,10,1000,10);
+		}
+		if(shield.enabled()){
+			shield.disable();
+		}else{
+			shield.enable();
+		}
+
 	}
 }

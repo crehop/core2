@@ -97,6 +97,9 @@ public class PlayController extends InputAdapter {
 			case Input.Keys.E:
 				GameStateManager.play.getPlayerShip().fireGrapple();
 				break;
+			case Input.Keys.Q:
+				GameStateManager.play.getPlayerShip().shieldToggle();
+				break;
 			case Input.Keys.F1:
 				if(WorldUtils.isWireframe()){
 					WorldUtils.setWireframe(false);
