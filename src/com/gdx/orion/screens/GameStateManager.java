@@ -13,6 +13,7 @@ public class GameStateManager {
 	public static final int LEVELSELECT = 3;
 	public static final int STORE = 4;
 	public static final int PAUSE = 5;
+	public static final int HANGAR = 6;
 	
 	public static Screen state;
 	public static Play play;

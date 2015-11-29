@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.graphics.ParticleEmitterBox2D;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.Main;
 import com.gdx.orion.screens.GameStateManager;
@@ -17,14 +19,16 @@ import com.gdx.orion.screens.GameStateManager;
 public class EffectUtils {
 	static ParticleEffect thrust = new ParticleEffect();
 	static ParticleEffect rotationThrusters = new ParticleEffect();
-	static ParticleEffect bulletHit = new ParticleEffect();
+	static ParticleEffect muzzleFlash = new ParticleEffect();
 	static ParticleEffect shieldMain = new ParticleEffect();
+	static ParticleEffect bullet = new ParticleEffect();
 	static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 	static float spacingH = 0;
 	static float spacingW = 0;
 	static Array<ParticleEffect> particles = new Array<ParticleEffect>();
 	static Array<ParticleEmitter> emitters;
 	static ScaledNumericValue val;
+	static ParticleEmitterBox2D b2DEmitter;
 	static float h1;
 	static float h2;
 	static float angle;
@@ -33,14 +37,17 @@ public class EffectUtils {
 		thrust.scaleEffect(.04f);
 		rotationThrusters.load(Gdx.files.internal("emitters/rotationThrusters"), Gdx.files.internal("images"));
 		rotationThrusters.scaleEffect(.05f);
-		bulletHit.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
-		bulletHit.scaleEffect(.01f);
+		muzzleFlash.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
+		muzzleFlash.scaleEffect(.01f);
 		shieldMain.load(Gdx.files.internal("emitters/shieldsMain"), Gdx.files.internal("images"));
 		shieldMain.scaleEffect(.21f);
+		bullet.load(Gdx.files.internal("emitters/bullet"), Gdx.files.internal("images"));
+		bullet.scaleEffect(.21f);
 		particles.add(thrust);
 		particles.add(rotationThrusters);
-		particles.add(bulletHit);
+		particles.add(muzzleFlash);
 		particles.add(shieldMain);
+		particles.add(bullet);
 	}
 	public static void line(float x1, float y1, float z1,
 			float x2, float y2, float z2,
@@ -95,8 +102,8 @@ public class EffectUtils {
 		rotationThrusters.start();
 		rotationThrusters.draw(batch);
 	}
-	public static void fire(Vector2 position, Batch batch, float rotation){
-		emitters = bulletHit.getEmitters();
+	public static void muzzleFlash(World world,Vector2 position, Batch batch, float rotation){
+		emitters = muzzleFlash.getEmitters();
 		for(int i = 0; i< emitters.size; i++){
 			val = emitters.get(i).getAngle();
 			h1 = rotation;
@@ -104,14 +111,29 @@ public class EffectUtils {
 			val.setHigh(h1,h2);
 			val.setLow(h1,h2);
 		}
-		bulletHit.setPosition(position.x, position.y);
-		bulletHit.start();
-		bulletHit.draw(batch);
+		muzzleFlash.setPosition(position.x, position.y);
+		muzzleFlash.start();
+		muzzleFlash.draw(batch);
+	}
+	public static void bullet(World world,Vector2 position, Batch batch, float rotation){
+		if(b2DEmitter == null){
+			b2DEmitter = new ParticleEmitterBox2D(world, bullet.getEmitters().get(0));
+			b2DEmitter.allowCompletion();
+		}
+		val = b2DEmitter.getAngle();
+		h1 = rotation;
+		h2 = rotation;
+		val.setHigh(h1,h2);
+		val.setLow(h1,h2);
+		b2DEmitter.setPosition(position.x, position.y);
+		b2DEmitter.start();
+		b2DEmitter.draw(batch);
 	}
 	public static void updateEffects(float delta){
-		for(ParticleEffect effect:particles){
+ 		for(ParticleEffect effect:particles){
 			effect.update(delta);
 		}
+ 		if(b2DEmitter != null)b2DEmitter.update(delta);
 	}
 	public static void inverterMainShieldEffect(Vector2 position, Batch batch){
 		shieldMain.setPosition(position.x, position.y);

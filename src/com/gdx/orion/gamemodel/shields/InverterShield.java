@@ -53,7 +53,7 @@ public class InverterShield extends Shield {
 		shields.setRadius(radius);
 		bdef.position.set(ship.getBody().getWorldCenter());
 		shieldBody = world.createBody(bdef);
-		shieldBody.createFixture(shields,0.5f);
+		shieldBody.createFixture(shields,0.8f);
 		shieldBody.setUserData(new EntityData(1000,EntityType.SHIELD,null));
 		springDef.localAnchorB.x = ship.getBody().getLocalCenter().x;
 		springDef.localAnchorB.y = ship.getBody().getLocalCenter().y;

@@ -97,7 +97,7 @@ public class PlayerShip {
 		body.setBullet(true);
 		body.setUserData(new EntityData(1000,EntityType.SHIP,this));
 		body.setAngularDamping(ANGULAR_DAMPENING);
-		shield = new InverterShield(world,this,10,1000,10);
+		//shield = new InverterShield(world,this,10,1000,10);
 	}
 
 	public Body getBody() {
@@ -139,10 +139,10 @@ public class PlayerShip {
 			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * SIZE_MOD;
 			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
 			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
-			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
+			//WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
 			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
-			WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
+			//WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
 			fired = true;
 		}
@@ -204,12 +204,18 @@ public class PlayerShip {
 			if(fired){
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(12)))) * 2.2f  * SIZE_MOD;
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(12)))) * 2.2f * SIZE_MOD;
-				EffectUtils.fire(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				EffectUtils.muzzleFlash(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
-				EffectUtils.fire(fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				EffectUtils.muzzleFlash(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(10)))) * 5.5f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(10)))) * 5.5f * SIZE_MOD;
+				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-10))) * 5.5f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-10))) * 5.5f * SIZE_MOD);
+				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 			}
-			EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
+			//EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
 			left = false;
 			right = false;
 			forward = false;

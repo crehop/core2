@@ -42,7 +42,7 @@ public class ContactHandler implements ContactListener {
 			}
 			if(entityDataA.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataB != null){
-					if(entityDataB.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
+					if(entityDataB.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL && entityDataB.getType() != EntityType.SHIELD){
 						entityDataB.setType(EntityType.DELETEME);
 					}
 				}
@@ -65,7 +65,7 @@ public class ContactHandler implements ContactListener {
 			}
 			if(entityDataB.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataA != null){
-					if(entityDataA.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL){
+					if(entityDataA.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL && entityDataA.getType() != EntityType.SHIELD){
 						entityDataA.setType(EntityType.DELETEME);
 					}
 				}
