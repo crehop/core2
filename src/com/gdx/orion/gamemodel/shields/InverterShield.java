@@ -73,7 +73,6 @@ public class InverterShield extends Shield {
 		return shieldBody;
 	}
 	public void enable() {
-		System.out.println("ENABLED");
 		bdef.bullet = true;
 		bdef.angularDamping = 100.5f;
 		bdef.type = BodyType.DynamicBody;
@@ -122,7 +121,6 @@ public class InverterShield extends Shield {
 	public void disable(){
 		((EntityData)shieldBody.getUserData()).setType(EntityType.DELETEME);
 		this.setEnabled(false);
-		System.out.println("DISABLED");
 	}
 	public boolean enabled(){
 		return this.enabled;

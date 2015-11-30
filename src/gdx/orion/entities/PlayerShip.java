@@ -143,7 +143,7 @@ public class PlayerShip {
 			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
 			//WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
 			fire = 0;
-			fired = true;
+			if(!fired)fired = true;
 		}
 	}
 	public void fireGrapple(){
@@ -207,11 +207,11 @@ public class PlayerShip {
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-12))) * 2.2f * SIZE_MOD);
 				EffectUtils.muzzleFlash(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
-				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(10)))) * 5.5f  * SIZE_MOD;
-				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(10)))) * 5.5f * SIZE_MOD;
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(7)))) * 3.5f  * SIZE_MOD;
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(7)))) * 3.5f * SIZE_MOD;
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
-				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-10))) * 5.5f * SIZE_MOD);
-				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-10))) * 5.5f * SIZE_MOD);
+				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
+				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 			}
 			if(this.shield != null && this.shield.enabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
@@ -219,7 +219,6 @@ public class PlayerShip {
 			right = false;
 			forward = false;
 			backward = false;
-			fired = false;
 			shipSprite.setSize(5, 5);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(this.getBody().getAngle() * 57.2958));
@@ -250,5 +249,12 @@ public class PlayerShip {
 			shield.enable();
 		}
 
+	}
+	public void toggleGunFire(){
+		if(this.fired){
+			this.fired = false;
+		}else{
+			this.fired = true;
+		}
 	}
 }

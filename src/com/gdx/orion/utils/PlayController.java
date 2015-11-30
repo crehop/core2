@@ -92,6 +92,7 @@ public class PlayController extends InputAdapter {
 				strafeRight = false;
 				break;
 			case Input.Keys.SPACE:
+				GameStateManager.play.getPlayerShip().toggleGunFire();
 				fired = false;
 				break;
 			case Input.Keys.E:
