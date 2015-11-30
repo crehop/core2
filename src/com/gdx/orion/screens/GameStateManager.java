@@ -23,6 +23,7 @@ public class GameStateManager {
 	public static Store store;
 	public static Game game;
 	public static Pause pause;
+	public static Hangar hangar;
 	public static ArrayList<GameState> gameStates = new ArrayList<GameState>();
 	
 	public static void initiate(Game game2){
@@ -33,33 +34,35 @@ public class GameStateManager {
 		menu = new Menu(game, 0);
 		store = new Store(game);
 		pause = new Pause(game, 5);
+		hangar = new Hangar(game, HANGAR);
 		gameStates.add(play);
 		gameStates.add(menu);
 		gameStates.add(store);
 		gameStates.add(levelEdit);
 		gameStates.add(levelSelect);
 		gameStates.add(pause);
+		gameStates.add(hangar);
 	}
 	
 	public static Screen getScreen(int screen){
-		if(screen == PLAY){
-			return play;
+		switch (screen) {
+			case PLAY:   return play;
+			case MENU:   return menu;
+			case PAUSE:  return pause;
+			case HANGAR: return hangar;
 		}
-		if (screen == MENU) {
-			return menu;
-		}
-		if (screen == PAUSE) {
-			return pause;
-		}
+		
 		return null;
 	}
 
 	public static void setScreen(int levelselect2) {
 		for(GameState state: gameStates){
-			if(state.getID() != levelselect2){
-				state.setActive(false);
-			}else{
-				state.setActive(true);
+			if (state != null) {
+				if (state.getID() != levelselect2) {
+					state.setActive(false);
+				} else {
+					state.setActive(true);
+				}
 			}
 		}
 		switch(levelselect2){
@@ -81,8 +84,11 @@ public class GameStateManager {
 			case PAUSE:
 				game.setScreen(pause);
 				break;
+			case HANGAR:
+				game.setScreen(hangar);
+				break;
 			default:
-				System.out.println("ERROR IN SETSCREEN: (GameStateManager.java)");
+				System.out.printf("ERROR IN SETSCREEN: Unknown state %d%n", levelselect2);
 		}
 	}
 }
