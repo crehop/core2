@@ -71,7 +71,6 @@ public class Pause extends GameState implements Screen {
 		stage.addActor(resume);
 		stage.addActor(mainmenu);
 		stage.addActor(quit);
-		
 		resume.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
@@ -92,20 +91,20 @@ public class Pause extends GameState implements Screen {
             	Gdx.app.exit();
             }
         });
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	public void render(float delta) {
 		if (active) {
-		Gdx.input.setInputProcessor(stage);
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.setProjectionMatrix(viewport.getCamera().combined);
-		batch.draw(pauseImage, 0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
-		batch.end();
-		stage.act();
-		stage.draw();
-		cam.update();
+			Gdx.gl.glClearColor(0, 0, 0, 0);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.begin();
+			batch.setProjectionMatrix(viewport.getCamera().combined);
+			batch.draw(pauseImage, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+			batch.end();
+			stage.act();
+			stage.draw();
+			cam.update();
 		}
 	}
 
