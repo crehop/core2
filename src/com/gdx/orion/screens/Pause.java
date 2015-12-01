@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.gdx.orion.Main;
 import com.gdx.orion.utils.Scene2dUtils;
 
 public class Pause extends GameState implements Screen {
@@ -34,7 +35,7 @@ public class Pause extends GameState implements Screen {
 	private Skin skin;
 	
 	private SpriteBatch batch;
-	private Texture s1 = new Texture(Gdx.files.internal("images/PauseImage.png"));
+	private Texture s1 = new Texture(Gdx.files.internal("images/TitleScreen.png"));
 	private Sprite pauseImage = new Sprite(s1);
 	
 	private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf"));
@@ -44,8 +45,6 @@ public class Pause extends GameState implements Screen {
 	private TextButton resume;
 	private TextButton mainmenu;
 	private TextButton quit;
-	private final float GAME_WORLD_WIDTH = 1000;
-	private final float GAME_WORLD_HEIGHT = 700;
 	
 	protected Pause(Game game, int ID) {
 		super(GameStateManager.PAUSE);
@@ -64,11 +63,11 @@ public class Pause extends GameState implements Screen {
 		skin.add("default",font);
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 		resume = new TextButton("RESUME", style);
-		resume.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 + 200);
+		resume.setPosition(viewport.getScreenWidth()/2 - resume.getWidth()/2 - 35, viewport.getScreenHeight()/2 + 200);
 		mainmenu = new TextButton("MAIN MENU", style);
-		mainmenu.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2);
+		mainmenu.setPosition(viewport.getScreenWidth()/2 - mainmenu.getWidth()/2 - 35, viewport.getScreenHeight()/2);
 		quit = new TextButton("QUIT", style);
-		quit.setPosition(GAME_WORLD_WIDTH/2 - 100, GAME_WORLD_HEIGHT/2 - 200);
+		quit.setPosition(viewport.getScreenWidth()/2 - quit.getWidth()/2 - 35, viewport.getScreenHeight()/2 - 200);
 		stage.addActor(resume);
 		stage.addActor(mainmenu);
 		stage.addActor(quit);
@@ -100,11 +99,12 @@ public class Pause extends GameState implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		batch.setProjectionMatrix(viewport.getCamera().combined);
+		batch.draw(pauseImage, 0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
+		batch.end();
 		stage.act();
 		stage.draw();
-		batch.begin();
-		batch.draw(pauseImage, 0, 0, 642, 480);
-		batch.end();
 		cam.update();
 		}
 	}
