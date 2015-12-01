@@ -36,6 +36,7 @@ public class GameStateExample extends GameState implements Screen{
 	
 	@Override
 	public void show() {
+		//INPUT PROCESSOR CALL GOES HERE
 		this.setActive(true);
 	}
 	
