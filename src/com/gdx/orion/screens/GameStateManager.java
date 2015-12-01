@@ -25,6 +25,7 @@ public class GameStateManager {
 	public static Pause pause;
 	public static Hangar hangar;
 	public static ArrayList<GameState> gameStates = new ArrayList<GameState>();
+	private static int lastScreen = 0;
 	
 	public static void initiate(Game game2){
 		game = game2;
@@ -56,6 +57,9 @@ public class GameStateManager {
 	}
 
 	public static void setScreen(int levelselect2) {
+		if(levelselect2 != PAUSE){
+			setLastScreen(levelselect2);
+		}
 		for(GameState state: gameStates){
 			if (state != null) {
 				if (state.getID() != levelselect2) {
@@ -90,5 +94,13 @@ public class GameStateManager {
 			default:
 				System.out.printf("ERROR IN SETSCREEN: Unknown state %d%n", levelselect2);
 		}
+	}
+
+	public static int getLastScreen() {
+		return lastScreen;
+	}
+
+	public static void setLastScreen(int screen) {
+		lastScreen = screen;
 	}
 }

@@ -147,7 +147,7 @@ public class Play extends GameState implements Screen{
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
 			for(Body body:bodies){
-				//GravityUtils.applyGravity(gameWorld,body);
+				GravityUtils.applyGravity(gameWorld,body);
 				if(body.getUserData() instanceof EntityData){
 				entityDataA = (EntityData)body.getUserData();
 					if(entityDataA.getType() == EntityType.DESTROYME){

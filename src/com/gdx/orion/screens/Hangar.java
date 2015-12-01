@@ -90,7 +90,7 @@ public class Hangar extends GameState implements Screen {
 			public boolean keyUp(InputEvent event, int keycode) {
 				switch (keycode) {
 					case Input.Keys.ESCAPE:
-						GameStateManager.setScreen(GameStateManager.MENU);
+						GameStateManager.setScreen(GameStateManager.PAUSE);
 						break;
 					}
 			
