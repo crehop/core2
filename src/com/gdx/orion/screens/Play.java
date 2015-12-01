@@ -133,7 +133,6 @@ public class Play extends GameState implements Screen{
 			gameWorld.getBodies(bodies);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			mapCam.position.set(ship.getBody().getWorldCenter(), 0);
-			Gdx.input.setInputProcessor(playController);
 			playController.checkInput();
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -254,6 +253,7 @@ public class Play extends GameState implements Screen{
 	
 	@Override
 	public void show() {
+		Gdx.input.setInputProcessor(playController);
 		this.setActive(true);
 	}
 	

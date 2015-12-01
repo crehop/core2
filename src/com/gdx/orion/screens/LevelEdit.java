@@ -139,7 +139,6 @@ public class LevelEdit extends GameState implements Screen {
 		if(active){
 		  Gdx.gl.glClearColor(0, 0, 0, 1);
 		  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		  Gdx.input.setInputProcessor(stage);
 		  
 		  stage.act();
 		  stage.draw();
@@ -175,6 +174,7 @@ public class LevelEdit extends GameState implements Screen {
 	
 	@Override
 	public void show() {
+		Gdx.input.setInputProcessor(stage);
 		this.setActive(true);
 	}
 	

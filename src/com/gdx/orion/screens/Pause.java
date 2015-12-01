@@ -91,7 +91,6 @@ public class Pause extends GameState implements Screen {
             	Gdx.app.exit();
             }
         });
-		Gdx.input.setInputProcessor(stage);
 	}
 
 	public void render(float delta) {
@@ -127,6 +126,7 @@ public class Pause extends GameState implements Screen {
 	}
 
 	public void show() {
+		Gdx.input.setInputProcessor(stage);
 		this.setActive(true);
 	}
 	

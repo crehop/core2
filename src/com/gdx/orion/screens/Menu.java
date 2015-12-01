@@ -128,7 +128,6 @@ public class Menu extends GameState implements Screen {
 			batch.draw(titleS, 0, 0, cam.viewportWidth, cam.viewportHeight);
 			batch.draw(text, 20, 120, 300, 200);
 			batch.end();
-			Gdx.input.setInputProcessor(stage);
 			stage.act();
 			stage.draw();
 			
@@ -159,6 +158,7 @@ public class Menu extends GameState implements Screen {
 	
 	@Override
 	public void show() {
+		Gdx.input.setInputProcessor(stage);
 		this.setActive(true);
 	}
 	

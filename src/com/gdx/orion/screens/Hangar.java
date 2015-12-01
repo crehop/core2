@@ -101,13 +101,13 @@ public class Hangar extends GameState implements Screen {
 
 	@Override
 	public void show() {
+		Gdx.input.setInputProcessor(stage);
 		setActive(true);
 	}
 
 	@Override
 	public void render(float delta) {
 		if (active) {
-			Gdx.input.setInputProcessor(stage);
 			Gdx.gl.glClearColor(0, 0, 0, 0);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
@@ -252,14 +252,13 @@ public class Hangar extends GameState implements Screen {
 		
 		@Override
 		public void show() {
+			Gdx.input.setInputProcessor(stage);
 			active = true;
 		}
 
 		@Override
 		public void render(float delta) {
 			if (active) {
-				Gdx.input.setInputProcessor(stage);
-
 			    // Frame box dimensions is expressed as a parameter of INSET_PERCENTAGE
 				// TODO: Can this be moved outside of render()?  Other parts of the code can use it.
 			    final float boxX = INSET_PERCENTAGE * camera.viewportWidth;
