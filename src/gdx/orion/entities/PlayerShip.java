@@ -214,6 +214,10 @@ public class PlayerShip {
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 			}
+			if(ropeFired){
+				EffectUtils.line(body.getPosition().x, body.getPosition().y, 0, rope.getGrapple().getPosition().x, rope.getGrapple().getPosition().y, 0,
+						/*color*/ 0, 100, 10, 1);
+			}
 			if(this.shield != null && this.shield.enabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
 			left = false;
 			right = false;
