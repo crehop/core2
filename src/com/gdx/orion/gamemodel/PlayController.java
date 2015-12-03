@@ -1,10 +1,12 @@
-package com.gdx.orion.utils;
+package com.gdx.orion.gamemodel;
 
 import gdx.orion.entities.PlayerShip;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.gdx.orion.screens.GameStateManager;
+import com.gdx.orion.utils.Console;
+import com.gdx.orion.utils.WorldUtils;
 
 public class PlayController extends InputAdapter {
 	public static final float TURN_RATE = 9000.06f;

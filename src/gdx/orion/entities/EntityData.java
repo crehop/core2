@@ -1,6 +1,5 @@
 package gdx.orion.entities;
 
-import com.gdx.orion.utils.UIDGetter;
 
 public class EntityData {
 	private float life = 0;

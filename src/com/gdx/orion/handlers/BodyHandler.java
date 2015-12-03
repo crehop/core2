@@ -1,4 +1,4 @@
-package com.gdx.orion.utils;
+package com.gdx.orion.handlers;
 
 import gdx.orion.entities.Asteroid;
 import gdx.orion.entities.EntityData;
@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.screens.GameStateManager;
+import com.gdx.orion.utils.GravityUtils;
+import com.gdx.orion.utils.WorldUtils;
 
 public class BodyHandler {
 	private static EntityData entityDataA;
@@ -95,5 +97,26 @@ public class BodyHandler {
 				}
 			}
 		}
+	}
+	public static void handleStates(World gameWorld , Array<Body> bodies) {
+		for(Body body:bodies){
+			GravityUtils.applyGravity(gameWorld,body);
+			if(body.getUserData() instanceof EntityData){
+			entityDataA = (EntityData)body.getUserData();
+				if(entityDataA.getType() == EntityType.DESTROYME){
+					((Asteroid)entityDataA.getObject()).fragment(10);
+				}
+				if(entityDataA.getType() == EntityType.DELETEME){
+					gameWorld.destroyBody(body);
+				}
+				if(entityDataA.getType() == EntityType.ASTEROID){
+				}
+			}
+		}		
+	}
+	public static void destroyBodies(World gameWorld,Array<Body> destroy) {
+		for(Body body:destroy){
+			gameWorld.destroyBody(body);    
+		}		
 	}
 }

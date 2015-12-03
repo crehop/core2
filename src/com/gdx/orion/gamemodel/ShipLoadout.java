@@ -1,4 +1,4 @@
-package com.gdx.orion.utils;
+package com.gdx.orion.gamemodel;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;

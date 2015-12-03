@@ -32,12 +32,13 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
-import com.gdx.orion.utils.BodyHandler;
+import com.gdx.orion.gamemodel.PlayController;
+import com.gdx.orion.handlers.BodyHandler;
+import com.gdx.orion.handlers.ContactHandler;
+import com.gdx.orion.handlers.JointHandler;
 import com.gdx.orion.utils.Console;
-import com.gdx.orion.utils.ContactHandler;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
-import com.gdx.orion.utils.PlayController;
 import com.gdx.orion.utils.WorldUtils;
 
 public class Play extends GameState implements Screen{
@@ -48,7 +49,6 @@ public class Play extends GameState implements Screen{
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
 	public ScalingViewport mapViewport;  
-	private static EntityData entityDataA;
 	private static PlayController playController = new PlayController();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
@@ -124,7 +124,6 @@ public class Play extends GameState implements Screen{
 	
 	@Override
 	public void render(float delta) {
-		accumulator += delta;
 		if(isActive()) {
 			aliveTime++;
 			if(aliveTime > maxAliveTime){
@@ -145,91 +144,48 @@ public class Play extends GameState implements Screen{
 			batch.begin();
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
-			for(Body body:bodies){
-				GravityUtils.applyGravity(gameWorld,body);
-				if(body.getUserData() instanceof EntityData){
-				entityDataA = (EntityData)body.getUserData();
-					if(entityDataA.getType() == EntityType.DESTROYME){
-						((Asteroid)entityDataA.getObject()).fragment(10);
-					}
-					if(entityDataA.getType() == EntityType.DELETEME){
-						gameWorld.destroyBody(body);
-					}
-					if(entityDataA.getType() == EntityType.ASTEROID){
-					}
-				}
-			}
-			for(JointDef def:addJoint){
-				gameWorld.createJoint(def);
-			}
-			addJoint.clear();
+			BodyHandler.handleStates(gameWorld,bodies);
 			gameWorld.getJoints(clearJoint);
-			for(Joint joint: clearJoint){
-				if(!ship.ropeFired){
-					if(joint.getBodyA().getUserData() instanceof EntityData){
-						entityDataA = (EntityData)joint.getBodyA().getUserData();
-						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-							if(joint.getBodyB().getUserData() instanceof EntityData){
-								entityDataA = (EntityData)joint.getBodyB().getUserData();
-								if(entityDataA.getType() == EntityType.SHIELD){
-									
-								}else{
-									gameWorld.destroyJoint(joint);
-								}
-							}else{
-								gameWorld.destroyJoint(joint);
-							}
-						}
-					}else if(joint.getBodyB().getUserData() instanceof EntityData){
-						entityDataA = (EntityData)joint.getBodyB().getUserData();
-						if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-							if(joint.getBodyA().getUserData() instanceof EntityData){
-								entityDataA = (EntityData)joint.getBodyA().getUserData();
-								if(entityDataA.getType() == EntityType.SHIELD){
-									
-								}else{
-									gameWorld.destroyJoint(joint);
-								}
-							}else{
-								gameWorld.destroyJoint(joint);
-							}						}
-					}
-				}
-			}
+			JointHandler.handleJoints(gameWorld,addJoint,clearJoint,ship);
+			addJoint.clear();
 			clearJoint.clear();
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
 			ship.draw(batch, true,mapCam.position);
 			batch.end();
 			BodyHandler.update(cam, gameWorld, bodies);
-			for(Body body:destroy){
-				gameWorld.destroyBody(body);    
-			}
+			BodyHandler.destroyBodies(gameWorld,destroy);
 			destroy.clear();
-
+			
 			if(WorldUtils.isWireframe()){
 				renderer.render(getGameWorld(), viewport.getCamera().combined);
 			}
+			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine3("CAMERA LOCATION:" + cam.position.x + "/"+ cam.position.y + "/" + cam.position.z);
-			Console.setLine11("PRESS F1 TO TOGGLE WIREFRAME:" + WorldUtils.isWireframe());
-
 			cam.update();
+			
+			
+			//TIMESTEP AND WORLD UPDATE INFORMATION
 			newTime = TimeUtils.millis() / 1000.0;
 		    currentTime = newTime;
-		    frameTime = Math.min(newTime - currentTime, 0.25);
+		    frameTime = Math.min(newTime - currentTime, 1/120);
 		    deltaTime = (float)frameTime;
+			accumulator += delta;
 		    while (accumulator >= step) {
 		        gameWorld.step(step, 8, 6);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
+		    ///////////////////////////////////////
+		    
+		    
 			//MUST BE LAST
 			renderer.render(gameWorld, mapCam.combined);              
 			Console.render(consoleCam);
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			consoleCam.update();
+			//////////////
 		}
 	}
 
