@@ -29,7 +29,7 @@ import com.gdx.orion.utils.Scene2dUtils;
 
 public class Menu extends GameState implements Screen {
 
-    @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private Game game;
     private static OrthographicCamera consoleCam;
     private static ScalingViewport consoleViewport;  
@@ -44,6 +44,8 @@ public class Menu extends GameState implements Screen {
 	private Sprite titleS = new Sprite(new Texture(Gdx.files.internal("images/TitleScreen.png")));
 	private Sprite text = new Sprite(new Texture(Gdx.files.internal("images/AsteroidsText.png")));
     
+	private static final int BUTTON_Y_OFFSET = -35;
+	
 	protected Menu(Game game, int level) {
 		super(GameStateManager.MENU);
 		this.game = game;
@@ -67,16 +69,16 @@ public class Menu extends GameState implements Screen {
 
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 
-		final Button playButton = new TextButton("PLAY", style);
-		playButton.setPosition(0, 0);
+		final Button playButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_play.png")))));
+		playButton.setPosition(0, BUTTON_Y_OFFSET);
 		final Button hangar = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_hangar.png")))));
-		hangar.setPosition(1 * cam.viewportWidth / 5, -40);
-		final Button settings = new TextButton("SETTINGS", style);
-		settings.setPosition(2 * cam.viewportWidth / 5, 0);
-		final Button levelEditor = new TextButton("EDITOR", style);
-		levelEditor.setPosition(3 * cam.viewportWidth / 5, 0);
-		final Button exit = new TextButton("EXIT", style);
-		exit.setPosition(4 * cam.viewportWidth / 5, 0);
+		hangar.setPosition(1 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
+		final Button settings = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_settings.png")))));
+		settings.setPosition(2 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
+		final Button levelEditor = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_editor.png")))));
+		levelEditor.setPosition(3 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
+		final Button exit = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_exit.png")))));
+		exit.setPosition(4 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
 		
 		stage.addActor(playButton);
 		stage.addActor(hangar);
