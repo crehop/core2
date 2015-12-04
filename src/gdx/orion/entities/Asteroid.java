@@ -32,8 +32,10 @@ public class Asteroid {
 	private float[] points;
 	private float density;
 	private Color[] colors = new Color[15];
+	private int ID;
 
 	public Asteroid(World world, Vector2 position, float density, int size){
+		ID = UIDGetter.getID();
 		this.density = density;
 		this.world = world;
 		for(int i = 0; i < colors.length; i++){
@@ -226,5 +228,8 @@ public class Asteroid {
 
 	public float[] getVerts() {
 		return shapeVerts;
+	}
+	public int getID(){
+		return ID;
 	}
 }

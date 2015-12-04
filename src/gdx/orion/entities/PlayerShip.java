@@ -20,7 +20,6 @@ import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
-import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
 	private float offset = (float) Math.toRadians(90);
@@ -39,7 +38,7 @@ public class PlayerShip {
 	private boolean left = false;
 	private boolean right = false;
 	private boolean fired = false;
-	public boolean ropeFired = false;
+	private boolean ropeFired = false;
 	private EntityData entityData;
 	Grapple rope;
 	private static final int FIRE_DELAY = 2;
@@ -133,19 +132,21 @@ public class PlayerShip {
 	}
 	public void fire(){
 		fire++;
-		if(fire > FIRE_DELAY){
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f  * SIZE_MOD;
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(25)))) * 1.5f * SIZE_MOD;
-			force.x = (float) (Math.cos(body.getAngle() + offset) * 999999999 + body.getLocalCenter().x);
-			force.y = (float) (Math.sin(body.getAngle() + offset) * 999999999 + body.getLocalCenter().y);
-			//WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
-			fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
-			fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-25))) * 1.5f * SIZE_MOD);
-			//WorldUtils.fireBullet(this.world,fireSpot,.01f,.011f,force);
-			fire = 0;
-			if(!fired)fired = true;
+		if(this.isSheilded() == false){
+			if(fire > FIRE_DELAY){
+				if(!fired)fired = true;
+			}
+		}else{
+			fired = false;
 		}
 	}
+	private boolean isSheilded() {
+		if(this.shield == null){
+			return false;
+		}
+		return this.shield.isEnabled();
+	}
+
 	public void fireGrapple(){
 		if(ropeFired){
 			ropeFired = false;
@@ -218,7 +219,7 @@ public class PlayerShip {
 				EffectUtils.line(body.getWorldCenter().x, body.getWorldCenter().y, 0, rope.getGrapple().getPosition().x, rope.getGrapple().getPosition().y, 0,
 						/*color*/ 0, 100, 10, 1);
 			}
-			if(this.shield != null && this.shield.enabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
+			if(this.shield != null && this.shield.isEnabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);
 			left = false;
 			right = false;
 			forward = false;
@@ -238,7 +239,9 @@ public class PlayerShip {
 			shipSprite.draw(batch);	
 		}
 	}
-
+	public boolean ropeFired(){
+		return ropeFired;
+	}
 	public Grapple getRope() {
 		return rope;
 	}
@@ -247,18 +250,18 @@ public class PlayerShip {
 		if(shield == null){
 			shield = new InverterShield(world,this,10,1000,10);
 		}
-		if(shield.enabled()){
+		if(shield.isEnabled()){
 			shield.disable();
 		}else{
 			shield.enable();
 		}
 
 	}
-	public void toggleGunFire(){
-		if(this.fired){
-			this.fired = false;
-		}else{
-			this.fired = true;
-		}
+	public void setFired(boolean fired){
+		this.fired = fired;
+	}
+
+	public void setRopeFired(boolean ropeFired) {
+		this.ropeFired = ropeFired;
 	}
 }

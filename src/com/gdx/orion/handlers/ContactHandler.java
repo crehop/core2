@@ -66,8 +66,22 @@ public class ContactHandler implements ContactListener {
 			}
 			if(entityDataB.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataA != null){
-					if(entityDataA.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL && entityDataA.getType() != EntityType.SHIELD){
-						entityDataA.setType(EntityType.DELETEME);
+					if(entityDataA.getType() != EntityType.SHIP && 
+				       entityDataA.getType() != EntityType.GRAVITY_WELL && 
+					   entityDataA.getType() != EntityType.SHIELD){
+						
+						if(entityDataA.getType() == EntityType.ASTEROID){
+							if(GameStateManager.play.getPlayerShip().ropeFired()){
+								if(entityDataA.getID() == GameStateManager.play.getPlayerShip().getRope().getGrappleID()){
+									GameStateManager.play.getPlayerShip().getRope().destroyRope();
+									GameStateManager.play.getPlayerShip().setRopeFired(false);
+								}else{
+									entityDataA.setType(EntityType.DELETEME);
+								}
+							}else{
+								entityDataA.setType(EntityType.DELETEME);
+							}
+						}
 					}
 				}
 			}

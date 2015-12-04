@@ -106,4 +106,7 @@ public class Grapple {
 	public void destroyRope() {
 		this.grapple.setUserData(new EntityData(0,EntityType.DELETEME,null));
 	}
+	public int getGrappleID() {
+		return ((EntityData)grapple.getUserData()).getID();
+	}
 }

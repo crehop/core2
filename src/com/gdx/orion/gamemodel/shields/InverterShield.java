@@ -122,7 +122,7 @@ public class InverterShield extends Shield {
 		((EntityData)shieldBody.getUserData()).setType(EntityType.DELETEME);
 		this.setEnabled(false);
 	}
-	public boolean enabled(){
+	public boolean isEnabled(){
 		return this.enabled;
 	}
 }

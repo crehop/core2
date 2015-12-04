@@ -1,4 +1,4 @@
-package com.gdx.orion.gamemodel;
+package com.gdx.orion.handlers;
 
 import gdx.orion.entities.PlayerShip;
 
@@ -8,7 +8,7 @@ import com.gdx.orion.screens.GameStateManager;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.WorldUtils;
 
-public class PlayController extends InputAdapter {
+public class ControlHandler extends InputAdapter {
 	public static final float TURN_RATE = 9000.06f;
 	public static final int THRUST_REVERSE_FACTOR = -1200000;
 	public static final int THRUST_FORWARD_FACTOR = 1200000;
@@ -50,6 +50,10 @@ public class PlayController extends InputAdapter {
 			if(GameStateManager.play.isActive()){
 				GameStateManager.play.getPlayerShip().fire();  
 			}
+		}else{
+			if(GameStateManager.play.isActive()){
+				GameStateManager.play.getPlayerShip().setFired(false); 
+			}
 		}
 	}
 	
@@ -72,7 +76,7 @@ public class PlayController extends InputAdapter {
 				exitKey = true;
 				break;
 			case Input.Keys.SPACE:
-				fired = true;
+				if(!fired) fired = true;
 				break;
 		}
 		return super.keyDown(keycode);
@@ -94,7 +98,6 @@ public class PlayController extends InputAdapter {
 				strafeRight = false;
 				break;
 			case Input.Keys.SPACE:
-				GameStateManager.play.getPlayerShip().toggleGunFire();
 				fired = false;
 				break;
 			case Input.Keys.E:

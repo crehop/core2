@@ -19,7 +19,7 @@ public class JointHandler {
 			gameWorld.createJoint(def);
 		}	
 		for(Joint joint: clearJoint){
-			if(!ship.ropeFired){
+			if(!ship.ropeFired()){
 				if(joint.getBodyA().getUserData() instanceof EntityData){
 					entityDataA = (EntityData)joint.getBodyA().getUserData();
 					if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
@@ -46,7 +46,8 @@ public class JointHandler {
 							}
 						}else{
 							gameWorld.destroyJoint(joint);
-						}						}
+						}						
+					}
 				}
 			}
 		}
