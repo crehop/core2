@@ -81,6 +81,8 @@ public class ContactHandler implements ContactListener {
 							}else{
 								entityDataA.setType(EntityType.DELETEME);
 							}
+						}else{
+							entityDataA.setType(EntityType.DELETEME);
 						}
 					}
 				}
