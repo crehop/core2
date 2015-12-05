@@ -75,6 +75,7 @@ public class Play extends GameState implements Screen{
 	public int MAX_FRAGMENT_SIZE = 3;
 	public int aliveTime = 0;
 	private ShaderProgram shader;
+	private int count = 0;
 	private final int VIEW_DISTANCE = 300;
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	//TODO, COMMENT CODE
@@ -111,7 +112,9 @@ public class Play extends GameState implements Screen{
 		this.gameWorld.setContactListener(new ContactHandler());
 		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
-		while(getGameWorld().getBodyCount() < 500) {
+		count = 0;
+		while(count < 500) {
+			count++;
 			position.set(MathUtils.random(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/2));
 			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 		}

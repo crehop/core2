@@ -41,10 +41,28 @@ public class ContactHandler implements ContactListener {
 					entityDataA.setType(EntityType.DELETEME);
 				}
 			}
+
 			if(entityDataA.getType() == EntityType.GRAVITY_WELL){
 				if(entityDataB != null){
-					if(entityDataB.getType() != EntityType.SHIP && entityDataA.getType() != EntityType.GRAVITY_WELL && entityDataB.getType() != EntityType.SHIELD){
-						entityDataB.setType(EntityType.DELETEME);
+					if(entityDataB.getType() != EntityType.SHIP && 
+				       entityDataB.getType() != EntityType.GRAVITY_WELL && 
+					   entityDataB.getType() != EntityType.SHIELD &&
+					   entityDataB.getType() != EntityType.WORLD_BOUNDRY){
+						
+						if(entityDataB.getType() == EntityType.ASTEROID){
+							if(GameStateManager.play.getPlayerShip().ropeFired()){
+								if(entityDataB.getID() == GameStateManager.play.getPlayerShip().getRope().getGrappleID()){
+									GameStateManager.play.getPlayerShip().getRope().destroyRope();
+									GameStateManager.play.getPlayerShip().setRopeFired(false);
+								}else{
+									entityDataB.setType(EntityType.DELETEME);
+								}
+							}else{
+								entityDataB.setType(EntityType.DELETEME);
+							}
+						}else{
+							entityDataB.setType(EntityType.DELETEME);
+						}
 					}
 				}
 			}
@@ -68,7 +86,8 @@ public class ContactHandler implements ContactListener {
 				if(entityDataA != null){
 					if(entityDataA.getType() != EntityType.SHIP && 
 				       entityDataA.getType() != EntityType.GRAVITY_WELL && 
-					   entityDataA.getType() != EntityType.SHIELD){
+					   entityDataA.getType() != EntityType.SHIELD &&
+					   entityDataA.getType() != EntityType.WORLD_BOUNDRY){
 						
 						if(entityDataA.getType() == EntityType.ASTEROID){
 							if(GameStateManager.play.getPlayerShip().ropeFired()){

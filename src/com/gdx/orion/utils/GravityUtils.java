@@ -26,6 +26,7 @@ public class GravityUtils{
 	private static float radius;
 	private static float finalDistance;
 	private static float vecSum;
+	private static int count = 0;
 	private static final int GRAVITATIONAL_REACH = 3000000;
 	
 	public static void addGravityWell(float x,float y, float radius, float density, World world, boolean inWardForce, Sprite sprite) {
@@ -40,6 +41,7 @@ public class GravityUtils{
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
 		bodyDef.position.set(x,y);
+		bodyDef.type = BodyType.DynamicBody;
 		thePlanet = world.createBody(bodyDef);
 		planetVector.add(thePlanet);
 		gravitySprites.add(sprite);
@@ -50,28 +52,36 @@ public class GravityUtils{
 	}
 	public static void applyGravity(World world,Body body){
 		forceVector = body.getWorldCenter();
-		for (int j = 0; j < planetVector.size(); j++) {
-			if(planetVector.get(j).getFixtureList().size > 0){
-				circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
-				radius =circleShape.getRadius();
-				planetPosition = planetVector.get(j).getWorldCenter();
-				planetDistance =new Vector2(0,0);
-				planetDistance.add(forceVector);
-				planetDistance.sub(planetPosition);
-				finalDistance = planetDistance.len();
-				if(finalDistance <= radius * GRAVITATIONAL_REACH) {
-					planetDistance.x = planetDistance.x * -1;
-					planetDistance.y = planetDistance.y * -1;
-					vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
-					planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-					planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-					body.applyForce(planetDistance,body.getWorldCenter(),false);
-				}
-			}
-		}	
+			for (int j = 0; j < planetVector.size(); j++) {
+				if(planetVector.get(j).getFixtureList().size > 0){
+					circleShape = (CircleShape)planetVector.get(j).getFixtureList().get(0).getShape();
+					radius = circleShape.getRadius();
+					planetPosition = planetVector.get(j).getWorldCenter();
+					planetDistance =new Vector2(0,0);
+					planetDistance.add(forceVector);
+					planetDistance.sub(planetPosition);
+					finalDistance = planetDistance.len();
+					if(finalDistance <= radius * GRAVITATIONAL_REACH) {
+						planetDistance.x = planetDistance.x * -1;
+						planetDistance.y = planetDistance.y * -1;
+						vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
+						planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+						planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+						if(((EntityData)body.getUserData()).getID() != ((EntityData)planetVector.get(j).getUserData()).getID()){
+							body.applyForce(planetDistance,body.getWorldCenter(),true);
+						}
+					}
+				}	
+		}
+
 	}
 	public static void renderWells(Batch batch){
+		count = 0;
 		for(Sprite sprite:gravitySprites){
+			sprite.setOriginCenter();
+			sprite.setPosition(planetVector.get(count).getPosition().x - ((CircleShape)planetVector.get(count).getFixtureList().get(0).getShape()).getRadius(), 
+								planetVector.get(count).getPosition().y -((CircleShape)planetVector.get(count).getFixtureList().get(0).getShape()).getRadius());
+			count++;
 			sprite.draw(batch);
 		}
 	}
