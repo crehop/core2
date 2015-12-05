@@ -112,7 +112,7 @@ public class Play extends GameState implements Screen{
 		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
 		while(getGameWorld().getBodyCount() < 500) {
-			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT));
+			position.set(MathUtils.random(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/2));
 			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
 		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,66, gameWorld, true, sprite2);
