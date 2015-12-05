@@ -32,6 +32,7 @@ public class GravityUtils{
 		sprite.setPosition(x - radius, y - radius);
 		sprite.setSize(radius * 2, radius * 2);
 		sprite.setOriginCenter();
+
 		fixtureDef.restitution=0;
 		fixtureDef.density = density;
 		circleShape =new CircleShape();
@@ -39,7 +40,6 @@ public class GravityUtils{
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
 		bodyDef.position.set(x,y);
-		bodyDef.type = BodyType.StaticBody;
 		thePlanet = world.createBody(bodyDef);
 		planetVector.add(thePlanet);
 		gravitySprites.add(sprite);
