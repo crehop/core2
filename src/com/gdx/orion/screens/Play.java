@@ -119,7 +119,6 @@ public class Play extends GameState implements Screen{
 			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
 		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,66, gameWorld, true, sprite2);
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/3, Main.GAME_WORLD_HEIGHT/1.5f, 40.03f,66, gameWorld, true, sprite3);
 
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();

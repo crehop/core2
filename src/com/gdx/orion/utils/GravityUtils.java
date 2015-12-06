@@ -41,7 +41,7 @@ public class GravityUtils{
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
 		bodyDef.position.set(x,y);
-		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.type = BodyType.StaticBody;
 		thePlanet = world.createBody(bodyDef);
 		planetVector.add(thePlanet);
 		gravitySprites.add(sprite);
