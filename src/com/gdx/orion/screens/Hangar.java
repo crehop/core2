@@ -145,8 +145,8 @@ public class Hangar extends GameState implements Screen {
 				// Right Engine
 				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 				btnEngineRight.setName("EngineChemical"); // Naming is important for removal from stage
-				btnEngineRight.setSize(1622, 384);
-				btnEngineRight.setPosition(500, shipBaseYPosition() - 100f);
+				btnEngineRight.setSize(250, 384);
+				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
 				
 				stage.addActor(btnEngineRight);
 			}
