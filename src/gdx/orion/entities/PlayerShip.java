@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.gamemodel.shields.InverterShield;
 import com.gdx.orion.gamemodel.weapons.Grapple;
+import com.gdx.orion.handlers.RaycastHandler;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
@@ -214,6 +215,12 @@ public class PlayerShip {
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 23.6f * SIZE_MOD);
+				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 23.6f * SIZE_MOD);
+				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
+				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(7))) * 23.6f * SIZE_MOD);
+				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(7))) * 23.6f * SIZE_MOD);
+				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
 			}
 			if(ropeFired){
 				EffectUtils.line(body.getWorldCenter().x, body.getWorldCenter().y, 0, rope.getGrapple().getPosition().x, rope.getGrapple().getPosition().y, 0,
@@ -232,7 +239,7 @@ public class PlayerShip {
 			shipSprite.draw(batch);
 		}
 		else{
-			shipSprite.setSize(50,50);
+			shipSprite.setSize(150,150);
 			shipSprite.setOriginCenter();
 			shipSprite.setCenterX(position.x);
 			shipSprite.setCenterY(position.y);

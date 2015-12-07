@@ -25,6 +25,13 @@ public class EntityData {
 	}
 	public void damage(float amount){
 		life -= amount;
+		if(life<0){
+			if(this.object instanceof Asteroid){
+				if(((Asteroid)object).getBody().getUserData() instanceof EntityData){
+					((EntityData)((Asteroid)object).getBody().getUserData()).setType(EntityType.DESTROYME);
+				}
+			}
+		}
 	}
 	public void setType(EntityType type) {
 		this.type = type;
