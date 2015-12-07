@@ -3,6 +3,8 @@ package com.gdx.orion;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.gdx.orion.gamemodel.Campaign;
+import com.gdx.orion.gamemodel.engines.ChemicalEngine;
 //import com.badlogic.gdx.audio.Music;
 import com.gdx.orion.screens.GameStateManager;
 
@@ -22,6 +24,8 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.input.setCursorCatched(false);
 		GameStateManager.setScreen(GameStateManager.MENU);
 		//music.play();
+		
+		// TODO: Configure the ship by reading back from persistence
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class ShipModel implements Health, Serializable {
 	 * @see #getCurrentEngine()
 	 * @see #getEnginesInventory()
 	 */
-	private Engine currentEngine = new ChemicalEngine();
+	private Engine currentEngine = null;
 	
 	/**
 	 * Current shield but also part of inventory.  Never use this
@@ -75,8 +75,17 @@ public class ShipModel implements Health, Serializable {
 	 * @see #getEnginesInventory()
 	 * @return  current engine in use
 	 */
-	private Engine getCurrentEngine() {
+	public Engine getCurrentEngine() {
 		return currentEngine;
+	}
+	
+	/**
+	 * Sets the current engine
+	 * 
+	 * @param engine  engine should be one from the inventory
+	 */
+	public void setCurrentEngine(final Engine engine) {
+		this.currentEngine = engine;
 	}
 	
 	/**

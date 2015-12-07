@@ -3,10 +3,13 @@ package com.gdx.orion.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -16,17 +19,25 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gdx.orion.gamemodel.Campaign;
+import com.gdx.orion.gamemodel.engines.ChemicalEngine;
+import com.gdx.orion.gamemodel.engines.Engine;
+import com.gdx.orion.utils.Scene2dUtils;
 
 /**
  * This is the screen for the Hangar.  Player can repair, upgrade, and reconfigure
@@ -42,9 +53,17 @@ public class Hangar extends GameState implements Screen {
 	private final Sprite spriteBackground;
 	private final SpriteBatch batch;
 	private final Stage stage;
-	private final ImageButton btnEnginePortLeft;
-	private final ImageButton btnEnginePortRight;
+	private final Button btnEnginePortLeft;
+	private final Button btnEnginePortRight;
 	private static final float SHIP_SCALING_FACTOR = 0.85f;
+	
+	/**
+	 * The current engine to render.  Can be null if no engine is currently configured.
+	 * The engine is implement as a button because it can be clicked on by user for
+	 * configuration.
+	 */
+	private Button btnEngineLeft = null;
+	private Button btnEngineRight = null;
 	
 	/**
 	 * Sole constructor
@@ -82,9 +101,12 @@ public class Hangar extends GameState implements Screen {
 			}
 		});
 		
+		
 		stage.clear();
 		stage.addActor(btnEnginePortLeft);
 		stage.addActor(btnEnginePortRight);
+		if (btnEngineLeft != null) stage.addActor(btnEngineLeft);
+		if (btnEngineRight != null) stage.addActor(btnEngineRight);
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
@@ -97,6 +119,47 @@ public class Hangar extends GameState implements Screen {
 				return super.keyUp(event, keycode);
 			}
 		});
+		
+		mvcUpdateView();
+	}
+	
+	/**
+	 * Configures the ship's view to match the campaign configuration.  This method
+	 * can and should be called after any ship configuration is made to update the view
+	 * with the model.
+	 */
+	private void mvcUpdateView() {
+		final Engine currentEngine = Campaign.getInstance().getShipModel().getCurrentEngine();
+		
+		// Use Java reflection to determine type of engine (if any)
+		if (currentEngine != null) {
+			if (currentEngine instanceof ChemicalEngine) {
+				// Left Engine
+				btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+				btnEngineLeft.setName("EngineChemical"); // Naming is important for removal from stage
+				btnEngineLeft.setSize(250, 384);
+				btnEngineLeft.setPosition(500, shipBaseYPosition() - 100f);
+				
+				stage.addActor(btnEngineLeft);
+				
+				// Right Engine
+				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+				btnEngineRight.setName("EngineChemical"); // Naming is important for removal from stage
+				btnEngineRight.setSize(1622, 384);
+				btnEngineRight.setPosition(500, shipBaseYPosition() - 100f);
+				
+				stage.addActor(btnEngineRight);
+			}
+		} else {
+			for (final Actor actor : stage.getActors()) {
+				if (actor != null && actor instanceof ImageButton) {
+					if (actor.getName() != null && actor.getName().startsWith("Engine")) {
+						// Remove the engine since nothing was 
+						actor.remove();
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -190,7 +253,8 @@ public class Hangar extends GameState implements Screen {
 	 */
 	private class EnginePopupScreen implements Screen {
 		private static final float BORDER_LINE_WIDTH = 4.0f;
-		private static final float INSET_PERCENTAGE = 0.05f;
+		private static final float FRAME_INSET_PERCENTAGE = 0.05f;
+		private static final float BUTTON_INSET_PERCENTAGE = 1.06f;
 		private boolean active = true;
 		private final Color COLOR_BACKGROUND = new Color(0.5f, 0.5f, 0.5f, 0.45f);
 		private final Color COLOR_BORDER = Color.NAVY;
@@ -222,51 +286,93 @@ public class Hangar extends GameState implements Screen {
 										}});
 		private final Label lblEngineDescription = new Label("...", new LabelStyle(fontDescription, fontDescription.getColor()));
 		
+		
+		// Popup's outer frame dimensions are expressed as a parameter of FRAME_INSET_PERCENTAGE
+	    private final float boxX = FRAME_INSET_PERCENTAGE * camera.viewportWidth;
+	    private final float boxY = FRAME_INSET_PERCENTAGE * camera.viewportHeight;
+	    private final float boxWidth = (1 - 2 * FRAME_INSET_PERCENTAGE) * camera.viewportWidth;
+	    private final float boxHeight = (1 - 2 * FRAME_INSET_PERCENTAGE) * camera.viewportHeight;
+	    
+	    /**
+	     * Remember the previous input handler so that control can be returned to
+	     * it on dispose
+	     * 
+	     * @see {@link #dispose()}
+	     */
+	    private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
+	    
 		/**
 		 * Sole constructor
 		 */
 		public EnginePopupScreen() {
 			spriteEngine = new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")));
 			batch = new SpriteBatch();
-			stage = new Stage(viewport);
+			this.stage = new Stage(viewport);  // Must use the outer classes viewport!
+			Gdx.input.setInputProcessor(this.stage);
 			
-			stage.clear();
-			stage.addListener(new InputListener() {
+			// TODO: Load from ShipConfig
+			lblEngineDescription.setText("This is the stock engine that uses impulse from a chemical reaction. This was the only type of engine available during early days of space exploration.  It is essentially a modernized rocket engine.  Its design operates best in planetary atmosphere conditions so provides a degraded level of performance in the frigid vacuum of space.  The chemical engine is largely superseded by Neutrino engines that perform much better in space.");
+			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
+			lblEngineDescription.setWrap(true);
+			
+			final Skin skin = new Skin();
+			final Pixmap pixmap = new Pixmap(200, 100, Format.RGBA8888);
+			pixmap.setColor(Color.GOLD);
+			pixmap.fill();
+			skin.add("white", new Texture(pixmap));
+			skin.add("default", new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf")).generateFont(new FreeTypeFontParameter()));
+			final TextButton.TextButtonStyle style = Scene2dUtils.createTextButtonStyle(skin, "default");
+			final Button btnOk = new TextButton("OK", style);
+			btnOk.setPosition(boxX + boxWidth - btnOk.getWidth() * BUTTON_INSET_PERCENTAGE, boxY * BUTTON_INSET_PERCENTAGE);
+			
+			this.stage.clear();
+			this.stage.addActor(btnOk);
+			this.stage.addListener(new InputListener() {
 				@Override
 				public boolean keyUp(InputEvent event, int keycode) {
-					switch (keycode){
+					switch (keycode) {
 						case Input.Keys.ESCAPE:
-							Hangar.this.removeScreen(EnginePopupScreen.this);
+						case Input.Keys.BACK:
+							cancel();
 							break;
 						}
 				
 					return super.keyUp(event, keycode);
 				}
 			});
+			btnOk.addListener(new ClickListener() {
+	            @Override 
+	            public void clicked(InputEvent event, float x, float y) {
+	            	ok();
+	            }
+	        });
+		}
+		
+		/**
+		 * Cancels and close this popup screen from view and perform no action
+		 */
+		public void cancel() {
+			Hangar.this.removeScreen(EnginePopupScreen.this);
+		}
+		
+		public void ok() {
+			Campaign.getInstance().getShipModel().setCurrentEngine(new ChemicalEngine());  // TODO: should get engine from inventory
 			
-			// TODO: Load from ShipConfig
-			lblEngineDescription.setText("This is the stock engine that uses impulse from a chemical reaction. This was the only type of engine available during early days of space exploration.  It is essentially a modernized rocket engine.  Its design operates best in planetary atmosphere conditions so provides a degraded level of performance in the frigid vacuum of space.  The chemical engine is largely superseded by Neutrino engines that perform much better in space.");
-			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
-			lblEngineDescription.setWrap(true);
+			Hangar.this.removeScreen(EnginePopupScreen.this);
+			mvcUpdateView();
 		}
 		
 		@Override
 		public void show() {
-			Gdx.input.setInputProcessor(stage);
+			Gdx.input.setInputProcessor(this.stage);
 			active = true;
 		}
 
 		@Override
 		public void render(float delta) {
 			if (active) {
-			    // Frame box dimensions is expressed as a parameter of INSET_PERCENTAGE
-				// TODO: Can this be moved outside of render()?  Other parts of the code can use it.
-			    final float boxX = INSET_PERCENTAGE * camera.viewportWidth;
-			    final float boxY = INSET_PERCENTAGE * camera.viewportHeight;
-			    final float boxWidth = (1 - 2 * INSET_PERCENTAGE) * camera.viewportWidth;
-			    final float boxHeight = (1 - 2 * INSET_PERCENTAGE) * camera.viewportHeight;
-
 			    shapeRenderer.setProjectionMatrix(camera.combined);
+			    
 			    
 			    // Frame outer box border
 			    batch.begin();
@@ -327,7 +433,6 @@ public class Hangar extends GameState implements Screen {
 				
 				stage.act();
 				stage.draw();
-				
 				camera.update();
 			}
 		}
@@ -352,7 +457,7 @@ public class Hangar extends GameState implements Screen {
 
 		@Override
 		public void dispose() {
-//			stage.dispose();
+			Gdx.input.setInputProcessor(previousInputProcessor);
 		}
 	}
 }

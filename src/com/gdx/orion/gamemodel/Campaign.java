@@ -59,6 +59,11 @@ public class Campaign implements Serializable {
 	}
 	
 	public ShipModel getShipModel() {
+		// Lazy instantiation on first use
+		if (shipModel == null) {
+			shipModel = new ShipModel();
+		}
+		
 		return shipModel;
 	}
 	
