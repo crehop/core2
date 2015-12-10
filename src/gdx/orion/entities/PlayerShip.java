@@ -3,6 +3,7 @@ package gdx.orion.entities;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,9 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.gamemodel.shields.InverterShield;
@@ -49,7 +50,7 @@ public class PlayerShip {
     private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
     private Sprite shipSprite = new Sprite(texture2);
     private InverterShield shield;
-
+    private final Sound soundFire = Gdx.audio.newSound(Gdx.files.internal("sound/shoot01.wav"));
 	
 	public PlayerShip(World world, Vector2 position){
 		this.world = world;
@@ -136,6 +137,8 @@ public class PlayerShip {
 		if(this.isSheilded() == false){
 			if(fire > FIRE_DELAY){
 				if(!fired)fired = true;
+				
+				soundFire.play();
 			}
 		}else{
 			fired = false;
