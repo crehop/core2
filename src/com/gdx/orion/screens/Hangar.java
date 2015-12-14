@@ -330,12 +330,6 @@ public class Hangar extends GameState implements Screen {
 			btnOk.setPosition(boxX + boxWidth - btnOk.getWidth() * BUTTON_INSET_PERCENTAGE, boxY * BUTTON_INSET_PERCENTAGE);
 			
 			this.stage.clear();
-			////
-//			createTestTextScroller(stage);
-//			createEngineScroller(stage);
-	        ////
-	        
-			this.stage.addActor(btnOk);
 			this.stage.addListener(new InputListener() {
 				@Override
 				public boolean keyUp(InputEvent event, int keycode) {
@@ -358,26 +352,26 @@ public class Hangar extends GameState implements Screen {
 			
 			
 			// Main table layout
-			final Table table = new Table();
-			table.setBounds(
-					(camera.viewportWidth - camera.viewportWidth * 0.85f) / 2, 
-					(camera.viewportHeight - camera.viewportHeight * 0.85f) / 2, 
-					camera.viewportWidth * 0.85f, 
-					camera.viewportHeight * 0.85f);
-			table.debug();
+			final float tableInsetPercentage = 0.88f;
+			final Table tblOuter = new Table();
+			tblOuter.setBounds(
+					(camera.viewportWidth - camera.viewportWidth * tableInsetPercentage) / 2, 
+					(camera.viewportHeight - camera.viewportHeight * tableInsetPercentage) / 2, 
+					camera.viewportWidth * tableInsetPercentage, 
+					camera.viewportHeight * tableInsetPercentage);
+			tblOuter.debug(); // Draws lines for easier debugging of layout
 			
-//			table.add().width(table.getWidth() / 3);
-//			table.add(new ScrollPane(new List()));		
-//			table.row();
-			table.add(new Label("Select Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top();
-			table.row();
-			table.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor())));
-			table.row();
-			table.add(createEngineScroller(stage)).center().fill().expand();
-			table.row();
-			table.add(lblEngineDescription).align(Align.left).expandX().bottom();
+			tblOuter.add(new Label("Select Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top();
+			tblOuter.row();
+			tblOuter.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor())));
+			tblOuter.row();
+			tblOuter.add(createEngineScroller(stage)).bottom().fill().expand();
+			tblOuter.row();
+			tblOuter.add(lblEngineDescription).align(Align.left).fill().bottom();
+			tblOuter.row();
+			tblOuter.add(btnOk).align(Align.right).pad(8, 0, 0, 0);
 			
-			stage.addActor(table);
+			stage.addActor(tblOuter);
 		}
 		
 		/**
@@ -438,34 +432,6 @@ public class Hangar extends GameState implements Screen {
 				shapeRenderer.end();
 				batch.end();
 				
-				// Draw engines -- TEST -- this should be a setable scrollable content box that
-				// can contain any content like engines, shields, power cores, etc.
-				batch.begin();
-				batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
-				final float engineBaseY = 1.25f * (camera.viewportHeight - spriteEngine.getHeight()) / 2;
-//				batch.draw(
-//						spriteEngine, 
-//						(camera.viewportWidth - spriteEngine.getWidth()) / 2, 
-//						engineBaseY
-//						);
-				
-//				gryphLayoutEngineTitle.setText(fontEngineTitle, "Chemical Engine");
-				
-				// Screen title
-//				fontScreenTitle.draw(batch, "Select your engine", boxX + 10f, boxY + boxHeight - 5.0f);
-//				fontEngineTitle.draw(batch, "Chemical Engine",
-//						(camera.viewportWidth - spriteEngine.getWidth()) / 2 + gryphLayoutEngineTitle.width / 4,
-//						engineBaseY + spriteEngine.getHeight() + fontEngineTitle.getLineHeight());
-//				
-//				// Engine description blurb
-//				// TODO: Need to wrap in scrollable pane in case text overflows the screen
-//				lblEngineDescription.setPosition(boxX + 25f, engineBaseY - spriteEngine.getHeight() / 2.0f + lblEngineDescription.getMinHeight() / 2.0f);
-//				lblEngineDescription.draw(batch, 1.0f);
-				
-				
-				
-				batch.end();
-				
 				stage.act();
 				stage.draw();
 				camera.update();
@@ -497,14 +463,16 @@ public class Hangar extends GameState implements Screen {
 		
 		public Table createEngineScroller(final Stage targetStage) {
 			final Table tableContents = new Table();
-			tableContents.add(new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png"))))));
-	        tableContents.add(new Label("Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor())));
+			ImageButton btnLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+			btnLeft.setScale(0.75f);
+			tableContents.add(btnLeft);
+	        tableContents.add(new Label("Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor())));
 	        tableContents.add(new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-right.png"))))));
 
 	        final ScrollPane scroller = new ScrollPane(tableContents);
 
 	        final Table table = new Table();
-	        table.setFillParent(true);
+//	        table.setFillParent(true);   // <-- DO NOT USE or scrollpane extends outside of the cell!
 	        final Cell<ScrollPane> c = table.add(scroller).fill().expand();
 	        targetStage.addActor(table);
 	        return table;
