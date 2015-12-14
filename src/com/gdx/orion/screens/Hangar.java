@@ -24,13 +24,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -277,14 +281,14 @@ public class Hangar extends GameState implements Screen {
 									    	shadowOffsetX = 3;
 									    	shadowOffsetY = 3;
 										}});
-		private final BitmapFont fontDescription = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Light.ttf"))
+		private final BitmapFont fontEngineDescription = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Light.ttf"))
 									    .generateFont(new FreeTypeFontParameter() {{
 									    	size = 32;
 									    	color = Color.WHITE;
 									    	shadowOffsetX = 1;
 									    	shadowOffsetY = 1;
 										}});
-		private final Label lblEngineDescription = new Label("...", new LabelStyle(fontDescription, fontDescription.getColor()));
+		private final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
 		
 		
 		// Popup's outer frame dimensions are expressed as a parameter of FRAME_INSET_PERCENTAGE
@@ -326,6 +330,11 @@ public class Hangar extends GameState implements Screen {
 			btnOk.setPosition(boxX + boxWidth - btnOk.getWidth() * BUTTON_INSET_PERCENTAGE, boxY * BUTTON_INSET_PERCENTAGE);
 			
 			this.stage.clear();
+			////
+//			createTestTextScroller(stage);
+//			createEngineScroller(stage);
+	        ////
+	        
 			this.stage.addActor(btnOk);
 			this.stage.addListener(new InputListener() {
 				@Override
@@ -346,6 +355,29 @@ public class Hangar extends GameState implements Screen {
 	            	ok();
 	            }
 	        });
+			
+			
+			// Main table layout
+			final Table table = new Table();
+			table.setBounds(
+					(camera.viewportWidth - camera.viewportWidth * 0.85f) / 2, 
+					(camera.viewportHeight - camera.viewportHeight * 0.85f) / 2, 
+					camera.viewportWidth * 0.85f, 
+					camera.viewportHeight * 0.85f);
+			table.debug();
+			
+//			table.add().width(table.getWidth() / 3);
+//			table.add(new ScrollPane(new List()));		
+//			table.row();
+			table.add(new Label("Select Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top();
+			table.row();
+			table.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor())));
+			table.row();
+			table.add(createEngineScroller(stage)).center().fill().expand();
+			table.row();
+			table.add(lblEngineDescription).align(Align.left).expandX().bottom();
+			
+			stage.addActor(table);
 		}
 		
 		/**
@@ -366,13 +398,14 @@ public class Hangar extends GameState implements Screen {
 		public void show() {
 			Gdx.input.setInputProcessor(this.stage);
 			active = true;
+			
+			
 		}
 
 		@Override
 		public void render(float delta) {
 			if (active) {
 			    shapeRenderer.setProjectionMatrix(camera.combined);
-			    
 			    
 			    // Frame outer box border
 			    batch.begin();
@@ -410,24 +443,26 @@ public class Hangar extends GameState implements Screen {
 				batch.begin();
 				batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
 				final float engineBaseY = 1.25f * (camera.viewportHeight - spriteEngine.getHeight()) / 2;
-				batch.draw(
-						spriteEngine, 
-						(camera.viewportWidth - spriteEngine.getWidth()) / 2, 
-						engineBaseY
-						);
+//				batch.draw(
+//						spriteEngine, 
+//						(camera.viewportWidth - spriteEngine.getWidth()) / 2, 
+//						engineBaseY
+//						);
 				
-				gryphLayoutEngineTitle.setText(fontEngineTitle, "Chemical Engine");
+//				gryphLayoutEngineTitle.setText(fontEngineTitle, "Chemical Engine");
 				
 				// Screen title
-				fontScreenTitle.draw(batch, "Select your engine", boxX + 10f, boxY + boxHeight - 5.0f);
-				fontEngineTitle.draw(batch, "Chemical Engine",
-						(camera.viewportWidth - spriteEngine.getWidth()) / 2 + gryphLayoutEngineTitle.width / 4,
-						engineBaseY + spriteEngine.getHeight() + fontEngineTitle.getLineHeight());
+//				fontScreenTitle.draw(batch, "Select your engine", boxX + 10f, boxY + boxHeight - 5.0f);
+//				fontEngineTitle.draw(batch, "Chemical Engine",
+//						(camera.viewportWidth - spriteEngine.getWidth()) / 2 + gryphLayoutEngineTitle.width / 4,
+//						engineBaseY + spriteEngine.getHeight() + fontEngineTitle.getLineHeight());
+//				
+//				// Engine description blurb
+//				// TODO: Need to wrap in scrollable pane in case text overflows the screen
+//				lblEngineDescription.setPosition(boxX + 25f, engineBaseY - spriteEngine.getHeight() / 2.0f + lblEngineDescription.getMinHeight() / 2.0f);
+//				lblEngineDescription.draw(batch, 1.0f);
 				
-				// Engine description blurb
-				// TODO: Need to wrap in scrollable pane in case text overflows the screen
-				lblEngineDescription.setPosition(boxX + 25f, engineBaseY - spriteEngine.getHeight() / 2.0f + lblEngineDescription.getMinHeight() / 2.0f);
-				lblEngineDescription.draw(batch, 1.0f);
+				
 				
 				batch.end();
 				
@@ -458,6 +493,21 @@ public class Hangar extends GameState implements Screen {
 		@Override
 		public void dispose() {
 			Gdx.input.setInputProcessor(previousInputProcessor);
+		}
+		
+		public Table createEngineScroller(final Stage targetStage) {
+			final Table tableContents = new Table();
+			tableContents.add(new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png"))))));
+	        tableContents.add(new Label("Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor())));
+	        tableContents.add(new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-right.png"))))));
+
+	        final ScrollPane scroller = new ScrollPane(tableContents);
+
+	        final Table table = new Table();
+	        table.setFillParent(true);
+	        final Cell<ScrollPane> c = table.add(scroller).fill().expand();
+	        targetStage.addActor(table);
+	        return table;
 		}
 	}
 }
