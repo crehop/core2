@@ -354,6 +354,7 @@ public class Hangar extends GameState implements Screen {
 			// Main table layout
 			final float tableInsetPercentage = 0.88f;
 			final Table tblOuter = new Table();
+			// Main container table is centered and slightly smaller than the viewport
 			tblOuter.setBounds(
 					(camera.viewportWidth - camera.viewportWidth * tableInsetPercentage) / 2, 
 					(camera.viewportHeight - camera.viewportHeight * tableInsetPercentage) / 2, 
@@ -365,7 +366,7 @@ public class Hangar extends GameState implements Screen {
 			tblOuter.row();
 			tblOuter.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor())));
 			tblOuter.row();
-			tblOuter.add(createEngineScroller(stage)).bottom().fill().expand();
+			tblOuter.add(createEngineScroller()).bottom().fill().expand();
 			tblOuter.row();
 			tblOuter.add(lblEngineDescription).align(Align.left).fill().bottom();
 			tblOuter.row();
@@ -392,8 +393,6 @@ public class Hangar extends GameState implements Screen {
 		public void show() {
 			Gdx.input.setInputProcessor(this.stage);
 			active = true;
-			
-			
 		}
 
 		@Override
@@ -461,7 +460,7 @@ public class Hangar extends GameState implements Screen {
 			Gdx.input.setInputProcessor(previousInputProcessor);
 		}
 		
-		public Table createEngineScroller(final Stage targetStage) {
+		public Table createEngineScroller() {
 			final Table tableContents = new Table();
 			ImageButton btnLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 			btnLeft.setScale(0.75f);
@@ -473,8 +472,7 @@ public class Hangar extends GameState implements Screen {
 
 	        final Table table = new Table();
 //	        table.setFillParent(true);   // <-- DO NOT USE or scrollpane extends outside of the cell!
-	        final Cell<ScrollPane> c = table.add(scroller).fill().expand();
-	        targetStage.addActor(table);
+	        table.add(scroller).fill().expand();
 	        return table;
 		}
 	}
