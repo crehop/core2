@@ -49,6 +49,14 @@ public class EffectUtils {
 		particles.add(shieldMain);
 		particles.add(bullet);
 	}
+	public static void line(Vector2 origin,
+			Vector2 destination,
+			float r, float g, float b, float a) {
+		lineRenderer.color(r, g, b, a);
+		lineRenderer.vertex(origin.x, origin.y, 0);
+		lineRenderer.color(r, g, b, a);
+		lineRenderer.vertex(destination.x, destination.y, 0);
+	}
 	public static void line(float x1, float y1, float z1,
 			float x2, float y2, float z2,
 			float r, float g, float b, float a) {

@@ -214,19 +214,23 @@ public class PlayerShip {
 				EffectUtils.muzzleFlash(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(7)))) * 3.5f  * SIZE_MOD;
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(7)))) * 3.5f * SIZE_MOD;
+				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(3))) * 23.6f * SIZE_MOD);
+				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(3))) * 23.6f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
+				EffectUtils.line(fireSpot,force,100,0,0,1);
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
+				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-3))) * 23.6f * SIZE_MOD);
+				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-3))) * 23.6f * SIZE_MOD);
 				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
-				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 23.6f * SIZE_MOD);
-				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 23.6f * SIZE_MOD);
 				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
-				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(7))) * 23.6f * SIZE_MOD);
-				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(7))) * 23.6f * SIZE_MOD);
-				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
+				EffectUtils.line(fireSpot,force,100,0,0,1);
+
+				
 			}
 			if(ropeFired){
-				EffectUtils.line(body.getWorldCenter().x, body.getWorldCenter().y, 0, rope.getGrapple().getPosition().x, rope.getGrapple().getPosition().y, 0,
+				EffectUtils.line(body.getWorldCenter(), rope.getGrapple().getPosition(),
 						/*color*/ 0, 100, 10, 1);
 			}
 			if(this.shield != null && this.shield.isEnabled())EffectUtils.inverterMainShieldEffect(shield.getBody().getWorldCenter(), batch);

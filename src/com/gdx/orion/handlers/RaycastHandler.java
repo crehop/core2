@@ -9,8 +9,8 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class RaycastHandler {
-	private static Vector2 collision = new Vector2();
-	private static Vector2 normal = new Vector2();
+	//private static Vector2 collision = new Vector2();
+	//private static Vector2 normal = new Vector2();
 	private static EntityType type;
 	private static EntityData data;
 	private static RayCastCallback callback = new RayCastCallback(){
@@ -23,8 +23,8 @@ public class RaycastHandler {
 					data.damage(1);
 				}
 			}
-			collision.set(point);
-			normal.set(normal2).add(point);
+			//collision.set(point);
+			//normal.set(normal2).add(point);
 			return 0;
 		}
 	};
