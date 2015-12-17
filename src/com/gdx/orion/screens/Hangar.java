@@ -1,5 +1,7 @@
 package com.gdx.orion.screens;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -61,13 +63,6 @@ public class Hangar extends GameState implements Screen {
 	private final Button btnEnginePortRight;
 	private static final float SHIP_SCALING_FACTOR = 0.85f;
 	
-	/**
-	 * The current engine to render.  Can be null if no engine is currently configured.
-	 * The engine is implement as a button because it can be clicked on by user for
-	 * configuration.
-	 */
-	private Button btnEngineLeft = null;
-	private Button btnEngineRight = null;
 	
 	/**
 	 * Sole constructor
@@ -109,8 +104,6 @@ public class Hangar extends GameState implements Screen {
 		stage.clear();
 		stage.addActor(btnEnginePortLeft);
 		stage.addActor(btnEnginePortRight);
-		if (btnEngineLeft != null) stage.addActor(btnEngineLeft);
-		if (btnEngineRight != null) stage.addActor(btnEngineRight);
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
@@ -135,49 +128,76 @@ public class Hangar extends GameState implements Screen {
 	private void mvcUpdateView() {
 		final Engine currentEngine = Campaign.getInstance().getShipModel().getCurrentEngine();
 		
+		// Remove all engines from the stage as they will be updated to the new configuration
+		final Iterator<Actor> iterator = stage.getActors().iterator();
+		while (iterator.hasNext()) {
+			final Actor actor = iterator.next();
+			
+			if (actor != null && actor instanceof ImageButton) {
+				if (actor.getName() != null && actor.getName().startsWith("Engine")) {
+					iterator.remove();
+				}
+			}
+		}
+		
 		// Use Java reflection to determine type of engine (if any)
 		if (currentEngine != null) {
 			if (currentEngine instanceof ChemicalEngine) {
 				// Left Engine
-				btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+				final Button btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 				btnEngineLeft.setName("EngineChemical"); // Naming is important for removal from stage
 				btnEngineLeft.setSize(250, 384);
 				btnEngineLeft.setPosition(500, shipBaseYPosition() - 100f);
-				
+				btnEngineLeft.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						addScreen(new EnginePopupScreen());
+					}
+				});
+						
 				stage.addActor(btnEngineLeft);
 				
 				// Right Engine
-				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 				btnEngineRight.setName("EngineChemical"); // Naming is important for removal from stage
 				btnEngineRight.setSize(250, 384);
 				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
+				btnEngineRight.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						addScreen(new EnginePopupScreen());
+					}
+				});
 				
 				stage.addActor(btnEngineRight);
-			} else {
+			} else if (currentEngine instanceof NeutrinoEngine) {
 				// Left Engine
-				btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				final Button btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
 				btnEngineLeft.setName("EngineNeutrino"); // Naming is important for removal from stage
 				btnEngineLeft.setSize(250, 384);
 				btnEngineLeft.setPosition(500, shipBaseYPosition() - 100f);
+				btnEngineLeft.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						addScreen(new EnginePopupScreen());
+					}
+				});
 				
 				stage.addActor(btnEngineLeft);
 				
 				// Right Engine
-				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
 				btnEngineRight.setName("EngineNeutrino"); // Naming is important for removal from stage
 				btnEngineRight.setSize(250, 384);
 				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
+				btnEngineRight.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						addScreen(new EnginePopupScreen());
+					}
+				});
 				
 				stage.addActor(btnEngineRight);
-			}
-		} else {
-			for (final Actor actor : stage.getActors()) {
-				if (actor != null && actor instanceof ImageButton) {
-					if (actor.getName() != null && actor.getName().startsWith("Engine")) {
-						// Remove the engine since nothing was 
-						actor.remove();
-					}
-				}
 			}
 		}
 	}
