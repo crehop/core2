@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -41,6 +40,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.gamemodel.Campaign;
 import com.gdx.orion.gamemodel.engines.ChemicalEngine;
 import com.gdx.orion.gamemodel.engines.Engine;
+import com.gdx.orion.gamemodel.engines.NeutrinoEngine;
 import com.gdx.orion.utils.Scene2dUtils;
 
 /**
@@ -149,6 +149,22 @@ public class Hangar extends GameState implements Screen {
 				// Right Engine
 				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 				btnEngineRight.setName("EngineChemical"); // Naming is important for removal from stage
+				btnEngineRight.setSize(250, 384);
+				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
+				
+				stage.addActor(btnEngineRight);
+			} else {
+				// Left Engine
+				btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				btnEngineLeft.setName("EngineNeutrino"); // Naming is important for removal from stage
+				btnEngineLeft.setSize(250, 384);
+				btnEngineLeft.setPosition(500, shipBaseYPosition() - 100f);
+				
+				stage.addActor(btnEngineLeft);
+				
+				// Right Engine
+				btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				btnEngineRight.setName("EngineNeutrino"); // Naming is important for removal from stage
 				btnEngineRight.setSize(250, 384);
 				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
 				
@@ -288,7 +304,7 @@ public class Hangar extends GameState implements Screen {
 									    	shadowOffsetX = 1;
 									    	shadowOffsetY = 1;
 										}});
-		private final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
+		ScrollPane scrollPaneEngineSelection;
 		
 		
 		// Popup's outer frame dimensions are expressed as a parameter of FRAME_INSET_PERCENTAGE
@@ -313,11 +329,6 @@ public class Hangar extends GameState implements Screen {
 			batch = new SpriteBatch();
 			this.stage = new Stage(viewport);  // Must use the outer classes viewport!
 			Gdx.input.setInputProcessor(this.stage);
-			
-			// TODO: Load from ShipConfig
-			lblEngineDescription.setText("This is the stock engine that uses impulse from a chemical reaction. This was the only type of engine available during early days of space exploration.  It is essentially a modernized rocket engine.  Its design operates best in planetary atmosphere conditions so provides a degraded level of performance in the frigid vacuum of space.  The chemical engine is largely superseded by Neutrino engines that perform much better in space.");
-			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
-			lblEngineDescription.setWrap(true);
 			
 			final Skin skin = new Skin();
 			final Pixmap pixmap = new Pixmap(200, 100, Format.RGBA8888);
@@ -362,16 +373,21 @@ public class Hangar extends GameState implements Screen {
 					camera.viewportHeight * tableInsetPercentage);
 			tblOuter.debug(); // Draws lines for easier debugging of layout
 			
-			tblOuter.add(new Label("Select Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top();
+			final Table tblContent = new Table();
+			// Set each engine to be the width of the panel as they should occupy the view entirely until scrolled to 
+			// the next engine
+			tblContent.add(createChemicalEngineLayout(tblOuter.getWidth() * .98f)).fill().minWidth(tblOuter.getWidth());
+			tblContent.add(createNeutrinoEngineLayout(tblOuter.getWidth() * .98f)).fill().minWidth(tblOuter.getWidth());
+			
+			scrollPaneEngineSelection = new ScrollPane(tblContent);
+			scrollPaneEngineSelection.setScrollBarPositions(true, false);
+			scrollPaneEngineSelection.setScrollbarsOnTop(true);
+			tblOuter.add(new Label("Choose Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top().pad(0, 0, 8, 0);
 			tblOuter.row();
-			tblOuter.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor())));
-			tblOuter.row();
-			tblOuter.add(createEngineScroller()).bottom().fill().expand();
-			tblOuter.row();
-			tblOuter.add(lblEngineDescription).align(Align.left).fill().bottom();
+			tblOuter.add(scrollPaneEngineSelection).center().fill().expand();
 			tblOuter.row();
 			tblOuter.add(btnOk).align(Align.right).pad(8, 0, 0, 0);
-			
+						
 			stage.addActor(tblOuter);
 		}
 		
@@ -383,7 +399,11 @@ public class Hangar extends GameState implements Screen {
 		}
 		
 		public void ok() {
-			Campaign.getInstance().getShipModel().setCurrentEngine(new ChemicalEngine());  // TODO: should get engine from inventory
+			if (scrollPaneEngineSelection.getScrollPercentX() <= 0.5f) {
+				Campaign.getInstance().getShipModel().setCurrentEngine(new ChemicalEngine());  // TODO: should get engine from inventory
+			} else {
+				Campaign.getInstance().getShipModel().setCurrentEngine(new NeutrinoEngine());  // TODO: should get engine from inventory
+			}
 			
 			Hangar.this.removeScreen(EnginePopupScreen.this);
 			mvcUpdateView();
@@ -460,19 +480,41 @@ public class Hangar extends GameState implements Screen {
 			Gdx.input.setInputProcessor(previousInputProcessor);
 		}
 		
-		public Table createEngineScroller() {
-			final Table tableContents = new Table();
-			ImageButton btnLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
-			btnLeft.setScale(0.75f);
-			tableContents.add(btnLeft);
-	        tableContents.add(new Label("Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!  Scroll here!", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor())));
-	        tableContents.add(new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-right.png"))))));
+		public Table createChemicalEngineLayout(final float maxWidth) {
+			final Table table = new Table();
+			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
+			// TODO: Load from ShipConfig
+			lblEngineDescription.setText("This is the stock engine that uses impulse from a chemical reaction. This was the only type of engine available during early days of space exploration.  It is essentially a modernized rocket engine.  Its design operates best in planetary atmosphere conditions so provides a degraded level of performance in the frigid vacuum of space.  The chemical engine is largely superseded by Neutrino engines that perform much better in space.");
+			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
+			lblEngineDescription.setWrap(true);
+						
+			table.debug();
+			table.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
+			table.row();
+			table.add(imageButton).bottom().fill().expand();
+			table.row();
+			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
-	        final ScrollPane scroller = new ScrollPane(tableContents);
+	        return table;
+		}
+		
+		public Table createNeutrinoEngineLayout(final float maxWidth) {
+			final Table table = new Table();
+			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
+			// TODO: Load from ShipConfig
+			lblEngineDescription.setText("This modern space engine provides much greater efficiency and thrust over the old chemical engine design.  The Neutrino drive is the engine of choice for high performance sublight maneuvering in the vacuum of space.  It integrates advanced R&D concepts that physicists only theorized about at the dawn of the \"space age\".");
+			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
+			lblEngineDescription.setWrap(true);
+						
+			table.debug();
+			table.add(new Label("Neutrino Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
+			table.row();
+			table.add(imageButton).bottom().fill().expand();
+			table.row();
+			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
-	        final Table table = new Table();
-//	        table.setFillParent(true);   // <-- DO NOT USE or scrollpane extends outside of the cell!
-	        table.add(scroller).fill().expand();
 	        return table;
 		}
 	}
