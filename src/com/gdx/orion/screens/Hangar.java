@@ -158,7 +158,7 @@ public class Hangar extends GameState implements Screen {
 				stage.addActor(btnEngineLeft);
 				
 				// Right Engine
-				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
+				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-right.png")))));
 				btnEngineRight.setName("EngineChemical"); // Naming is important for removal from stage
 				btnEngineRight.setSize(250, 384);
 				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
@@ -396,8 +396,9 @@ public class Hangar extends GameState implements Screen {
 			final Table tblContent = new Table();
 			// Set each engine to be the width of the panel as they should occupy the view entirely until scrolled to 
 			// the next engine
-			tblContent.add(createChemicalEngineLayout(tblOuter.getWidth() * .98f)).fill().minWidth(tblOuter.getWidth());
-			tblContent.add(createNeutrinoEngineLayout(tblOuter.getWidth() * .98f)).fill().minWidth(tblOuter.getWidth());
+			tblContent.add(createChemicalEngineLayout()).fill().minWidth(tblOuter.getWidth());
+			tblContent.add(createNeutrinoEngineLayout()).fill().minWidth(tblOuter.getWidth());
+			tblContent.add(createHiggsEngineLayout()).fill().minWidth(tblOuter.getWidth());
 			
 			scrollPaneEngineSelection = new ScrollPane(tblContent);
 			scrollPaneEngineSelection.setScrollBarPositions(true, false);
@@ -500,7 +501,7 @@ public class Hangar extends GameState implements Screen {
 			Gdx.input.setInputProcessor(previousInputProcessor);
 		}
 		
-		public Table createChemicalEngineLayout(final float maxWidth) {
+		public Table createChemicalEngineLayout() {
 			final Table table = new Table();
 			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")))));
 			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
@@ -519,7 +520,7 @@ public class Hangar extends GameState implements Screen {
 	        return table;
 		}
 		
-		public Table createNeutrinoEngineLayout(final float maxWidth) {
+		public Table createNeutrinoEngineLayout() {
 			final Table table = new Table();
 			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
 			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
@@ -534,6 +535,25 @@ public class Hangar extends GameState implements Screen {
 			table.add(imageButton).bottom().fill().expand();
 			table.row();
 			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
+
+	        return table;
+		}
+		
+		public Table createHiggsEngineLayout() {
+			final Table table = new Table();
+			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/Locked.png")))));
+			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
+			// TODO: Load from ShipConfig
+			lblEngineDescription.setText("This is the most advanced sublight speed engine available and represents the absolute bleeding edge of humanity's progress. This engine's most fascinating feature is that it confers onto the craft an \"inertialess\" state where the craft ceases to have apparent mass and inertia to the outside observer. This allows the craft to be unaffected by gravity or inertia.  Acceleration and deceleration are near instant with no build up of momentum providing a \"UFO\"-like of maneuvering never seen before. It's hoped that further research into this type of drive will lead to a safe and efficient method of faster-than-light travel but that remains to be seen!");
+			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
+			lblEngineDescription.setWrap(true);
+						
+			table.debug();
+			table.add(new Label("Higgs Inhibitor Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
+			table.row();
+			table.add(imageButton).bottom().fill().expand();
+			table.row();
+			table.add(lblEngineDescription).align(Align.center).fill().bottom();
 
 	        return table;
 		}
