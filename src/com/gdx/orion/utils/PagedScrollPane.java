@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Logger;
 
 /**
  * A "paged" scroll pane that auto locks onto discrete pages of screen.<br/>
@@ -22,6 +23,8 @@ public class PagedScrollPane extends ScrollPane {
 	 * pages from sometimes getting stuck.
 	 */
     private static final float DEFAULT_PAGE_SPACE = 3.0f;
+    
+    private static final Logger LOGGER = new Logger(PagedScrollPane.class.toString());
 
 	private boolean wasPanDragFling = false;
     
@@ -208,6 +211,6 @@ public class PagedScrollPane extends ScrollPane {
      */
     private void setCurrentPage(final Actor actor) {
     	currentPage = actor;
-    	System.out.printf("Currently selected page name is \"%s\"%n", currentPage.getName());
+    	LOGGER.info(String.format("Currently selected page name: \"%s\"", currentPage.getName()));
     }
 }
