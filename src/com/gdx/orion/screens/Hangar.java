@@ -29,11 +29,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -43,6 +43,7 @@ import com.gdx.orion.gamemodel.Campaign;
 import com.gdx.orion.gamemodel.engines.ChemicalEngine;
 import com.gdx.orion.gamemodel.engines.Engine;
 import com.gdx.orion.gamemodel.engines.NeutrinoEngine;
+import com.gdx.orion.utils.PagedScrollPane;
 import com.gdx.orion.utils.Scene2dUtils;
 
 /**
@@ -324,7 +325,7 @@ public class Hangar extends GameState implements Screen {
 									    	shadowOffsetX = 1;
 									    	shadowOffsetY = 1;
 										}});
-		ScrollPane scrollPaneEngineSelection;
+		PagedScrollPane scrollPaneEngineSelection;
 		
 		
 		// Popup's outer frame dimensions are expressed as a parameter of FRAME_INSET_PERCENTAGE
@@ -391,7 +392,7 @@ public class Hangar extends GameState implements Screen {
 					(camera.viewportHeight - camera.viewportHeight * tableInsetPercentage) / 2, 
 					camera.viewportWidth * tableInsetPercentage, 
 					camera.viewportHeight * tableInsetPercentage);
-			tblOuter.debug(); // Draws lines for easier debugging of layout
+			//tblOuter.debug(); // Draws lines for easier debugging of layout
 			
 			final Table tblContent = new Table();
 			// Set each engine to be the width of the panel as they should occupy the view entirely until scrolled to 
@@ -400,9 +401,14 @@ public class Hangar extends GameState implements Screen {
 			tblContent.add(createNeutrinoEngineLayout()).fill().minWidth(tblOuter.getWidth());
 			tblContent.add(createHiggsEngineLayout()).fill().minWidth(tblOuter.getWidth());
 			
-			scrollPaneEngineSelection = new ScrollPane(tblContent);
+			scrollPaneEngineSelection = new PagedScrollPane();
+			scrollPaneEngineSelection.addPage(createChemicalEngineLayout(), tblOuter.getWidth());
+			scrollPaneEngineSelection.addPage(createNeutrinoEngineLayout(), tblOuter.getWidth());
+			scrollPaneEngineSelection.addPage(createHiggsEngineLayout(), tblOuter.getWidth());
 			scrollPaneEngineSelection.setScrollBarPositions(true, false);
 			scrollPaneEngineSelection.setScrollbarsOnTop(true);
+			scrollPaneEngineSelection.setFlingTime(0.33f);
+			
 			tblOuter.add(new Label("Choose Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top().pad(0, 0, 8, 0);
 			tblOuter.row();
 			tblOuter.add(scrollPaneEngineSelection).center().fill().expand();
@@ -510,7 +516,7 @@ public class Hangar extends GameState implements Screen {
 			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
 			lblEngineDescription.setWrap(true);
 						
-			table.debug();
+			//table.debug();
 			table.add(new Label("Chemical Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
 			table.row();
 			table.add(imageButton).bottom().fill().expand();
@@ -529,7 +535,7 @@ public class Hangar extends GameState implements Screen {
 			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
 			lblEngineDescription.setWrap(true);
 						
-			table.debug();
+			//table.debug();
 			table.add(new Label("Neutrino Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
 			table.row();
 			table.add(imageButton).bottom().fill().expand();
@@ -548,7 +554,7 @@ public class Hangar extends GameState implements Screen {
 			lblEngineDescription.setSize(camera.viewportWidth * 0.85f, 188f);
 			lblEngineDescription.setWrap(true);
 						
-			table.debug();
+			//table.debug();
 			table.add(new Label("Higgs Inhibitor Engine", new LabelStyle(fontEngineTitle, fontEngineTitle.getColor()))).align(Align.center).pad(0, 0, 8, 0);
 			table.row();
 			table.add(imageButton).bottom().fill().expand();
@@ -558,4 +564,8 @@ public class Hangar extends GameState implements Screen {
 	        return table;
 		}
 	}
+	
+	
+	
+	
 }
