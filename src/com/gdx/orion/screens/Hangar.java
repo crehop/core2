@@ -42,6 +42,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.gamemodel.Campaign;
 import com.gdx.orion.gamemodel.engines.ChemicalEngine;
 import com.gdx.orion.gamemodel.engines.Engine;
+import com.gdx.orion.gamemodel.engines.HiggsInhibitorEngine;
 import com.gdx.orion.gamemodel.engines.NeutrinoEngine;
 import com.gdx.orion.utils.PagedScrollPane;
 import com.gdx.orion.utils.Scene2dUtils;
@@ -426,12 +427,16 @@ public class Hangar extends GameState implements Screen {
 		}
 		
 		public void ok() {
-			if (scrollPaneEngineSelection.getScrollPercentX() <= 0.5f) {
-				Campaign.getInstance().getShipModel().setCurrentEngine(new ChemicalEngine());  // TODO: should get engine from inventory
+			// TODO: Add Higgs Inhibitor engine when its ready
+			if (ChemicalEngine.class.getSimpleName().equals(scrollPaneEngineSelection.getCurrentPage().getName())) {
+				Campaign.getInstance().getShipModel().setCurrentEngine(new ChemicalEngine());
+			} else if (NeutrinoEngine.class.getSimpleName().equals(scrollPaneEngineSelection.getCurrentPage().getName())) {
+				Campaign.getInstance().getShipModel().setCurrentEngine(new NeutrinoEngine());
 			} else {
-				Campaign.getInstance().getShipModel().setCurrentEngine(new NeutrinoEngine());  // TODO: should get engine from inventory
+				Campaign.getInstance().getShipModel().setCurrentEngine(null);
 			}
 			
+			// Remove the screen from view and notify views that model has changed
 			Hangar.this.removeScreen(EnginePopupScreen.this);
 			mvcUpdateView();
 		}
@@ -524,7 +529,7 @@ public class Hangar extends GameState implements Screen {
 			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
 			// Helps identify which engine this layout represents when OK is selected
-			table.setName("Chemical");
+			table.setName(ChemicalEngine.class.getSimpleName());
 			
 	        return table;
 		}
@@ -546,7 +551,7 @@ public class Hangar extends GameState implements Screen {
 			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
 			// Helps identify which engine this layout represents when OK is selected
-			table.setName("Neutrino");
+			table.setName(NeutrinoEngine.class.getSimpleName());
 			
 	        return table;
 		}
@@ -568,13 +573,9 @@ public class Hangar extends GameState implements Screen {
 			table.add(lblEngineDescription).align(Align.center).fill().bottom();
 
 			// Helps identify which engine this layout represents when OK is selected
-			table.setName("HiggsInhibitor");
+			table.setName(HiggsInhibitorEngine.class.getSimpleName());
 			
 	        return table;
 		}
 	}
-	
-	
-	
-	
 }
