@@ -25,12 +25,14 @@ public class PagedScrollPane extends ScrollPane {
 
 	private boolean wasPanDragFling = false;
     
-    private Table content;
+	/**
+	 * This is the internal layout table to hold the pages
+	 */
+    private final Table table = new Table();
     private float pageSpace;
     private ScrollRunnable onScroll;
     
-    public static interface ScrollRunnable
-    {
+    public static interface ScrollRunnable {
         public void run(Actor scrolledTo);
     }
     
@@ -69,8 +71,7 @@ public class PagedScrollPane extends ScrollPane {
         setup(pageSpace);
     }
 
-    public void setOnScroll(ScrollRunnable onScroll)
-    {
+    public void setOnScroll(ScrollRunnable onScroll) {
         this.onScroll = onScroll;
     }
 
@@ -78,15 +79,8 @@ public class PagedScrollPane extends ScrollPane {
         this.pageSpace = pageSpace;
         this.onScroll = null;
 
-        content = new Table();
-        content.defaults().space(pageSpace);
-        super.setWidget(content);
-    }
-
-    public void addPages (Actor... pages) {
-        for (Actor page : pages) {
-            content.add(page).expandY().fillY();
-        }
+        table.defaults().space(pageSpace);
+        super.setWidget(table);
     }
 
     /**
@@ -97,8 +91,8 @@ public class PagedScrollPane extends ScrollPane {
      * @return the table cell for the page
      * @see #addPage(Actor)
      */
-    public Cell addPage (final Actor page, final float minWidth) {
-    	final Cell<Actor> cell = content.add(page).expandY().fillY();
+    public Cell addPage(final Actor page, final float minWidth) {
+    	final Cell<Actor> cell = table.add(page).expandY().fillY();
         
     	if (minWidth >= 0) {
         	return cell.minWidth(minWidth);
@@ -119,7 +113,7 @@ public class PagedScrollPane extends ScrollPane {
     }
 
     @Override
-    public void act (float delta) {
+    public void act(float delta) {
         super.act(delta);
         if (wasPanDragFling && !isPanning() && !isDragging() && !isFlinging()) {
             wasPanDragFling = false;
@@ -132,26 +126,25 @@ public class PagedScrollPane extends ScrollPane {
     }
 
     @Override
-    public void setWidget (Actor widget)
-    {
+    public void setWidget (Actor widget) {
         //
     }
 
-    public void setPageSpacing (float pageSpacing) {
-        if (content != null) {
-            content.defaults().space(pageSpacing);
-            for (@SuppressWarnings("rawtypes") Cell cell : content.getCells()) {
+    public void setPageSpacing(float pageSpacing) {
+        if (table != null) {
+            table.defaults().space(pageSpacing);
+            for (@SuppressWarnings("rawtypes") Cell cell : table.getCells()) {
                 cell.space(pageSpacing);
             }
-            content.invalidate();
+            table.invalidate();
         }
     }
 
-    private void scrollToPage () {
+    private void scrollToPage() {
         final float width = getWidth();
         final float scrollX = getScrollX() + getWidth() / 2f;
 
-        Array<Actor> pages = content.getChildren();
+        Array<Actor> pages = table.getChildren();
         if (pages.size > 0) {
             for (Actor a : pages) {
                 float pageX = a.getX();
@@ -170,8 +163,7 @@ public class PagedScrollPane extends ScrollPane {
         }
     }
 
-    public void scrollTo(Actor listenerActor)
-    {
+    public void scrollTo(Actor listenerActor) {
         float pageX = listenerActor.getX();
         float pageWidth = listenerActor.getWidth();
         final float width = getWidth();
@@ -179,8 +171,7 @@ public class PagedScrollPane extends ScrollPane {
         setScrollX(pageX - (width - pageWidth) / 2f);
     }
 
-    public void addEmptyPage(float offset)
-    {
-        content.add().minWidth(offset);
+    public void addEmptyPage(float offset) {
+        table.add().minWidth(offset);
     }
 }
