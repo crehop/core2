@@ -32,6 +32,14 @@ public class PagedScrollPane extends ScrollPane {
     private float pageSpace;
     private ScrollRunnable onScroll;
     
+    /**
+     * References currently selected page
+     * 
+     * @see #setCurrentPage(Actor)
+     * @see #getCurrentPage()
+     */
+    private Actor currentPage = null;
+    
     public static interface ScrollRunnable {
         public void run(Actor scrolledTo);
     }
@@ -94,6 +102,11 @@ public class PagedScrollPane extends ScrollPane {
     public Cell addPage(final Actor page, final float minWidth) {
     	final Cell<Actor> cell = table.add(page).expandY().fillY();
         
+    	if (currentPage == null) {
+    		// Initialize with first page
+    		currentPage = page;
+    	}
+    	
     	if (minWidth >= 0) {
         	return cell.minWidth(minWidth);
     	} else {
@@ -144,19 +157,21 @@ public class PagedScrollPane extends ScrollPane {
         final float width = getWidth();
         final float scrollX = getScrollX() + getWidth() / 2f;
 
-        Array<Actor> pages = table.getChildren();
+        final Array<Actor> pages = table.getChildren();
         if (pages.size > 0) {
-            for (Actor a : pages) {
-                float pageX = a.getX();
-                float pageWidth = a.getWidth();
+            for (final Actor actor : pages) {
+                final float pageX = actor.getX();
+                final float pageWidth = actor.getWidth();
 
-                if (scrollX >= pageX && scrollX < pageX + pageWidth)
-                {
+                if (scrollX >= pageX && scrollX < pageX + pageWidth) {
                     setScrollX(pageX - (width - pageWidth) / 2f);
-                    if (onScroll != null)
-                    {
-                        onScroll.run(a);
+                    
+                    if (onScroll != null){
+                        onScroll.run(actor);
                     }
+                    
+                    setCurrentPage(actor);
+                    
                     break;
                 }
             }
@@ -173,5 +188,26 @@ public class PagedScrollPane extends ScrollPane {
 
     public void addEmptyPage(float offset) {
         table.add().minWidth(offset);
+    }
+    
+    /**
+     * Returns the currently selected page.  This should be called by client code to
+     * determine which page the user has currently selected.
+     * 
+     * @return  currently selected page in the scroller
+     */
+    public Actor getCurrentPage() {
+    	return currentPage;
+    }
+    
+    /**
+     * Sets the current page.  This method is private as only the internal scroller
+     * should set this after a page has been selected.
+     * 
+     * @param actor  the newly selected page
+     */
+    private void setCurrentPage(final Actor actor) {
+    	currentPage = actor;
+    	System.out.printf("Currently selected page name is \"%s\"%n", currentPage.getName());
     }
 }
