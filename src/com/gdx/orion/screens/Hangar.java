@@ -407,7 +407,7 @@ public class Hangar extends GameState implements Screen {
 			scrollPaneEngineSelection.addPage(createHiggsEngineLayout(), tblOuter.getWidth());
 			scrollPaneEngineSelection.setScrollBarPositions(true, false);
 			scrollPaneEngineSelection.setScrollbarsOnTop(true);
-			scrollPaneEngineSelection.setFlingTime(0.33f);
+			scrollPaneEngineSelection.setFlingTime(0.15f);  // Set an appropriate fling time: too fast and motion will be jerky, too slow and motion is heavy
 			
 			tblOuter.add(new Label("Choose Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top().pad(0, 0, 8, 0);
 			tblOuter.row();
@@ -523,6 +523,9 @@ public class Hangar extends GameState implements Screen {
 			table.row();
 			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
+			// Helps identify which engine this layout represents when OK is selected
+			table.setName("Chemical");
+			
 	        return table;
 		}
 		
@@ -542,6 +545,9 @@ public class Hangar extends GameState implements Screen {
 			table.row();
 			table.add(lblEngineDescription).align(Align.center).fill().expandY().bottom();
 
+			// Helps identify which engine this layout represents when OK is selected
+			table.setName("Neutrino");
+			
 	        return table;
 		}
 		
@@ -561,6 +567,9 @@ public class Hangar extends GameState implements Screen {
 			table.row();
 			table.add(lblEngineDescription).align(Align.center).fill().bottom();
 
+			// Helps identify which engine this layout represents when OK is selected
+			table.setName("HiggsInhibitor");
+			
 	        return table;
 		}
 	}
