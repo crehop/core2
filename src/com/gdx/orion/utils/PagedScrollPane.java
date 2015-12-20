@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
+import com.gdx.orion.Main;
 
 /**
  * A "paged" scroll pane that auto locks onto discrete pages of screen.<br/>
@@ -24,7 +25,7 @@ public class PagedScrollPane extends ScrollPane {
 	 */
     private static final float DEFAULT_PAGE_SPACE = 3.0f;
     
-    private static final Logger LOGGER = new Logger(PagedScrollPane.class.toString());
+    private static final Logger LOGGER = new Logger(PagedScrollPane.class.toString(), Main.getAppLogLevel());
 
 	private boolean wasPanDragFling = false;
     
@@ -173,6 +174,7 @@ public class PagedScrollPane extends ScrollPane {
                         onScroll.run(actor);
                     }
                     
+                    // New page has been locked onto so set the current page accordingly
                     setCurrentPage(actor);
                     
                     break;
@@ -181,12 +183,29 @@ public class PagedScrollPane extends ScrollPane {
         }
     }
 
-    public void scrollTo(Actor listenerActor) {
-        float pageX = listenerActor.getX();
-        float pageWidth = listenerActor.getWidth();
-        final float width = getWidth();
-
-        setScrollX(pageX - (width - pageWidth) / 2f);
+    /**
+     * Forces the GUI to scroll to a page by name.  Good for initializing the scroll
+     * position to a particular element based on current game state.  NOTE: If the
+     * page name is not found then no action occurs.
+     * 
+     * @param name  name of the page
+     */
+    public void forceScrollTo(final String name) {
+    	int index = 0;
+    	
+    	for (final Actor page : table.getChildren()) {
+    		if (name.equals(page.getName())) {
+    			LOGGER.info(String.format("Switching to page name %s", page.getName()));
+    			setCurrentPage(page);
+    			scrollX(table.getCells().get(index).getMinWidth() * index);
+    			
+    			break;
+    		}
+    		
+    		index++;
+    	}
+    	
+    	LOGGER.info(String.format("Force scroll did not find page for page name \"%s\"", name));
     }
 
     public void addEmptyPage(float offset) {
@@ -204,12 +223,16 @@ public class PagedScrollPane extends ScrollPane {
     }
     
     /**
-     * Sets the current page.  This method is private as only the internal scroller
-     * should set this after a page has been selected.
+     * Sets the current page so that dependent game logic will know what page is selected.
+     * This method is protected as only the internal scroller should set this after a page
+     * has been selected.<br/>
+     * <br/>
+     * NOTE: this does not scroll.  It only sets the value that will be returned by
+     * {@link #getCurrentPage()}. 
      * 
      * @param actor  the newly selected page
      */
-    private void setCurrentPage(final Actor actor) {
+    protected void setCurrentPage(final Actor actor) {
     	currentPage = actor;
     	LOGGER.info(String.format("Currently selected page name: \"%s\"", currentPage.getName()));
     }
