@@ -3,8 +3,7 @@ package com.gdx.orion;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.gdx.orion.gamemodel.Campaign;
-import com.gdx.orion.gamemodel.engines.ChemicalEngine;
+import com.badlogic.gdx.utils.Logger;
 //import com.badlogic.gdx.audio.Music;
 import com.gdx.orion.screens.GameStateManager;
 
@@ -25,7 +24,7 @@ public class Main extends Game implements ApplicationListener{
 		GameStateManager.setScreen(GameStateManager.MENU);
 		//music.play();
 		
-		// TODO: Configure the ship by reading back from persistence
+		// TODO: Configure the campaign singleton by reading back from persistent storage
 	}
 
 	@Override
@@ -50,6 +49,16 @@ public class Main extends Game implements ApplicationListener{
 	@Override
 	public void dispose () {
 		super.dispose();
+	}
+	
+	/**
+	 * This determines the global application log level.  All loggers should reference
+	 * this value for the current log level
+	 * 
+	 * @return  current log level
+	 */
+	public static int getAppLogLevel() {
+		return Logger.INFO;  // TODO: Should get this from a runtime config property
 	}
 }
 
