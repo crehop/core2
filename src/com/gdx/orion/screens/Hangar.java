@@ -33,7 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -407,7 +406,7 @@ public class Hangar extends GameState implements Screen {
 			scrollPaneEngineSelection.addPage(createNeutrinoEngineLayout(), tblOuter.getWidth());
 			scrollPaneEngineSelection.addPage(createHiggsEngineLayout(), tblOuter.getWidth());
 			scrollPaneEngineSelection.setScrollBarPositions(true, false);
-			scrollPaneEngineSelection.setScrollbarsOnTop(true);
+			scrollPaneEngineSelection.setForceScroll(true, false);
 			scrollPaneEngineSelection.setFlingTime(0.15f);  // Set an appropriate fling time: too fast and motion will be jerky, too slow and motion is heavy
 			
 			tblOuter.add(new Label("Choose Your Engine", new LabelStyle(fontScreenTitle, fontScreenTitle.getColor()))).align(Align.left).top().pad(0, 0, 8, 0);
@@ -417,6 +416,13 @@ public class Hangar extends GameState implements Screen {
 			tblOuter.add(btnOk).align(Align.right).pad(8, 0, 0, 0);
 						
 			stage.addActor(tblOuter);
+			
+			// Set the scrollpane to the currently selected engine
+			//
+			final Engine currentEngine = Campaign.getInstance().getShipModel().getCurrentEngine();
+			if (currentEngine != null) {
+				scrollPaneEngineSelection.forceScrollTo(currentEngine.getClass().getSimpleName());
+			}
 		}
 		
 		/**
