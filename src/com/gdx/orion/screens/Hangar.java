@@ -173,7 +173,7 @@ public class Hangar extends GameState implements Screen {
 				stage.addActor(btnEngineRight);
 			} else if (currentEngine instanceof NeutrinoEngine) {
 				// Left Engine
-				final Button btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				final Button btnEngineLeft = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino-left.png")))));
 				btnEngineLeft.setName("EngineNeutrino"); // Naming is important for removal from stage
 				btnEngineLeft.setSize(250, 384);
 				btnEngineLeft.setPosition(500, shipBaseYPosition() - 100f);
@@ -187,7 +187,7 @@ public class Hangar extends GameState implements Screen {
 				stage.addActor(btnEngineLeft);
 				
 				// Right Engine
-				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+				final Button btnEngineRight = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino-right.png")))));
 				btnEngineRight.setName("EngineNeutrino"); // Naming is important for removal from stage
 				btnEngineRight.setSize(250, 384);
 				btnEngineRight.setPosition(1175, shipBaseYPosition() - 100f);
@@ -542,7 +542,7 @@ public class Hangar extends GameState implements Screen {
 		
 		public Table createNeutrinoEngineLayout() {
 			final Table table = new Table();
-			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino.png")))));
+			final ImageButton imageButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/EngineNeutrino-left.png")))));
 			final Label lblEngineDescription = new Label("...", new LabelStyle(fontEngineDescription, fontEngineDescription.getColor()));
 			// TODO: Load from ShipConfig
 			lblEngineDescription.setText("This modern space engine provides much greater efficiency and thrust over the old chemical engine design.  The Neutrino drive is the engine of choice for high performance sublight maneuvering in the vacuum of space.  It integrates advanced R&D concepts that physicists only theorized about at the dawn of the \"space age\".");
