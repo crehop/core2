@@ -1,8 +1,8 @@
 package com.gdx.orion.handlers;
 
-import gdx.orion.entities.Asteroid;
-import gdx.orion.entities.EntityData;
-import gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.Asteroid;
+import com.gdx.orion.entities.EntityData;
+import com.gdx.orion.entities.EntityType;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;

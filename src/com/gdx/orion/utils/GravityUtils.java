@@ -1,6 +1,7 @@
 package com.gdx.orion.utils;
-import gdx.orion.entities.EntityData;
-import gdx.orion.entities.EntityType;
+
+import com.gdx.orion.entities.EntityData;
+import com.gdx.orion.entities.EntityType;
 
 import java.util.ArrayList;
 

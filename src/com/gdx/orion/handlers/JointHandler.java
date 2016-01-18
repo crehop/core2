@@ -1,8 +1,8 @@
 package com.gdx.orion.handlers;
 
-import gdx.orion.entities.EntityData;
-import gdx.orion.entities.EntityType;
-import gdx.orion.entities.PlayerShip;
+import com.gdx.orion.entities.EntityData;
+import com.gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.PlayerShip;
 
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;

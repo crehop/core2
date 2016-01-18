@@ -1,4 +1,4 @@
-package gdx.orion.entities;
+package com.gdx.orion.entities;
 	
 import java.util.Random;
 

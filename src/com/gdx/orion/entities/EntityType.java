@@ -1,4 +1,4 @@
-package gdx.orion.entities;
+package com.gdx.orion.entities;
 
 public enum EntityType {
 	ASTEROID,BULLET,SHIP,FRAGMENT,WORLD_BOUNDRY,DESTROYME,DELETEME, PRE_FRAG, GRAVITY_WELL, GRAPPLE, SHIELD

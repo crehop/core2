@@ -1,4 +1,4 @@
-package gdx.orion.entities;
+package com.gdx.orion.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;

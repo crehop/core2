@@ -1,6 +1,6 @@
 package com.gdx.orion.handlers;
 
-import gdx.orion.entities.PlayerShip;
+import com.gdx.orion.entities.PlayerShip;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;

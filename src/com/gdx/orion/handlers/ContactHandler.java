@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.gdx.orion.screens.GameStateManager;
 import com.gdx.orion.utils.Console;
 
-import gdx.orion.entities.EntityData;
-import gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.EntityData;
+import com.gdx.orion.entities.EntityType;
 
 public class ContactHandler implements ContactListener {
 	private  EntityData entityDataA;

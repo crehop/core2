@@ -1,4 +1,4 @@
-package gdx.orion.entities;
+package com.gdx.orion.entities;
 
 
 public class EntityData {

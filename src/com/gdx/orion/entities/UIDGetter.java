@@ -1,4 +1,4 @@
-package gdx.orion.entities;
+package com.gdx.orion.entities;
 
 public class UIDGetter {
 	private static int ID = 0;

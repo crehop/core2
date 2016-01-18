@@ -3,8 +3,8 @@ package com.gdx.orion.utils;
 
 import java.util.Random;
 
-import gdx.orion.entities.EntityData;
-import gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.EntityData;
+import com.gdx.orion.entities.EntityType;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
