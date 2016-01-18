@@ -4,6 +4,8 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,12 +18,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.orion.gamemodel.Campaign;
+import com.gdx.orion.gamemodel.engines.ChemicalEngine;
+import com.gdx.orion.gamemodel.engines.Engine;
 import com.gdx.orion.gamemodel.shields.InverterShield;
 import com.gdx.orion.gamemodel.weapons.Grapple;
 import com.gdx.orion.handlers.RaycastHandler;
 import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
+import com.gdx.orion.utils.Side;
 
 public class PlayerShip {
 	private float offset = (float) Math.toRadians(90);
@@ -47,8 +53,7 @@ public class PlayerShip {
 	private static final float ANGULAR_DAMPENING = 3.0f;
 	public static final float SIZE_MOD = 1.0f;
 	private Array<Grapple> ropes = new Array<Grapple>();
-    private Texture texture2 = new Texture(Gdx.files.internal("images/ship.png"));
-    private Sprite shipSprite = new Sprite(texture2);
+	private Sprite shipSprite = new Sprite(generateShipImageFromConfig());
     private InverterShield shield;
     private final Sound soundFire = Gdx.audio.newSound(Gdx.files.internal("sound/shoot01.wav"));
 	
@@ -277,5 +282,44 @@ public class PlayerShip {
 
 	public void setRopeFired(boolean ropeFired) {
 		this.ropeFired = ropeFired;
+	}
+	
+	public void updateShipImage() {
+		shipSprite = new Sprite(generateShipImageFromConfig());
+	}
+	
+	/**
+	 * Creates the ship's image properly with respect to the current campaign configuration
+	 * 
+	 * @return  a texture representing the ship with respect to the current campaign configuration
+	 */
+	private Texture generateShipImageFromConfig() {
+		final Texture textureShip = new Texture(Gdx.files.internal("images/PlayerShip-base-1920.png"));
+		final Texture textureEngineLeft = new Texture(Gdx.files.internal(enginePath(Campaign.getInstance().getShipModel().getCurrentEngine(), Side.LEFT)));
+		final Texture textureEngineRight = new Texture(Gdx.files.internal(enginePath(Campaign.getInstance().getShipModel().getCurrentEngine(), Side.RIGHT)));
+		
+		textureShip.getTextureData().prepare();
+		textureEngineLeft.getTextureData().prepare();
+		textureEngineRight.getTextureData().prepare();
+		
+		final Pixmap pixmap = new Pixmap(textureShip.getWidth(), (int)(1.25 * textureShip.getHeight()) , Format.RGBA8888);
+		pixmap.drawPixmap(textureShip.getTextureData().consumePixmap(), 0, 0);
+		pixmap.drawPixmap(textureEngineLeft.getTextureData().consumePixmap(), 380, 965); // TODO: Need to account X position for slightly different engine widths
+		pixmap.drawPixmap(textureEngineRight.getTextureData().consumePixmap(), 1200, 965);   // TODO: Need to account X position for slightly different engine widths
+		
+		// Ship texture should now have all engines, shields, and weapons configured
+		return new Texture(pixmap);
+	}
+	
+	private String enginePath(Engine engine, final Side side) {
+		if (engine == null) {
+			engine = new ChemicalEngine();
+		}
+		
+		switch (side) {
+			case LEFT:  return String.format("images/Engine%s-left.png", engine.getEngineName());
+			case RIGHT: return String.format("images/Engine%s-right.png", engine.getEngineName());
+			default:    throw new IllegalArgumentException("Engine side must be specified");  // Fatal
+		}
 	}
 }

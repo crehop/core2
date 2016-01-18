@@ -445,6 +445,7 @@ public class Hangar extends GameState implements Screen {
 			// Remove the screen from view and notify views that model has changed
 			Hangar.this.removeScreen(EnginePopupScreen.this);
 			mvcUpdateView();
+			GameStateManager.play.getPlayerShip().updateShipImage();  // TODO: this is a temporary hack since game flow isn't set up fully yet
 		}
 		
 		@Override
