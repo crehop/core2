@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,9 +21,12 @@ import com.gdx.orion.screens.GameStateManager;
 public class EffectUtils {
 	static ParticleEffect thrust = new ParticleEffect();
 	static ParticleEffect rotationThrusters = new ParticleEffect();
+	static ParticleEffect cometTrail = new ParticleEffect();
+	static ParticleEffect cometFragmentTrail = new ParticleEffect();
 	static ParticleEffect muzzleFlash = new ParticleEffect();
 	static ParticleEffect shieldMain = new ParticleEffect();
 	static ParticleEffect bullet = new ParticleEffect();
+	static SpriteBatch spriteBatch = new SpriteBatch();
 	static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 	static float spacingH = 0;
 	static float spacingW = 0;
@@ -35,6 +40,10 @@ public class EffectUtils {
 	public static void initilize(){
 		thrust.load(Gdx.files.internal("emitters/mainThrust"), Gdx.files.internal("images"));
 		thrust.scaleEffect(.04f);
+		cometTrail.load(Gdx.files.internal("emitters/cometTrail"), Gdx.files.internal("images"));
+		cometTrail.scaleEffect(.84f);
+		cometFragmentTrail.load(Gdx.files.internal("emitters/cometFragmentTrail"), Gdx.files.internal("images"));
+		cometFragmentTrail.scaleEffect(.04f);
 		rotationThrusters.load(Gdx.files.internal("emitters/rotationThrusters"), Gdx.files.internal("images"));
 		rotationThrusters.scaleEffect(.05f);
 		muzzleFlash.load(Gdx.files.internal("emitters/bulletHit"), Gdx.files.internal("images"));
@@ -48,6 +57,8 @@ public class EffectUtils {
 		particles.add(muzzleFlash);
 		particles.add(shieldMain);
 		particles.add(bullet);
+		particles.add(cometTrail);
+		particles.add(cometFragmentTrail);
 	}
 	public static void line(Vector2 origin,
 			Vector2 destination,
@@ -97,12 +108,38 @@ public class EffectUtils {
 		thrust.start();
 		thrust.draw(batch);
 	}
-	public static void rotationThrustEffect(Vector2 position, Batch batch, float rotation){
-		emitters = rotationThrusters.getEmitters();
+	public static void cometTrailEffect(Vector2 position, Batch batch, float rotation){
+		emitters = cometTrail.getEmitters();
 		for(int i = 0; i< emitters.size; i++){
 			val = emitters.get(i).getAngle();
 			h1 = rotation - 90f;
 			h2 = rotation - 90f;
+			val.setHigh(h1,h2);
+			val.setLow(h1,h2);
+		}
+		cometTrail.setPosition(position.x, position.y);
+		cometTrail.start();
+		cometTrail.draw(batch);
+	}
+	public static void cometFragmentTrailEffect(Vector2 position, Batch batch, float rotation){
+		emitters = thrust.getEmitters();
+		for(int i = 0; i< emitters.size; i++){
+			val = emitters.get(i).getAngle();
+			h1 = rotation;
+			h2 = rotation;
+			val.setHigh(h1,h2);
+			val.setLow(h1,h2);
+		}
+		thrust.setPosition(position.x, position.y);
+		thrust.start();
+		thrust.draw(batch);
+	}
+	public static void rotationThrustEffect(Vector2 position, Batch batch, float rotation){
+		emitters = rotationThrusters.getEmitters();
+		for(int i = 0; i< emitters.size; i++){
+			val = emitters.get(i).getAngle();
+			h1 = rotation;
+			h2 = rotation;
 			val.setHigh(h1,h2);
 			val.setLow(h1,h2);
 		}

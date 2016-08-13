@@ -55,7 +55,7 @@ public class PlayerShip {
 	private Array<Grapple> ropes = new Array<Grapple>();
 	private Sprite shipSprite = new Sprite(generateShipImageFromConfig());
     private InverterShield shield;
-    private final Sound soundFire = Gdx.audio.newSound(Gdx.files.internal("sound/shoot01.wav"));
+    //private final Sound soundFire = Gdx.audio.newSound(Gdx.files.internal("sound/shoot01.wav"));
 	
 	public PlayerShip(World world, Vector2 position){
 		this.world = world;
@@ -143,7 +143,7 @@ public class PlayerShip {
 			if(fire > FIRE_DELAY){
 				if(!fired)fired = true;
 				
-				soundFire.play();
+				//soundFire.play();
 			}
 		}else{
 			fired = false;

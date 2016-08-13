@@ -1,12 +1,15 @@
 package com.gdx.orion.handlers;
 
+import java.util.ArrayList;
+
 import com.gdx.orion.entities.Asteroid;
 import com.gdx.orion.entities.Comet;
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.screens.GameStateManager;
+import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.WorldUtils;
 
@@ -24,6 +28,7 @@ public class BodyHandler {
     private static Vector2 midPoint = new Vector2(0,0);
     private static Vector2 midPoint2 = new Vector2(0,0);
     private static Vector2 midPoint3 = new Vector2(0,0);
+    private static ArrayList<Body> effectBody = new ArrayList<Body>();
 	private static float[] tempAsteroid = new float[48];
 	private static int fragmentsCulled;
 	private static int count;
@@ -46,6 +51,7 @@ public class BodyHandler {
 					if(GameStateManager.play.isOnScreen(GameStateManager.play.getPlayerShip().getBody().getPosition(),body.getPosition())){
 						((Comet)entityDataA.getObject()).draw(r,cam);
 					}
+					effectBody.add(body);
 				}
 				if(entityDataA.getType() == EntityType.PRE_FRAG_ASTEROID){
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
@@ -136,6 +142,7 @@ public class BodyHandler {
 							}
 						}
 					}
+					//effectBodies.add(body);
 				}
 			}
 			if(body.getUserData() instanceof Integer){
@@ -174,5 +181,11 @@ public class BodyHandler {
 		for(Body body:destroy){
 			gameWorld.destroyBody(body);    
 		}		
+	}
+	public static void applyEffects(Batch batch,Body body){
+		entityDataA = (EntityData)body.getUserData();
+		if(entityDataA.getType() == EntityType.COMET){
+			EffectUtils.cometTrailEffect(body.getLocalCenter(), batch, body.getAngularVelocity() * 180);
+		}
 	}
 }
