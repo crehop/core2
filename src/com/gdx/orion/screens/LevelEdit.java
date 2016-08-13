@@ -236,14 +236,16 @@ public class LevelEdit extends GameState implements Screen {
 
 		private boolean active = true;
 		
+		private boolean activePop = false;
+		
 		private final Stage stage;
 		private SpriteBatch batch;
 		
 		private Pixmap prompt;
 		private Sprite sprite;
 		
-		private final int PROMPT_WIDTH = 500;
-		private final int PROMPT_HEIGHT = 500;
+		private final int PROMPT_WIDTH = (int) (cam.viewportWidth/2);
+		private final int PROMPT_HEIGHT = (int) (cam.viewportHeight/2);
 		
 		private final BitmapFont selectionText = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Regular.ttf"))
 	    .generateFont(new FreeTypeFontParameter() {{
@@ -263,6 +265,8 @@ public class LevelEdit extends GameState implements Screen {
 		
 		private TextButton x;
 		private TextButton y;
+		
+		private TextButton exit;
 		
 		private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
 		
@@ -294,14 +298,18 @@ public class LevelEdit extends GameState implements Screen {
 			
 			TextButtonStyle select = new TextButtonStyle();
 			select.font = selectionText;
+			select.up = skin.newDrawable("white", Color.BLACK);
 			x = new TextButton(LevelEdit.this.GRID_MAX_X + "", select);
 			y = new TextButton(LevelEdit.this.GRID_MAX_Y + "", select);
+			exit = new TextButton("X", select);
 			x.setBounds(PROMPT_WIDTH/3, PROMPT_HEIGHT-225, 50, 50);
 			y.setBounds(PROMPT_WIDTH/3, PROMPT_HEIGHT-400, 50, 50);
+			exit.setBounds(1, PROMPT_HEIGHT-101, 50, 50);
 			
 			x.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
 					Gdx.input.getTextInput(new NumberPrompt(true), "Width Value", "", null);
 				}
 			});
@@ -309,14 +317,24 @@ public class LevelEdit extends GameState implements Screen {
 			y.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
 					Gdx.input.getTextInput(new NumberPrompt(false), "Height Value", "", null);
+				}
+			});
+			
+			exit.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					LevelSizePrompt.this.cancel();
 				}
 			});
 			
 			stage.addActor(x);
 			stage.addActor(y);
+			stage.addActor(exit);
 			
-			this.sprite.setPosition(cam.viewportWidth/2 - PROMPT_WIDTH, cam.viewportHeight/2 - PROMPT_HEIGHT);
+			this.sprite.setSize(PROMPT_WIDTH, PROMPT_HEIGHT);
+			this.sprite.setPosition(0, 0);
 		}
 		
 		@Override
@@ -347,6 +365,7 @@ public class LevelEdit extends GameState implements Screen {
 		
 		@Override
 		public void resize(int width, int height) {
+
 		}
 
 		@Override
@@ -376,10 +395,12 @@ public class LevelEdit extends GameState implements Screen {
 			
 			public NumberPrompt(boolean x) {
 				this.x = x;
+				LevelSizePrompt.this.activePop = true;
 			}
 			
 			public void input(String text) {
-				int i;
+				int i = -1;
+				try {
 				if ((i = Integer.parseInt(text)) != -1) {
 					if (x) {
 						GRID_MAX_X = i;
@@ -389,10 +410,15 @@ public class LevelEdit extends GameState implements Screen {
 						LevelSizePrompt.this.y.setText(i + "");
 					}
 				}
+				LevelSizePrompt.this.activePop = false;
+				return;
+				} catch (NumberFormatException ez) {
+					LevelSizePrompt.this.activePop = false;
+				}
 			}
 
 			public void canceled() {
-				
+				LevelSizePrompt.this.activePop = false;
 			}
 			
 		}
