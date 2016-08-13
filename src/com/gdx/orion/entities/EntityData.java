@@ -28,7 +28,12 @@ public class EntityData {
 		if(life<0){
 			if(this.object instanceof Asteroid){
 				if(((Asteroid)object).getBody().getUserData() instanceof EntityData){
-					((EntityData)((Asteroid)object).getBody().getUserData()).setType(EntityType.DESTROYME);
+					((EntityData)((Asteroid)object).getBody().getUserData()).setType(EntityType.DESTROYME_ASTEROID);
+				}
+			}
+			if(this.object instanceof Comet){
+				if(((Comet)object).getBody().getUserData() instanceof EntityData){
+					((EntityData)((Comet)object).getBody().getUserData()).setType(EntityType.DESTROYME_COMET);
 				}
 			}
 		}

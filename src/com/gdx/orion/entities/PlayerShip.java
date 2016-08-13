@@ -161,7 +161,7 @@ public class PlayerShip {
 			ropeFired = false;
 			if(rope.getGrapple().getUserData() instanceof EntityData){
 				entityData = (EntityData)rope.getGrapple().getUserData();
-				if(entityData.getType() == EntityType.ASTEROID){
+				if(entityData.getType() == EntityType.ASTEROID || entityData.getType() == EntityType.COMET){
 				}else if(entityData.getType() == EntityType.GRAPPLE){
 					entityData.setType(EntityType.DELETEME);
 				}

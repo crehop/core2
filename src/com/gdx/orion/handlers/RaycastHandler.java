@@ -16,10 +16,10 @@ public class RaycastHandler {
 	private static RayCastCallback callback = new RayCastCallback(){
 		@Override
 		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal2, float fraction){
-			System.out.println("HIT!" + fixture.getBody().getUserData().toString());
 			if(fixture.getBody().getUserData() instanceof EntityData){
 				data = (EntityData)fixture.getBody().getUserData();
-				if(data.getType() == EntityType.ASTEROID && type == EntityType.BULLET){
+				if(data.getType() == EntityType.ASTEROID && type == EntityType.BULLET ||
+						data.getType() == EntityType.COMET && type == EntityType.BULLET){
 					data.damage(1);
 				}
 			}

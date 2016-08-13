@@ -32,10 +32,16 @@ public class ContactHandler implements ContactListener {
 			if(entityDataA.getType() == EntityType.ASTEROID && contact.getFixtureB().getBody().getUserData() instanceof Integer){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
-					entityDataA.setType(EntityType.DESTROYME);
+					entityDataA.setType(EntityType.DESTROYME_ASTEROID);
 					}
 			}
-			if(entityDataA.getType() == EntityType.FRAGMENT && contact.getFixtureB().getBody().getUserData() instanceof Integer){
+			if(entityDataA.getType() == EntityType.COMET && contact.getFixtureB().getBody().getUserData() instanceof Integer){
+				entityDataA.damage(1);
+				if(entityDataA.getLife() < 1){
+					entityDataA.setType(EntityType.DESTROYME_COMET);
+					}
+			}
+			if((entityDataA.getType() == EntityType.ASTEROID_FRAGMENT || entityDataA.getType() == EntityType.COMET_FRAGMENT) && contact.getFixtureB().getBody().getUserData() instanceof Integer){
 				entityDataA.damage(1);
 				if(entityDataA.getLife() < 1){
 					entityDataA.setType(EntityType.DELETEME);
@@ -49,7 +55,7 @@ public class ContactHandler implements ContactListener {
 					   entityDataB.getType() != EntityType.SHIELD &&
 					   entityDataB.getType() != EntityType.WORLD_BOUNDRY){
 						
-						if(entityDataB.getType() == EntityType.ASTEROID){
+						if(entityDataB.getType() == EntityType.ASTEROID || entityDataB.getType() == EntityType.COMET){
 							if(GameStateManager.play.getPlayerShip().ropeFired()){
 								if(entityDataB.getID() == GameStateManager.play.getPlayerShip().getRope().getGrappleID()){
 									GameStateManager.play.getPlayerShip().getRope().destroyRope();
@@ -72,11 +78,16 @@ public class ContactHandler implements ContactListener {
 			if(entityDataB.getType() == EntityType.ASTEROID && contact.getFixtureA().getBody().getUserData() instanceof Integer){
 				entityDataB.damage(1);
 				if(entityDataB.getLife() < 1){
-					entityDataB.setType(EntityType.DESTROYME);
+					entityDataB.setType(EntityType.DESTROYME_ASTEROID);
 				}
 			}
-			
-			if(entityDataB.getType() == EntityType.FRAGMENT && contact.getFixtureA().getBody().getUserData() instanceof Integer){
+			if(entityDataB.getType() == EntityType.COMET && contact.getFixtureA().getBody().getUserData() instanceof Integer){
+				entityDataB.damage(1);
+				if(entityDataB.getLife() < 1){
+					entityDataB.setType(EntityType.DESTROYME_COMET);
+				}
+			}
+			if((entityDataB.getType() == EntityType.COMET_FRAGMENT || entityDataB.getType() == EntityType.ASTEROID_FRAGMENT) && contact.getFixtureA().getBody().getUserData() instanceof Integer){
 				entityDataB.damage(1);
 				if(entityDataB.getLife()  < 1){
 					entityDataB.setType(EntityType.DELETEME);
@@ -89,7 +100,8 @@ public class ContactHandler implements ContactListener {
 					   entityDataA.getType() != EntityType.SHIELD &&
 					   entityDataA.getType() != EntityType.WORLD_BOUNDRY){
 						
-						if(entityDataA.getType() == EntityType.ASTEROID){
+						if(entityDataA.getType() == EntityType.ASTEROID
+							||entityDataA.getType() == EntityType.COMET){
 							if(GameStateManager.play.getPlayerShip().ropeFired()){
 								if(entityDataA.getID() == GameStateManager.play.getPlayerShip().getRope().getGrappleID()){
 									GameStateManager.play.getPlayerShip().getRope().destroyRope();
@@ -113,7 +125,14 @@ public class ContactHandler implements ContactListener {
 				midPoint = contact.getFixtureB().getBody().getLinearVelocity();
 				velo =  tempV2.sub(midPoint).len();
 				if(velo > 110){
-					entityDataA.setType(EntityType.DESTROYME);
+					entityDataA.setType(EntityType.DESTROYME_ASTEROID);
+				}
+			}else if(entityDataA.getType() == EntityType.COMET && entityDataB.getType() == EntityType.SHIP){
+				tempV2 = contact.getFixtureA().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureB().getBody().getLinearVelocity();
+				velo =  tempV2.sub(midPoint).len();
+				if(velo > 110){
+					entityDataA.setType(EntityType.DESTROYME_COMET);
 				}
 			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.SHIP){
 				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
@@ -121,20 +140,40 @@ public class ContactHandler implements ContactListener {
 				velo = tempV2.sub(midPoint).len();
 				Console.setLine6("FORCE OF IMPACT" + velo);
 				if(velo > 110){
-					entityDataB.setType(EntityType.DESTROYME);
+					entityDataB.setType(EntityType.DESTROYME_ASTEROID);
 				}
-			}
-			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.GRAPPLE){
-				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureB().getBody());
-			}else if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.GRAPPLE){
-				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureA().getBody());
-			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID){
+			}else if(entityDataB.getType() == EntityType.COMET && entityDataA.getType() == EntityType.SHIP){
 				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
 				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
 				velo = tempV2.sub(midPoint).len();
 				Console.setLine6("FORCE OF IMPACT" + velo);
 				if(velo > 110){
-					entityDataA.setType(EntityType.DESTROYME);
+					entityDataB.setType(EntityType.DESTROYME_COMET);
+				}
+			}
+			if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.GRAPPLE
+				||entityDataB.getType() == EntityType.COMET && entityDataA.getType() == EntityType.GRAPPLE){
+				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureB().getBody());
+			}else if(entityDataA.getType() == EntityType.ASTEROID && entityDataB.getType() == EntityType.GRAPPLE
+					||entityDataA.getType() == EntityType.COMET && entityDataB.getType() == EntityType.GRAPPLE){
+				GameStateManager.play.getPlayerShip().getRope().changeGrapple(contact.getFixtureA().getBody());
+			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.ASTEROID ||
+					entityDataB.getType() == EntityType.COMET && entityDataA.getType() == EntityType.ASTEROID){
+				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
+				velo = tempV2.sub(midPoint).len();
+				Console.setLine6("FORCE OF IMPACT" + velo);
+				if(velo > 110){
+					entityDataA.setType(EntityType.DESTROYME_ASTEROID);
+				}
+			}else if(entityDataB.getType() == EntityType.ASTEROID && entityDataA.getType() == EntityType.COMET ||
+					entityDataB.getType() == EntityType.COMET && entityDataA.getType() == EntityType.COMET){
+				tempV2 = contact.getFixtureB().getBody().getLinearVelocity();
+				midPoint = contact.getFixtureA().getBody().getLinearVelocity();
+				velo = tempV2.sub(midPoint).len();
+				Console.setLine6("FORCE OF IMPACT" + velo);
+				if(velo > 110){
+					entityDataA.setType(EntityType.DESTROYME_COMET);
 				}
 			}
 		}

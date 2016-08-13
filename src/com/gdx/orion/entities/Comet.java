@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
-public class Asteroid {
+public class Comet{
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
 	private BodyDef def;
@@ -34,23 +34,23 @@ public class Asteroid {
 	private Color[] colors = new Color[15];
 	private int ID;
 
-	public Asteroid(World world, Vector2 position, float density, int size){
+	public Comet(World world, Vector2 position, float density, int size){
 		ID = UIDGetter.getID();
 		this.density = density;
 		this.world = world;
 		for(int i = 0; i < colors.length; i++){
 			switch(MathUtils.random(1,4)){
 				case 1:
-					colors[i] = Color.GRAY;
+					colors[i] = Color.BLUE;
 					break;
 				case 2:
-					colors[i] = Color.DARK_GRAY;
+					colors[i] = Color.NAVY;
 					break;
 				case 3:
-					colors[i] = Color.LIGHT_GRAY;
+					colors[i] = Color.ROYAL;
 					break;
 				default:
-					colors[i] = Color.BLACK;
+					colors[i] = Color.SLATE;
 					break;
 			}
 		}
@@ -68,7 +68,7 @@ public class Asteroid {
 		body.createFixture(fdef);
 		body.applyForce(speed,body.getWorldCenter(), false);
 		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
-		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this));
+		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.COMET,this));
 		this.size = size;
 	}
 
@@ -139,15 +139,15 @@ public class Asteroid {
 		for(int i = 0; i < points.length; i+=6){
 			count++;
 			if(count <= 3){
-				WorldUtils.fragmentAsteroid(points[i], points[i+1], points[i+2],
+				WorldUtils.fragmentComet(points[i], points[i+1], points[i+2],
 						points[i+3], points[i+4], points[i+5], world, body);
 			}
 		}
-		WorldUtils.fragmentAsteroid(points[16],points[17],points[6],points[7],points[10], points[11],world, body);
-		WorldUtils.fragmentAsteroid(points[0],points[1],points[6],points[7],points[16], points[17],world, body);
-		WorldUtils.fragmentAsteroid(points[6],points[7],points[4],points[5],points[0], points[1],world, body);
-		WorldUtils.fragmentAsteroid(points[16],points[17],points[0],points[1],points[14], points[15],world, body);
-		WorldUtils.fragmentAsteroid(points[10],points[11],points[12],points[13],points[16], points[17],world, body);
+		WorldUtils.fragmentComet(points[16],points[17],points[6],points[7],points[10], points[11],world, body);
+		WorldUtils.fragmentComet(points[0],points[1],points[6],points[7],points[16], points[17],world, body);
+		WorldUtils.fragmentComet(points[6],points[7],points[4],points[5],points[0], points[1],world, body);
+		WorldUtils.fragmentComet(points[16],points[17],points[0],points[1],points[14], points[15],world, body);
+		WorldUtils.fragmentComet(points[10],points[11],points[12],points[13],points[16], points[17],world, body);
 		world.destroyBody(body);
 	}
 
@@ -233,3 +233,4 @@ public class Asteroid {
 		return ID;
 	}
 }
+

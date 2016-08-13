@@ -46,6 +46,7 @@ public class WorldUtils {
 	private static boolean wireframe = false;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
+	private static Color comet = Color.BLUE;
 	private static Mesh mesh;
 	private static int force;
 	public static void GenerateWorldBorder(World world,float x1,float x2,float y1,float y2){
@@ -137,7 +138,7 @@ public class WorldUtils {
 		int data = GameStateManager.play.getAliveTime();
 		body.setUserData((data));
 	}
-	public static void Fragment(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
+	public static void fragmentAsteroid(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
 		shape = new PolygonShape();
 		vertices[0] = points;
 		vertices[1] = points2;
@@ -161,13 +162,39 @@ public class WorldUtils {
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
-		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG,null));
+		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG_ASTEROID,null));
+	}
+	public static void fragmentComet(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
+		shape = new PolygonShape();
+		vertices[0] = points;
+		vertices[1] = points2;
+		vertices[2] = points3;
+		vertices[3] = points4;
+		vertices[4] = points5;
+		vertices[5] = points6;
+		def.type = BodyType.DynamicBody;
+		def.position.set(body2.getPosition());
+		def.angle = body2.getAngle();
+		body = world.createBody(def);
+		shape.set(vertices);
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.density = body2.getFixtureList().get(0).getDensity();
+		fdef.friction = body2.getFixtureList().get(0).getFriction();
+		fdef.restitution = body2.getFixtureList().get(0).getRestitution();
+		body.createFixture(fdef);
+		body.getPosition().set(body.getPosition().x, body.getPosition().y);
+		body.setLinearVelocity(body2.getLinearVelocity());
+		body.setAngularVelocity(body2.getAngularVelocity());
+		force = 3;
+		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
+		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG_COMET,null));
 	}
 	public Body getBody() {
 		return body;
 	}
 
-	public static Mesh createMesh(Body body2) {
+	public static Mesh createAsteroidMesh(Body body2) {
 		count = 0;
 		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
 			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
@@ -187,16 +214,53 @@ public class WorldUtils {
 		mesh.setVertices(temp);
 		return mesh;
 	}
+	public static Mesh createCometMesh(Body body2) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			temp[count++] = tempV2.x;
+			temp[count++] = tempV2.y;
+			temp[count++] = comet.r + randomPosNegValue(20,20);
+			temp[count++] = comet.g + randomPosNegValue(20,20);
+			temp[count++] = comet.b + randomPosNegValue(20,20);
+			temp[count++] = comet.a + randomPosNegValue(20,20);
+		}
+		if(mesh == null){
+			mesh = new Mesh(true, temp.length/6, 0,  
+		            new VertexAttribute(Usage.Position, POSITION_COMPONENTS, "a_position"),
+		            new VertexAttribute(Usage.ColorUnpacked, COLOR_COMPONENTS, "a_color"));
+		}
+		System.out.println("COUNT" + count + " TEMP:" + mesh.getMaxVertices() + "Mesh Verts" + mesh.getNumVertices());
+		mesh.setVertices(temp);
+		return mesh;
+	}
 
-	public static float[] getRenderData(Body body2) {
+	public static float[] getRenderAsteroidData(Body body2) {
 		if(body2.getFixtureList().get(0).getShape() instanceof PolygonShape){
 			count = 0;
 			for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
 				((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
-				temp[count++] = asteroid.r;
-				temp[count++] = asteroid.g;
-				temp[count++] = asteroid.b;
-				temp[count++] = asteroid.a;
+				temp[count++] = asteroid.r + randomPosNegValue(20,20);;
+				temp[count++] = asteroid.g + randomPosNegValue(20,20);;
+				temp[count++] = asteroid.b + randomPosNegValue(20,20);;
+				temp[count++] = asteroid.a + randomPosNegValue(20,20);;
+				temp[count++] = tempV2.x + 10;
+				//System.out.println("" + temp[count - 1]);
+				temp[count++] = tempV2.y + 10;
+				//System.out.println("" + temp[count - 1]);
+			}
+		}
+		return temp;
+	}
+	public static float[] getRenderCometData(Body body2) {
+		if(body2.getFixtureList().get(0).getShape() instanceof PolygonShape){
+			count = 0;
+			for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+				((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+				temp[count++] = comet.r + randomPosNegValue(20,20);;
+				temp[count++] = comet.g + randomPosNegValue(20,20);;
+				temp[count++] = comet.b + randomPosNegValue(20,20);;
+				temp[count++] = comet.a + randomPosNegValue(20,20);;
 				temp[count++] = tempV2.x + 10;
 				//System.out.println("" + temp[count - 1]);
 				temp[count++] = tempV2.y + 10;
@@ -206,7 +270,7 @@ public class WorldUtils {
 		return temp;
 	}
 
-	public static void drawFragment(Body body2, ImmediateModeRenderer20 r, OrthographicCamera cam) {
+	public static void drawAsteroidFragment(Body body2, ImmediateModeRenderer20 r, OrthographicCamera cam) {
 		count = 0;
 		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
 			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
@@ -221,6 +285,25 @@ public class WorldUtils {
 		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
 				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.color(Color.GRAY);
+		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.end();
+	}
+	public static void drawCometFragment(Body body2, ImmediateModeRenderer20 r, OrthographicCamera cam) {
+		count = 0;
+		for(int i = 0; i < ((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertexCount(); i++){
+			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
+			vertices[count++] = tempV2.x;
+			vertices[count++] = tempV2.y;
+		}	
+		r.begin(cam.combined, GL20.GL_TRIANGLES);
+		r.color(Color.BLUE);
+		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
+				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.color(Color.BLUE);
+		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
+				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
+		r.color(Color.BLUE);
 		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
 				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.end();
@@ -261,7 +344,9 @@ public class WorldUtils {
 	public static void setWireframe(boolean wireframe) {
 		WorldUtils.wireframe = wireframe;
 	}
-
-	
+	public static int randomPosNegValue(int max , int min) {
+	    int randValue = -min + (int) (Math.random() * ((max - (-min)) + 1));
+	    return randValue;
+	}
 }
 

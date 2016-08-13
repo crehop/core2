@@ -1,8 +1,7 @@
 package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Asteroid;
-import com.gdx.orion.entities.EntityData;
-import com.gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.Comet;
 import com.gdx.orion.entities.PlayerShip;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
-import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -59,6 +57,7 @@ public class Play extends GameState implements Screen{
 	public Array<Body> destroy = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+	private ArrayList<Comet> comets= new ArrayList<Comet>();
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
@@ -113,12 +112,14 @@ public class Play extends GameState implements Screen{
 		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
 		count = 0;
-		while(count < 500) {
+		while(count < 105) {
 			count++;
 			position.set(MathUtils.random(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/2));
+			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
+			new Comet(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 		}
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,66, gameWorld, true, sprite2);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,130, gameWorld, true, sprite2);
 
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
@@ -139,6 +140,7 @@ public class Play extends GameState implements Screen{
 			mapCam.position.set(ship.getBody().getWorldCenter(), 0);
 			playController.checkInput();
 			asteroids.clear();
+			comets.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
