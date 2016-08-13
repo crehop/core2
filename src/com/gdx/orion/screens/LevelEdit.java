@@ -35,7 +35,6 @@ public class LevelEdit extends GameState implements Screen {
 	
 	private final SpriteBatch batch;
 	private final Sprite vacantSquare;
-	private final Sprite occupiedSquare;
 	
 	private final int GRID_MAX_X = 100;
 	private final int GRID_MAX_Y = 100;
@@ -142,8 +141,6 @@ public class LevelEdit extends GameState implements Screen {
 		pixmap.drawRectangle(0, 0, 10, 10);
 		
 		vacantSquare = new Sprite(new Texture(pixmap));
-		occupiedSquare = new Sprite(new Texture(Gdx.files.internal("images/occupiedGrid.png")));
-		occupiedSquare.setBounds(0, 0, GRID_SQUARE_SIZE, GRID_SQUARE_SIZE);
 		
 		consoleCam = new OrthographicCamera();
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
