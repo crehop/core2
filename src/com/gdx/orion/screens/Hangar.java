@@ -104,6 +104,18 @@ public class Hangar extends GameState implements Screen {
 		stage.clear();
 		stage.addActor(btnEnginePortLeft);
 		stage.addActor(btnEnginePortRight);
+		stage.addListener(new InputListener() {
+			@Override
+			public boolean keyUp(InputEvent event, int keycode) {
+				switch (keycode) {
+					case Input.Keys.ESCAPE:
+						GameStateManager.setScreen(GameStateManager.MENU);
+						break;
+					}
+			
+				return super.keyUp(event, keycode);
+			}
+		});
 		
 		mvcUpdateView();
 	}
