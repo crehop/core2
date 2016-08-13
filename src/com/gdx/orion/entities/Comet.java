@@ -1,10 +1,10 @@
 package com.gdx.orion.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,8 +15,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.gdx.orion.Main;
-import com.gdx.orion.screens.Play;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
@@ -38,9 +36,13 @@ public class Comet{
 	private float density;
 	private Color[] colors = new Color[15];
 	private int ID;
+	ParticleEffect cometTrail = new ParticleEffect();
 
 	public Comet(World world, Vector2 position, float density, int size){
 		ID = UIDGetter.getID();
+		cometTrail.load(Gdx.files.internal("emitters/cometTrail"), Gdx.files.internal("images"));
+		cometTrail.scaleEffect(.84f);
+		EffectUtils.particles.add(cometTrail);
 		this.density = density;
 		this.world = world;
 		for(int i = 0; i < colors.length; i++){
@@ -230,13 +232,14 @@ public class Comet{
 	public Body getBody() {
 		return body;
 	}
-	public void drawEffects(Batch batch){
-	}
 	public float[] getVerts() {
 		return shapeVerts;
 	}
 	public int getID(){
 		return ID;
+	}
+	public ParticleEffect getParticleEffect(){
+		return this.cometTrail;
 	}
 }
 

@@ -21,7 +21,6 @@ import com.gdx.orion.screens.GameStateManager;
 public class EffectUtils {
 	static ParticleEffect thrust = new ParticleEffect();
 	static ParticleEffect rotationThrusters = new ParticleEffect();
-	static ParticleEffect cometTrail = new ParticleEffect();
 	static ParticleEffect cometFragmentTrail = new ParticleEffect();
 	static ParticleEffect muzzleFlash = new ParticleEffect();
 	static ParticleEffect shieldMain = new ParticleEffect();
@@ -30,7 +29,7 @@ public class EffectUtils {
 	static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 	static float spacingH = 0;
 	static float spacingW = 0;
-	static Array<ParticleEffect> particles = new Array<ParticleEffect>();
+	public static Array<ParticleEffect> particles = new Array<ParticleEffect>();
 	static Array<ParticleEmitter> emitters;
 	static ScaledNumericValue val;
 	static ParticleEmitterBox2D b2DEmitter;
@@ -40,8 +39,6 @@ public class EffectUtils {
 	public static void initilize(){
 		thrust.load(Gdx.files.internal("emitters/mainThrust"), Gdx.files.internal("images"));
 		thrust.scaleEffect(.04f);
-		cometTrail.load(Gdx.files.internal("emitters/cometTrail"), Gdx.files.internal("images"));
-		cometTrail.scaleEffect(.84f);
 		cometFragmentTrail.load(Gdx.files.internal("emitters/cometFragmentTrail"), Gdx.files.internal("images"));
 		cometFragmentTrail.scaleEffect(.04f);
 		rotationThrusters.load(Gdx.files.internal("emitters/rotationThrusters"), Gdx.files.internal("images"));
@@ -57,8 +54,6 @@ public class EffectUtils {
 		particles.add(muzzleFlash);
 		particles.add(shieldMain);
 		particles.add(bullet);
-		particles.add(cometTrail);
-		particles.add(cometFragmentTrail);
 	}
 	public static void line(Vector2 origin,
 			Vector2 destination,
@@ -108,18 +103,18 @@ public class EffectUtils {
 		thrust.start();
 		thrust.draw(batch);
 	}
-	public static void cometTrailEffect(Vector2 position, Batch batch, float rotation){
-		emitters = cometTrail.getEmitters();
+	public static void cometTrailEffect(Vector2 position, ParticleEffect particleEffect, Batch batch, float rotation){
+		emitters = particleEffect.getEmitters();
 		for(int i = 0; i< emitters.size; i++){
 			val = emitters.get(i).getAngle();
-			h1 = rotation - 90f;
-			h2 = rotation - 90f;
+			h1 = rotation - 60f;
+			h2 = rotation - 110f;
 			val.setHigh(h1,h2);
 			val.setLow(h1,h2);
 		}
-		cometTrail.setPosition(position.x, position.y);
-		cometTrail.start();
-		cometTrail.draw(batch);
+		particleEffect.setPosition(position.x, position.y);
+		particleEffect.start();
+		particleEffect.draw(batch);
 	}
 	public static void cometFragmentTrailEffect(Vector2 position, Batch batch, float rotation){
 		emitters = thrust.getEmitters();

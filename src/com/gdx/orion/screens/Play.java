@@ -161,10 +161,10 @@ public class Play extends GameState implements Screen{
 			ship.draw(batch, true,mapCam.position);
 			batch.end();
 			BodyHandler.update(cam, gameWorld, bodies);
-			BodyHandler.destroyBodies(gameWorld,destroy);
 			batch.begin();
 			batch.setProjectionMatrix(cam.combined);
-			EffectUtils.cometTrailEffect(new Vector2(100,100), batch, 20.0f);
+			BodyHandler.applyEffects(batch);
+			BodyHandler.destroyBodies(gameWorld,destroy);
 			batch.end();
 			destroy.clear();
 			

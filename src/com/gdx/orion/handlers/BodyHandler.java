@@ -182,10 +182,13 @@ public class BodyHandler {
 			gameWorld.destroyBody(body);    
 		}		
 	}
-	public static void applyEffects(Batch batch,Body body){
-		entityDataA = (EntityData)body.getUserData();
-		if(entityDataA.getType() == EntityType.COMET){
-			EffectUtils.cometTrailEffect(body.getLocalCenter(), batch, body.getAngularVelocity() * 180);
+	public static void applyEffects(Batch batch){
+		for(Body body:effectBody){
+			entityDataA = (EntityData)body.getUserData();
+			 if(entityDataA.getType() == EntityType.COMET){
+					EffectUtils.cometTrailEffect(body.getWorldCenter(),((Comet)entityDataA.getObject()).getParticleEffect(), batch, body.getAngularVelocity() * 180);
+			}
 		}
+		effectBody.clear();
 	}
 }
