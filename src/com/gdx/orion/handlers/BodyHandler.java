@@ -186,7 +186,7 @@ public class BodyHandler {
 		for(Body body:effectBody){
 			entityDataA = (EntityData)body.getUserData();
 			 if(entityDataA.getType() == EntityType.COMET){
-					EffectUtils.cometTrailEffect(body.getWorldCenter(),((Comet)entityDataA.getObject()).getParticleEffect(), batch, body.getAngularVelocity() * 180);
+					EffectUtils.cometTrailEffect(body.getWorldCenter(),((Comet)entityDataA.getObject()).getParticleEffect(), batch, body.getLinearVelocity().angle() - 90);
 			}
 		}
 		effectBody.clear();
