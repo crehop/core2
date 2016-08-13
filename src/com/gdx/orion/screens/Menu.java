@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -17,11 +16,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.utils.Console;
@@ -44,7 +41,8 @@ public class Menu extends GameState implements Screen {
 	private Sprite titleS = new Sprite(new Texture(Gdx.files.internal("images/TitleScreen.png")));
 	private Sprite text = new Sprite(new Texture(Gdx.files.internal("images/AsteroidsText.png")));
     
-	private static final int BUTTON_Y_OFFSET = -35;
+	private static final int BUTTON_X_OFFSET = 70;
+	private static final int BUTTON_Y_OFFSET = 0;
 	
 	protected Menu(Game game, int level) {
 		super(GameStateManager.MENU);
@@ -57,11 +55,11 @@ public class Menu extends GameState implements Screen {
 		
 		skin = new Skin();
 
-		pixmap = new Pixmap(120, 100, Format.RGBA8888);
+		pixmap = new Pixmap(240, 200, Format.RGBA8888);
 		pixmap.setColor(Color.GRAY);
 		pixmap.fill();
 		pixmap.setColor(Color.BLACK);
-		pixmap.drawRectangle(0, 0, 120, 100);
+		pixmap.drawRectangle(0, 0, 240, 200);
 
 		skin.add("white", new Texture(pixmap));
 		skin.add("default",
@@ -69,16 +67,16 @@ public class Menu extends GameState implements Screen {
 
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 
-		final Button playButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_play.png")))));
-		playButton.setPosition(0, BUTTON_Y_OFFSET);
-		final Button hangar = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_hangar.png")))));
-		hangar.setPosition(1 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
-		final Button settings = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_settings.png")))));
-		settings.setPosition(2 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
-		final Button levelEditor = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_editor.png")))));
-		levelEditor.setPosition(3 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
-		final Button exit = new ImageButton(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("buttons/button_exit.png")))));
-		exit.setPosition(4 * cam.viewportWidth / 5, BUTTON_Y_OFFSET);
+		final Button playButton = new TextButton("Play", style);
+		playButton.setPosition(0 /5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		final Button hangar = new TextButton("Hanger", style);
+		hangar.setPosition(1 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		final Button settings = new TextButton("Settings", style);
+		settings.setPosition(2 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		final Button levelEditor = new TextButton("Editor", style);
+		levelEditor.setPosition(3 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		final Button exit = new TextButton("Exit", style);
+		exit.setPosition(4 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
 		
 		stage.addActor(playButton);
 		stage.addActor(hangar);
@@ -128,7 +126,7 @@ public class Menu extends GameState implements Screen {
 			batch.begin();
 			batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
 			batch.draw(titleS, 0, 0, cam.viewportWidth, cam.viewportHeight);
-			batch.draw(text, 20, 120, 300, 200);
+			batch.draw(text, 40, 240, 700, 300);
 			batch.end();
 			stage.act();
 			stage.draw();

@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -105,18 +104,6 @@ public class Hangar extends GameState implements Screen {
 		stage.clear();
 		stage.addActor(btnEnginePortLeft);
 		stage.addActor(btnEnginePortRight);
-		stage.addListener(new InputListener() {
-			@Override
-			public boolean keyUp(InputEvent event, int keycode) {
-				switch (keycode) {
-					case Input.Keys.ESCAPE:
-						GameStateManager.setScreen(GameStateManager.PAUSE);
-						break;
-					}
-			
-				return super.keyUp(event, keycode);
-			}
-		});
 		
 		mvcUpdateView();
 	}
@@ -299,11 +286,9 @@ public class Hangar extends GameState implements Screen {
 		private boolean active = true;
 		private final Color COLOR_BACKGROUND = new Color(0.5f, 0.5f, 0.5f, 0.45f);
 		private final Color COLOR_BORDER = Color.NAVY;
-		private final Sprite spriteEngine;
 		private final SpriteBatch batch;
 		private final Stage stage;
 		private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-		private final GlyphLayout gryphLayoutEngineTitle = new GlyphLayout(); // Used for computing width of engine title font glyps text for centering
 		private final BitmapFont fontScreenTitle = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Black.ttf"))
 									    .generateFont(new FreeTypeFontParameter() {{
 									    	size = 40;
@@ -346,7 +331,7 @@ public class Hangar extends GameState implements Screen {
 		 * Sole constructor
 		 */
 		public EnginePopupScreen() {
-			spriteEngine = new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")));
+			new Sprite(new Texture(Gdx.files.internal("images/EngineChemical-left.png")));
 			batch = new SpriteBatch();
 			this.stage = new Stage(viewport);  // Must use the outer classes viewport!
 			Gdx.input.setInputProcessor(this.stage);
