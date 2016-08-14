@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -40,6 +39,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
 	private final SpriteBatch batch;
 	private final Sprite vacantSquare;
+	private final Sprite occupiedSquare;
 	
 	private int GRID_MAX_X = 100;
 	private int GRID_MAX_Y = 100;
@@ -153,10 +153,16 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		pixmap.setColor(Color.BLACK);
 		pixmap.fill();
 		pixmap.setColor(Color.GREEN);
-		pixmap.drawLine(0, 0, VIEWPORT_WIDTH, 0);
-		pixmap.drawLine(0, 0, 0, VIEWPORT_HEIGHT);
+		pixmap.drawRectangle(0, 0, 10, 10);
 		
 		vacantSquare = new Sprite(new Texture(pixmap));
+		
+		pixmap.setColor(Color.WHITE);
+		pixmap.fill();
+		pixmap.setColor(Color.RED);
+		pixmap.drawRectangle(0, 0, 10, 10);
+		
+		occupiedSquare = new Sprite(new Texture(pixmap));
 		
 		im = new InputMultiplexer();
 		im.addProcessor(stage);
@@ -254,7 +260,11 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			batch.setProjectionMatrix(gridCam.combined);
 			for (int  x = 0; x < GRID_MAX_X; x++) {
 				for (int y = 0; y < GRID_MAX_Y; y++) {
-					batch.draw(vacantSquare, x * GRID_SQUARE_SIZE, y * GRID_SQUARE_SIZE);
+					if (data[x][y] == null) {
+						batch.draw(vacantSquare, x * GRID_SQUARE_SIZE, y * GRID_SQUARE_SIZE);
+					} else {
+						batch.draw(occupiedSquare, x * GRID_SQUARE_SIZE, y * GRID_SQUARE_SIZE);
+					}
 				}
 			}
 			batch.end();
@@ -503,7 +513,9 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (asteroid.isChecked()) {
-
+			if (isOnGrid(screenX, screenY)) {
+				data[screenX/GRID_SQUARE_SIZE][screenY/GRID_SQUARE_SIZE] = new Object();
+			}
 			return true;
 		}
         if (button != Input.Buttons.LEFT || pointer > 0) return false;
