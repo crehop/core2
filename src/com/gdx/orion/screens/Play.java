@@ -78,7 +78,6 @@ public class Play extends GameState implements Screen{
 	private final int VIEW_DISTANCE = 300;
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	//TODO, COMMENT CODE
-	//TODO, FIX CRASH WITH GRAVITY WELL, most likely due to static body and bullets.
 	double newTime;
     double frameTime;
     private double accumulator = 60f;
@@ -121,8 +120,8 @@ public class Play extends GameState implements Screen{
 				new Comet(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			}
 		}
-		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,130, gameWorld, true, sprite2);
-
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,130, gameWorld, true, sprite2,new Vector2(0,0), true);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 10.03f,150, gameWorld, true, sprite2,new Vector2(-300,0), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);

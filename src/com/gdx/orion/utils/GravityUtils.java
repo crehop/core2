@@ -30,7 +30,7 @@ public class GravityUtils{
 	private static int count = 0;
 	private static final int GRAVITATIONAL_REACH = 3000000;
 	
-	public static void addGravityWell(float x,float y, float radius, float density, World world, boolean inWardForce, Sprite sprite) {
+	public static void addGravityWell(float x,float y, float radius, float density, World world, boolean inWardForce, Sprite sprite, Vector2 velocity, boolean isStatic) {
 		sprite.setPosition(x - radius, y - radius);
 		sprite.setSize(radius * 2, radius * 2);
 		sprite.setOriginCenter();
@@ -42,8 +42,13 @@ public class GravityUtils{
 		fixtureDef.shape= circleShape;
 		bodyDef = new BodyDef();
 		bodyDef.position.set(x,y);
-		bodyDef.type = BodyType.StaticBody;
+		if(isStatic){
+			bodyDef.type = BodyType.StaticBody;
+		}else{
+			bodyDef.type = BodyType.DynamicBody;
+		}
 		thePlanet = world.createBody(bodyDef);
+		thePlanet.setLinearVelocity(velocity);
 		planetVector.add(thePlanet);
 		gravitySprites.add(sprite);
 		if(inWardForce)thePlanet.setUserData(new EntityData(1000, EntityType.GRAVITY_WELL, null));
