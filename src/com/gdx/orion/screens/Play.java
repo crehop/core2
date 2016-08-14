@@ -71,7 +71,7 @@ public class Play extends GameState implements Screen{
     private String vertexShader;
     
     private Vector2 position = new Vector2(0,0);
-    private Vector2 force = new Vector2(50000000,0);
+    private Vector2 force = new Vector2(-100,0);
     
 	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
@@ -88,7 +88,7 @@ public class Play extends GameState implements Screen{
 	//TODO, COMMENT CODE
 	double newTime;
     double frameTime;
-    private double accumulator = 60f;
+    private double accumulator = 1.0f / 60.0f;;
     private double currentTime;
     private float step = 1.0f / 60.0f;
     float deltaTime = (float)frameTime;
@@ -129,7 +129,7 @@ public class Play extends GameState implements Screen{
 			}
 		}
 		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 50.03f,1500, gameWorld, true, titan,new Vector2(-30,50), false);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 1300, 50.03f,1500, gameWorld, true, titan,new Vector2(-12600,0), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);

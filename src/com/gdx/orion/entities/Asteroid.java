@@ -56,7 +56,6 @@ public class Asteroid {
 		def = new BodyDef();
 		def.position.set(position.x, position.y);
 		def.type = BodyType.DynamicBody;
-		def.bullet = true;
 		def.angle = 200;
 		body = world.createBody(def);
 		this.density = density;
@@ -66,8 +65,8 @@ public class Asteroid {
 		fdef.density = density;
 		fdef.friction = 1;
 		body.createFixture(fdef);
-		body.applyLinearImpulse(force,body.getWorldCenter(), false);
-		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
+		body.setLinearVelocity(force);
+		body.setAngularVelocity(MathUtils.random(-4f,4f));
 		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this));
 		this.size = size;
 	}

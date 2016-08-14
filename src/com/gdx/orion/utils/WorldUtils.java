@@ -157,6 +157,7 @@ public class WorldUtils {
 		fdef.friction = body2.getFixtureList().get(0).getFriction();
 		fdef.restitution = body2.getFixtureList().get(0).getRestitution();
 		body.createFixture(fdef);
+		body.setBullet(true);
 		body.getPosition().set(body.getPosition().x, body.getPosition().y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
@@ -183,6 +184,7 @@ public class WorldUtils {
 		fdef.friction = body2.getFixtureList().get(0).getFriction();
 		fdef.restitution = body2.getFixtureList().get(0).getRestitution();
 		body.createFixture(fdef);
+		body.setBullet(true);
 		body.getPosition().set(body.getPosition().x, body.getPosition().y);
 		body.setLinearVelocity(body2.getLinearVelocity());
 		body.setAngularVelocity(body2.getAngularVelocity());
