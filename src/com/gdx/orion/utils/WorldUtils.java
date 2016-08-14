@@ -278,13 +278,13 @@ public class WorldUtils {
 			vertices[count++] = tempV2.y;
 		}	
 		r.begin(cam.combined, GL20.GL_TRIANGLES);
-		r.color(Color.GRAY);
+		r.color(Color.DARK_GRAY);
 		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
 				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.color(Color.GRAY);
 		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
 				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
-		r.color(Color.GRAY);
+		r.color(Color.DARK_GRAY);
 		r.vertex((float)(((vertices[0+4]) * Math.cos(body2.getAngle())) - ((vertices[0+5]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
 				(float)(((vertices[0+5]) * Math.cos(body2.getAngle())) + ((vertices[0+4]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.end();
@@ -297,10 +297,10 @@ public class WorldUtils {
 			vertices[count++] = tempV2.y;
 		}	
 		r.begin(cam.combined, GL20.GL_TRIANGLES);
-		r.color(Color.BLUE);
+		r.color(Color.ROYAL);
 		r.vertex((float)(((vertices[0]) * Math.cos(body2.getAngle())) - ((vertices[0+1]) * Math.sin(body2.getAngle()))) + body2.getPosition().x,
 				(float)(((vertices[0 + 1]) * Math.cos(body2.getAngle())) + ((vertices[0]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
-		r.color(Color.BLUE);
+		r.color(Color.ROYAL);
 		r.vertex((float)(((vertices[0+2]) * Math.cos(body2.getAngle())) - ((vertices[0+3]) * Math.sin(body2.getAngle()))) + body2.getPosition().x ,
 				(float)(((vertices[0+3]) * Math.cos(body2.getAngle())) + ((vertices[0+2]) * Math.sin(body2.getAngle()))) + body2.getPosition().y,0);
 		r.color(Color.BLUE);
