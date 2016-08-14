@@ -23,7 +23,7 @@ public class Comet{
 	private Body body;
 	private BodyDef def;
 	private float width;
-	private int size;
+	private float size;
 	private float xmin;
 	private float xmax;
 	private float ymin;
@@ -37,7 +37,7 @@ public class Comet{
 	private int ID;
 	ParticleEffect cometTrail = new ParticleEffect();
 
-	public Comet(World world, Vector2 position, Vector2 force, float density, int size){
+	public Comet(World world, Vector2 position, Vector2 force, float density, float size){
 		ID = UIDGetter.getID();
 		cometTrail.load(Gdx.files.internal("emitters/cometTrail"), Gdx.files.internal("images"));
 		cometTrail.scaleEffect(.84f);
@@ -78,25 +78,12 @@ public class Comet{
 		this.size = size;
 	}
 
-	private float[] setShape(int size, Vector2 position) {
+	private float[] setShape(float size, Vector2 position) {
 		this.size = size;
 		numpoints = 8;
 		float force = 0;
-		if(this.size == 1){
-			force = MathUtils.random(-5.0f,5.0f);
-			width = MathUtils.random(7.0f,10.0f);
-			numpoints = 8;
-		}
-		if(this.size == 2){
-			force = MathUtils.random(-7.50f,7.50f);
-			width = MathUtils.random(10.5f,15.5f);
-			numpoints = 8;
-		}
-		if(this.size == 3){
-			numpoints = 8;
-			force = MathUtils.random(-60.0f,60.0f);
-			width = MathUtils.random(17,25);
-		}
+		force = MathUtils.random(-5.0f,5.0f);
+		width = MathUtils.random(size - size*5,size + size*5);
 		float radians = (float) (Math.toRadians(360)/numpoints);
 		float[] shapex = new float[numpoints];
 		float[] shapey = new float[numpoints];

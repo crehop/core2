@@ -123,9 +123,9 @@ public class Play extends GameState implements Screen{
 			count++;
 			position.set(MathUtils.random(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/2));
 			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
-			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1,3));
+			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(0.1f,0.3f));
 			if(count < 20){
-				new Comet(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1,3));
+				new Comet(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(0.1f,0.3f));
 			}
 		}
 		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);

@@ -9,9 +9,9 @@ import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.WorldUtils;
 
 public class ControlHandler extends InputAdapter {
-	public static final float TURN_RATE = 15000f;
-	public static final int THRUST_REVERSE_FACTOR = -1200000;
-	public static final int THRUST_FORWARD_FACTOR = 6000000;
+	public static final float TURN_RATE = 150f;
+	public static final int THRUST_REVERSE_FACTOR = -12000;
+	public static final int THRUST_FORWARD_FACTOR = 60000;
 	private boolean exitKey = false;
 	private boolean forward = false;
 	private boolean back = false;

@@ -51,7 +51,7 @@ public class PlayerShip {
 	Grapple rope;
 	private static final int FIRE_DELAY = 2;
 	private static final float ANGULAR_DAMPENING = 3.0f;
-	public static final float SIZE_MOD = 1.0f;
+	public static final float SIZE_MOD = 0.25f;
 	private Array<Grapple> ropes = new Array<Grapple>();
 	private Sprite shipSprite = new Sprite(generateShipImageFromConfig());
     private InverterShield shield;
@@ -243,7 +243,7 @@ public class PlayerShip {
 			right = false;
 			forward = false;
 			backward = false;
-			shipSprite.setSize(5, 5);
+			shipSprite.setSize(5 * SIZE_MOD, 5 * SIZE_MOD);
 			shipSprite.setOriginCenter();
 			shipSprite.setRotation((float)(this.getBody().getAngle() * 57.2958));
 			shipSprite.setCenterX(position.x);

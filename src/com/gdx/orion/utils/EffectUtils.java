@@ -72,8 +72,8 @@ public class EffectUtils {
 		lineRenderer.vertex(x2, y2, z2);
 	}
 	public static void grid(float GAME_WORLD_WIDTH, float GAME_WORLD_HEIGHT,Color color,int numberOfLines) {		
-		spacingH = GAME_WORLD_HEIGHT/numberOfLines;		
-		spacingW = GAME_WORLD_WIDTH/numberOfLines;
+		spacingH = 10;		
+		spacingW = 10;
 		for(int x = 0; x <= GAME_WORLD_WIDTH; x += spacingH) {		
 			line(x, 0, 0,		
 					x, GAME_WORLD_HEIGHT, 0,		
