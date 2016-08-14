@@ -272,7 +272,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	}
 	
 	public boolean isOnGrid(int x, int y) {
-		if (x + gridCam.position.x/2 > 0 && y + gridCam.viewportHeight + gridCam.position.x/2 > 0 && x < GRID_MAX_X * GRID_SQUARE_SIZE && y < GRID_MAX_Y * GRID_SQUARE_SIZE) {
+		if (x > 0 && y > 0 && x < GRID_MAX_X * GRID_SQUARE_SIZE && y < GRID_MAX_Y * GRID_SQUARE_SIZE) {
 			return true;
 		}
 		return false;
@@ -513,8 +513,15 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (asteroid.isChecked()) {
-			if (isOnGrid(screenX, screenY)) {
-				data[screenX/GRID_SQUARE_SIZE][screenY/GRID_SQUARE_SIZE] = new Object();
+			clickPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			gridCam.unproject(clickPos);
+			if (isOnGrid((int)clickPos.x, (int)clickPos.y)) {
+				Object o = data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE];
+				if (o == null) {
+					data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE] = new Object();
+				} else {
+					data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE] = null;
+				}
 			}
 			return true;
 		}
