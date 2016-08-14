@@ -61,9 +61,10 @@ public class Play extends GameState implements Screen{
 	private SpriteBatch batch = new SpriteBatch();
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
+    private Texture texture3 = new Texture(Gdx.files.internal("images/planets/Titan.png"));
     private Sprite sprite = new Sprite(texture);
-    private Sprite sprite2 = new Sprite(texture2);
-    private Sprite sprite3 = new Sprite(texture2);
+    private Sprite jupiter = new Sprite(texture2);
+    private Sprite titan = new Sprite(texture3);
     private String fragmentShader;
     private String vertexShader;
     private Vector2 position = new Vector2(0,0);
@@ -120,8 +121,8 @@ public class Play extends GameState implements Screen{
 				new Comet(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			}
 		}
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, sprite2,new Vector2(0,0), true);
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 50.03f,1500, gameWorld, true, sprite2,new Vector2(50,100), false);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 50.03f,1500, gameWorld, true, titan,new Vector2(-30,50), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
