@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -62,6 +63,8 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	private TextButton back;
 	
 	private InputMultiplexer im;
+	
+	private Vector3 clickPos = new Vector3(0,0,0);
 	
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
@@ -141,7 +144,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
         });
 		
 		gridCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		gridCam.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, 0);
+		gridCam.position.set(0, 0, 0);
 		
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(gridCam.combined);
@@ -183,14 +186,14 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		  stage.draw();
 		  gridCam.update();
 		  cam.update();
-		  
+
+		  Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 		  Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 		  Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
 		  Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
-		  Console.setLine5("CONSOLE:" + (((Gdx.input.getX() - Gdx.graphics.getWidth()/2) * gridCam.zoom)) + "/" 
-		  + (((Gdx.input.getY() - Gdx.graphics.getHeight() /2) * gridCam.zoom)));
-		  Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-		  Console.setLine6("GRIDCAM: " + gridCam.position.x + " / " + gridCam.position.y);
+		  clickPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		  gridCam.unproject(clickPos);
+		  Console.setLine5("CONSOLE:" + clickPos.x + "/" + clickPos.y);
 		  consoleCam.update();
 		  Console.render(consoleCam);
 		  
