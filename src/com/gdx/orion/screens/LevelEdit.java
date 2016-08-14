@@ -66,6 +66,8 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
 	
+	public static Object[][] data;
+	
 	protected LevelEdit(Game game) {
 		super(GameStateManager.LEVELEDIT);
 		cam = new OrthographicCamera();
@@ -92,10 +94,10 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 		editStyle = new TextButtonStyle();
-		editStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-		editStyle.down = skin.newDrawable("white", Color.DARK_GRAY);
-		editStyle.checked = skin.newDrawable("white", Color.DARK_GRAY);
-		editStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
+		editStyle.up = skin.newDrawable("white", Color.BLACK);
+		editStyle.down = skin.newDrawable("white", Color.BLACK);
+		editStyle.checked = skin.newDrawable("white", Color.RED);
+		editStyle.over = skin.newDrawable("white", Color.GRAY);
 		editStyle.font = skin.getFont("default");
 		
 		wStyle = new TextButtonStyle();
@@ -157,6 +159,13 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		im.addProcessor(stage);
 		im.addProcessor(this);
 		
+		data = new Object[GRID_MAX_X][GRID_MAX_Y];
+		for (int x = 0; x < GRID_MAX_X; x++) {
+			for (int y = 0; y < GRID_MAX_Y; y++) {
+				data[x][y] = null;
+			}
+		}
+		
 		consoleCam = new OrthographicCamera();
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
 		consoleViewport.apply();
@@ -172,16 +181,18 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		  
 		  stage.act();
 		  stage.draw();
-		  cam.update();
 		  gridCam.update();
+		  cam.update();
 		  
 		  Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 		  Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
 		  Console.setLine4("VIEWPORT:"+ viewport.getScreenWidth() + "/" + viewport.getScreenHeight());
-		  Console.setLine5("CONSOLE:"+ Console.x + "/" + Console.y);
+		  Console.setLine5("CONSOLE:" + (((Gdx.input.getX() - Gdx.graphics.getWidth()/2) * gridCam.zoom)) + "/" 
+		  + (((Gdx.input.getY() - Gdx.graphics.getHeight() /2) * gridCam.zoom)));
 		  Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
+		  Console.setLine6("GRIDCAM: " + gridCam.position.x + " / " + gridCam.position.y);
 		  consoleCam.update();
-		  Console.render(cam);
+		  Console.render(consoleCam);
 		  
 		  super.render(delta);
 		}
@@ -245,6 +256,21 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			}
 			batch.end();
 		}
+	}
+	
+	public boolean isOnGrid(int x, int y) {
+		if (x + gridCam.position.x/2 > 0 && y + gridCam.viewportHeight + gridCam.position.x/2 > 0 && x < GRID_MAX_X * GRID_SQUARE_SIZE && y < GRID_MAX_Y * GRID_SQUARE_SIZE) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void resetButtons() {
+		worldBorder.setChecked(false);
+		asteroid.setChecked(false);
+		gravityWell.setChecked(false);
+		spawnPoint.setChecked(false);
+		back.setChecked(false);
 	}
 	
 	private class LevelSizePrompt implements Screen {
@@ -375,6 +401,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		}
 
 		public void cancel() {
+			LevelEdit.this.resetButtons();
 			LevelEdit.this.removeScreen(LevelSizePrompt.this);
 		}
 		
@@ -424,6 +451,16 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 						GRID_MAX_Y = i;
 						LevelSizePrompt.this.y.setText(i + "");
 					}
+					data = new Object[GRID_MAX_X][GRID_MAX_Y];
+					for (int x = 0; x < GRID_MAX_X; x++) {
+						for (int y = 0; y < GRID_MAX_Y; y++) {
+							if (data[x][y] != null) {
+								if (!(data[x][y] instanceof Object)) {
+									data[x][y] = null;
+								}
+							}
+						}
+					}
 				}
 				LevelSizePrompt.this.activePop = false;
 				return;
@@ -462,6 +499,10 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (asteroid.isChecked()) {
+
+			return true;
+		}
         if (button != Input.Buttons.LEFT || pointer > 0) return false;
         dragging = true;
         return true;
