@@ -19,7 +19,6 @@ public class Asteroid {
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
 	private BodyDef def;
-	private Vector2 speed;
 	private float width;
 	private int size;
 	private float xmin;
@@ -34,7 +33,7 @@ public class Asteroid {
 	private Color[] colors = new Color[15];
 	private int ID;
 
-	public Asteroid(World world, Vector2 position, float density, int size){
+	public Asteroid(World world, Vector2 position, Vector2 force, float density, int size){
 		ID = UIDGetter.getID();
 		this.density = density;
 		this.world = world;
@@ -57,6 +56,7 @@ public class Asteroid {
 		def = new BodyDef();
 		def.position.set(position.x, position.y);
 		def.type = BodyType.DynamicBody;
+		def.bullet = true;
 		def.angle = 200;
 		body = world.createBody(def);
 		this.density = density;
@@ -66,7 +66,7 @@ public class Asteroid {
 		fdef.density = density;
 		fdef.friction = 1;
 		body.createFixture(fdef);
-		body.applyForce(speed,body.getWorldCenter(), false);
+		body.applyLinearImpulse(force,body.getWorldCenter(), false);
 		body.applyAngularImpulse(MathUtils.random(-400000,400000), false);
 		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this));
 		this.size = size;
@@ -91,7 +91,6 @@ public class Asteroid {
 			force = MathUtils.random(-60.0f,60.0f);
 			width = MathUtils.random(17,25);
 		}
-		this.speed = new Vector2((position.x + MathUtils.random(force * 10000 * size * density)),(position.y + MathUtils.random(force *100)));
 		float radians = (float) (Math.toRadians(360)/numpoints);
 		float[] shapex = new float[numpoints];
 		float[] shapey = new float[numpoints];

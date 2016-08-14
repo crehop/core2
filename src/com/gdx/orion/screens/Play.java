@@ -59,24 +59,31 @@ public class Play extends GameState implements Screen{
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
 	private ArrayList<Comet> comets= new ArrayList<Comet>();
 	private SpriteBatch batch = new SpriteBatch();
+	
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
     private Texture texture3 = new Texture(Gdx.files.internal("images/planets/Titan.png"));
     private Sprite sprite = new Sprite(texture);
     private Sprite jupiter = new Sprite(texture2);
     private Sprite titan = new Sprite(texture3);
+    
     private String fragmentShader;
     private String vertexShader;
+    
     private Vector2 position = new Vector2(0,0);
+    private Vector2 force = new Vector2(50000000,0);
+    
 	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
+	public final int MAX_FRAGMENT_SIZE = 3;
+	public final int MAX_ALIVE_TIME = 30;
+	public final int VIEW_DISTANCE = 1500;
+
+
 	int fragmentsCulled = 0;
-	int maxAliveTime = 30;
-	public int MAX_FRAGMENT_SIZE = 3;
 	public int aliveTime = 0;
 	private ShaderProgram shader;
 	private int count = 0;
-	private final int VIEW_DISTANCE = 300;
 	//TODO, create an int[maxAliveTime] and put objects in and pass those objects to bullets so multiple int objects arent constantly created
 	//TODO, COMMENT CODE
 	double newTime;
@@ -116,9 +123,9 @@ public class Play extends GameState implements Screen{
 			count++;
 			position.set(MathUtils.random(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/2));
 			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
-			new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
+			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1,3));
 			if(count < 20){
-				new Comet(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
+				new Comet(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1,3));
 			}
 		}
 		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
@@ -134,7 +141,7 @@ public class Play extends GameState implements Screen{
 	public void render(float delta) {
 		if(isActive()) {
 			aliveTime++;
-			if(aliveTime > maxAliveTime){
+			if(aliveTime > MAX_ALIVE_TIME){
 				aliveTime = 0;
 			}
 			gameWorld.getBodies(bodies);
