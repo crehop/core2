@@ -477,7 +477,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 	    if (!dragging) return false;
-	      gridCam.position.set(screenX, screenY, 0);
+	      gridCam.translate(-Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
 	      return true;
 	}
 
