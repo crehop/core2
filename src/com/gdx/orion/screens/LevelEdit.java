@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,10 +31,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.Scene2dUtils;
 
-public class LevelEdit extends GameState implements Screen {
+public class LevelEdit extends GameState implements Screen, InputProcessor {
 	public static Game game;
 	public static OrthographicCamera cam;
 	public static ScalingViewport viewport;  
+	public static OrthographicCamera gridCam;
 	
 	private final SpriteBatch batch;
 	private final Sprite vacantSquare;
@@ -57,6 +60,8 @@ public class LevelEdit extends GameState implements Screen {
 	private TextButton gravityWell;
 	private TextButton spawnPoint;
 	private TextButton back;
+	
+	private InputMultiplexer im;
 	
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
@@ -113,7 +118,7 @@ public class LevelEdit extends GameState implements Screen {
 		spawnPoint = new TextButton("SPAWN", editStyle);
 		spawnPoint.setPosition(cam.viewportWidth - 100, cam.viewportHeight - 400);
 		back = new TextButton("BACK", style);
-		back.setPosition(cam.viewportWidth - 100, cam.viewportHeight - cam.viewportHeight);
+		back.setPosition(cam.viewportWidth - 100 + viewport.getScreenX(), cam.viewportHeight - cam.viewportHeight + viewport.getScreenY());
 		stage.addActor(worldBorder);
 		stage.addActor(asteroid);
 		stage.addActor(gravityWell);
@@ -133,7 +138,11 @@ public class LevelEdit extends GameState implements Screen {
             }
         });
 		
+		gridCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		gridCam.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, 0);
+		
 		batch = new SpriteBatch();
+		batch.setProjectionMatrix(gridCam.combined);
 		
 		pixmap = new Pixmap(10, 10, Format.RGBA8888);
 		pixmap.setColor(Color.BLACK);
@@ -143,6 +152,10 @@ public class LevelEdit extends GameState implements Screen {
 		pixmap.drawLine(0, 0, 0, VIEWPORT_HEIGHT);
 		
 		vacantSquare = new Sprite(new Texture(pixmap));
+		
+		im = new InputMultiplexer();
+		im.addProcessor(stage);
+		im.addProcessor(this);
 		
 		consoleCam = new OrthographicCamera();
 		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
@@ -160,6 +173,7 @@ public class LevelEdit extends GameState implements Screen {
 		  stage.act();
 		  stage.draw();
 		  cam.update();
+		  gridCam.update();
 		  
 		  Console.setLine2("SCREEN:" + Gdx.graphics.getWidth() + "/" + Gdx.graphics.getHeight());
 		  Console.setLine3("CAM:"+ cam.viewportWidth + "/" + cam.viewportHeight);
@@ -177,6 +191,7 @@ public class LevelEdit extends GameState implements Screen {
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height);
 		stage.getViewport().apply();
+		viewport.update(width, height, true);
 		consoleViewport.update(width, height);
 		consoleViewport.apply();
 	}
@@ -193,7 +208,7 @@ public class LevelEdit extends GameState implements Screen {
 	
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(im);
 		this.setActive(true);
 	}
 	
@@ -222,10 +237,10 @@ public class LevelEdit extends GameState implements Screen {
 	public void renderGrid() {
 		if (active) {
 			batch.begin();
+			batch.setProjectionMatrix(gridCam.combined);
 			for (int  x = 0; x < GRID_MAX_X; x++) {
 				for (int y = 0; y < GRID_MAX_Y; y++) {
-					vacantSquare.setPosition(x * GRID_SQUARE_SIZE, y * GRID_SQUARE_SIZE);
-					vacantSquare.draw(batch);
+					batch.draw(vacantSquare, x * GRID_SQUARE_SIZE, y * GRID_SQUARE_SIZE);
 				}
 			}
 			batch.end();
@@ -423,6 +438,72 @@ public class LevelEdit extends GameState implements Screen {
 			
 		}
 		
+	}
+
+	/**
+	 * Input processor stuff for the editor only
+	 */
+	private Vector3 tp = new Vector3();
+	private boolean dragging;
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button != Input.Buttons.LEFT || pointer > 0) return false;
+        dragging = true;
+        return true;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button != Input.Buttons.LEFT || pointer > 0) return false;
+        dragging = false;
+        return true;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+	    if (!dragging) return false;
+	      gridCam.position.set(screenX, screenY, 0);
+	      return true;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		if(!(LevelEdit.gridCam.zoom + amount < 1)){
+			LevelEdit.gridCam.zoom += amount;
+			Console.setLine8(""+LevelEdit.cam.zoom);
+		}
+		if(LevelEdit.gridCam.zoom < 0){
+			LevelEdit.gridCam.zoom = 1;
+		}
+		return false;
+	}
+
+	public Vector3 getTp() {
+		return tp;
+	}
+
+	public void setTp(Vector3 tp) {
+		this.tp = tp;
 	}
 	
 }
