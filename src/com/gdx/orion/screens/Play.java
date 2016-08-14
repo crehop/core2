@@ -120,8 +120,8 @@ public class Play extends GameState implements Screen{
 				new Comet(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			}
 		}
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 40.03f,130, gameWorld, true, sprite2,new Vector2(0,0), true);
-		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 10.03f,150, gameWorld, true, sprite2,new Vector2(-300,0), false);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, sprite2,new Vector2(0,0), true);
+		GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 300, 50.03f,1500, gameWorld, true, sprite2,new Vector2(50,100), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);

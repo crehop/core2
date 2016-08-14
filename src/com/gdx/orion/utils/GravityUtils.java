@@ -68,11 +68,11 @@ public class GravityUtils{
 					planetDistance.sub(planetPosition);
 					finalDistance = planetDistance.len();
 					if(finalDistance <= radius * GRAVITATIONAL_REACH) {
-						planetDistance.x = planetDistance.x * -1;
-						planetDistance.y = planetDistance.y * -1;
+						planetDistance.x = (planetDistance.x * -1)/2;
+						planetDistance.y = (planetDistance.y * -1)/2;
 						vecSum = Math.abs(planetDistance.x) + Math.abs(planetDistance.y);			
-						planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
-						planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity();
+						planetDistance.x = planetDistance.x * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity()/100;
+						planetDistance.y = planetDistance.y * ((1/vecSum)* radius/finalDistance) * body.getMass() * planetVector.get(j).getFixtureList().get(0).getDensity()/100;
 						if(((EntityData)body.getUserData()).getID() != ((EntityData)planetVector.get(j).getUserData()).getID()){
 							body.applyForce(planetDistance,body.getWorldCenter(),true);
 						}
