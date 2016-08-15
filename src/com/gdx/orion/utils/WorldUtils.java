@@ -163,7 +163,8 @@ public class WorldUtils {
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
-		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG_ASTEROID,null));
+		body.setUserData(new EntityData(1,EntityType.PRE_FRAG_ASTEROID,null));
+		((EntityData)body.getUserData()).setEntropy(((EntityData)body2.getUserData()).getEntropy() + 1);
 	}
 	public static void fragmentComet(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
 		shape = new PolygonShape();
@@ -190,7 +191,8 @@ public class WorldUtils {
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
-		body.setUserData(new EntityData(MathUtils.random(30),EntityType.PRE_FRAG_COMET,null));
+		body.setUserData(new EntityData(1,EntityType.PRE_FRAG_COMET,null));
+		((EntityData)body.getUserData()).setEntropy(((EntityData)body2.getUserData()).getEntropy() + 1);
 	}
 	public Body getBody() {
 		return body;
@@ -202,10 +204,10 @@ public class WorldUtils {
 			((PolygonShape)body2.getFixtureList().get(0).getShape()).getVertex(i, tempV2);
 			temp[count++] = tempV2.x;
 			temp[count++] = tempV2.y;
-			temp[count++] = asteroid.r;
-			temp[count++] = asteroid.g;
-			temp[count++] = asteroid.b;
-			temp[count++] = asteroid.a;
+			temp[count++] = asteroid.r + randomPosNegValue(20,20);;
+			temp[count++] = asteroid.g + randomPosNegValue(20,20);;
+			temp[count++] = asteroid.b + randomPosNegValue(20,20);;
+			temp[count++] = asteroid.a + randomPosNegValue(20,20);;
 		}
 		if(mesh == null){
 			mesh = new Mesh(true, temp.length/6, 0,  

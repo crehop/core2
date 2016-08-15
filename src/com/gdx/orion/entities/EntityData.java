@@ -1,5 +1,7 @@
 package com.gdx.orion.entities;
 
+import com.badlogic.gdx.math.MathUtils;
+
 
 public class EntityData {
 	private float life = 0;
@@ -7,12 +9,14 @@ public class EntityData {
 	private EntityType type;
 	private int alive;
 	private Object object;
+	private int entropy = 0;
 	public EntityData(float life,EntityType type,Object object){
 		this.type = type;
 		this.ID = UIDGetter.getID();
 		this.life = life;
 		this.object = object;
 		this.alive = 0;
+		this.setEntropy(MathUtils.random(-1,1));
 	}
 	public EntityType getType(){
 		return type;
@@ -49,5 +53,11 @@ public class EntityData {
 	}
 	public Object getObject(){
 		return this.object;
+	}
+	public int getEntropy() {
+		return entropy;
+	}
+	public void setEntropy(int entropy) {
+		this.entropy = entropy;
 	}
 }

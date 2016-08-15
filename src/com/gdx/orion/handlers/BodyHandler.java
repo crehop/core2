@@ -56,8 +56,7 @@ public class BodyHandler {
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 					ps.getVertex(0, midPoint);
 					ps.getVertex(1, tempV2);
-					if((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE){
-						count = 0;
+					if(((entityDataA.getEntropy() < 3)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
 						for(int i = 0; i < ps.getVertexCount(); i++){
 							ps.getVertex(i, tempV2);
 							tempAsteroid[count++] = tempV2.x;
@@ -83,8 +82,7 @@ public class BodyHandler {
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 					ps.getVertex(0, midPoint);
 					ps.getVertex(1, tempV2);
-					if((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE){
-						count = 0;
+					if(((entityDataA.getEntropy() < 3)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
 						for(int i = 0; i < ps.getVertexCount(); i++){
 							ps.getVertex(i, tempV2);
 							tempAsteroid[count++] = tempV2.x;
