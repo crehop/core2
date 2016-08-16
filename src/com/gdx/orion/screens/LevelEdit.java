@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -369,8 +370,11 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		this.tp = tp;
 	}
 	
+	
+	
 	private class AsteroidEditPrompt implements Screen {
 		private boolean active = true;
+		private boolean activePop = false;
 		
 		private final int P_H = (int) cam.viewportHeight/2;
 		private final int P_W = (int) cam.viewportWidth; 
@@ -402,9 +406,16 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 		private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
 		
+		private GridData gd;
+		private int gridX, gridY;
+		
 		public AsteroidEditPrompt(GridData gd, int gridX, int gridY) {
 			this.stage = new Stage(viewport);
 			Gdx.input.setInputProcessor(this.stage);
+			
+			this.gd = gd;
+			this.gridX = gridX;
+			this.gridY = gridY;
 			
 			this.batch = new SpriteBatch();
 			
@@ -420,8 +431,8 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			this.stage.addListener(new InputListener() {
 				public boolean keyUp(InputEvent event, int keyCode) {
 					switch (keyCode) {
-					case Input.Keys.BACK: cancel(); break;
-					case Input.Keys.ESCAPE: cancel(); break;
+					case Input.Keys.BACK: cancelAndPlace(); break;
+					case Input.Keys.ESCAPE: cancelAndPlace(); break;
 					}
 					
 					return super .keyUp(event, keyCode);
@@ -447,6 +458,38 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			this.density.setPosition(P_W/3, P_H - 375);
 			this.size.setPosition(P_W/3, P_H - 475);
 			
+			this.velocity1.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
+					Gdx.input.getTextInput(new AsteroidNumberPrompt(velocity1), "X Velocity", "", null);
+				}
+			});
+			
+			this.velocity2.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
+					Gdx.input.getTextInput(new AsteroidNumberPrompt(velocity2), "Y Velocity", "", null);
+				}
+			});
+			
+			this.density.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
+					Gdx.input.getTextInput(new AsteroidNumberPrompt(density), "Density", "", null);
+				}
+			});
+			
+			this.size.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					if (!activePop)
+					Gdx.input.getTextInput(new AsteroidNumberPrompt(size), "Size", "", null);
+				}
+			});
+			
 			this.stage.addActor(velocity1);
 			this.stage.addActor(velocity2);
 			this.stage.addActor(density);
@@ -456,7 +499,12 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			Gdx.input.setInputProcessor(this.stage);
 			this.active = true;
 		}
-		public void cancel() {
+		public void cancelAndPlace() {
+			gd.setPosition(new Vector2(gridX,gridY));
+			gd.setForce(new Vector2(Float.parseFloat(velocity1.getText().toString()), Float.parseFloat(velocity2.getText().toString())));
+			gd.setDensity(Float.parseFloat(density.getText().toString()));
+			gd.setSize(Integer.parseInt((size.getText().toString())));
+			LevelEdit.data[gridX][gridY] = gd;
 			LevelEdit.this.removeScreen(AsteroidEditPrompt.this);
 		}
 		public void render(float delta) {
@@ -489,7 +537,38 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			Gdx.input.setInputProcessor(previousInputProcessor);
 		}
 		
+		private class AsteroidNumberPrompt implements TextInputListener {
+			
+			private TextButton b;
+			
+			public AsteroidNumberPrompt(TextButton b) {
+				this.b = b;
+				AsteroidEditPrompt.this.activePop = true;
+			}
+			
+			public void input(String text) {
+				int i = -1;
+				try {
+				if ((i = Integer.parseInt(text)) != -1) {
+					b.setText(i + "");
+				}
+				AsteroidEditPrompt.this.activePop = false;
+				return;
+				} catch (NumberFormatException ez) {
+					AsteroidEditPrompt.this.activePop = false;
+				}
+			}
+
+			public void canceled() {
+				AsteroidEditPrompt.this.activePop = false;
+			}
+			
+		}
+		
 	}
+	
+	
+	
 	
 	private class LevelSizePrompt implements Screen {
 
