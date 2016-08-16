@@ -28,6 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.gdx.orion.data.GridData;
+import com.gdx.orion.data.GridData.Type;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.Scene2dUtils;
 
@@ -69,7 +71,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	private OrthographicCamera consoleCam;
 	private ScalingViewport consoleViewport;
 	
-	public static Object[][] data;
+	public static GridData[][] data;
 	
 	protected LevelEdit(Game game) {
 		super(GameStateManager.LEVELEDIT);
@@ -168,7 +170,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		im.addProcessor(stage);
 		im.addProcessor(this);
 		
-		data = new Object[GRID_MAX_X][GRID_MAX_Y];
+		data = new GridData[GRID_MAX_X][GRID_MAX_Y];
 		for (int x = 0; x < GRID_MAX_X; x++) {
 			for (int y = 0; y < GRID_MAX_Y; y++) {
 				data[x][y] = null;
@@ -284,6 +286,209 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		gravityWell.setChecked(false);
 		spawnPoint.setChecked(false);
 		back.setChecked(false);
+	}
+	
+	/**
+	 * Input processor stuff for the editor only
+	 */
+	private Vector3 tp = new Vector3();
+	private boolean dragging;
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (asteroid.isChecked()) {
+			clickPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			gridCam.unproject(clickPos);
+			if (isOnGrid((int)clickPos.x, (int)clickPos.y)) {
+				Object o = data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE];
+				if (o == null) {
+					GridData gd = new GridData(Type.ASTEROID);
+					addScreen(new AsteroidEditPrompt(gd, (int)clickPos.x/GRID_SQUARE_SIZE, (int)clickPos.y/GRID_SQUARE_SIZE));
+					return true;
+				} else {
+					data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE] = null;
+				}
+			}
+			return true;
+		}
+        if (button != Input.Buttons.LEFT || pointer > 0) return false;
+        dragging = true;
+        return true;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button != Input.Buttons.LEFT || pointer > 0) return false;
+        dragging = false;
+        return true;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+	    if (!dragging) return false;
+	      gridCam.translate(-Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
+	      return true;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		if(!(LevelEdit.gridCam.zoom + amount < 1)){
+			LevelEdit.gridCam.zoom += amount;
+			Console.setLine8(""+LevelEdit.cam.zoom);
+		}
+		if(LevelEdit.gridCam.zoom < 0){
+			LevelEdit.gridCam.zoom = 1;
+		}
+		return false;
+	}
+
+	public Vector3 getTp() {
+		return tp;
+	}
+
+	public void setTp(Vector3 tp) {
+		this.tp = tp;
+	}
+	
+	private class AsteroidEditPrompt implements Screen {
+		private boolean active = true;
+		
+		private final int P_H = (int) cam.viewportHeight/2;
+		private final int P_W = (int) cam.viewportWidth; 
+		
+		private final Stage stage;
+		
+		private SpriteBatch batch;
+		
+		private Pixmap pixmap;
+		private Sprite promptBackground;
+		
+		private TextButton velocity1, velocity2, density, size;
+		
+		private final BitmapFont editorText = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Regular.ttf"))
+	    .generateFont(new FreeTypeFontParameter() {{
+	    	size = 38;
+	    	color = Color.WHITE;
+	    	shadowOffsetX = 3;
+	    	shadowOffsetY = 3;
+		}});
+		
+		private final BitmapFont selectionText = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Regular.ttf"))
+	    .generateFont(new FreeTypeFontParameter() {{
+	    	size = 42;
+	    	color = Color.RED;
+	    	shadowOffsetX = 3;
+	    	shadowOffsetY = 3;
+		}});
+		
+		private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
+		
+		public AsteroidEditPrompt(GridData gd, int gridX, int gridY) {
+			this.stage = new Stage(viewport);
+			Gdx.input.setInputProcessor(this.stage);
+			
+			this.batch = new SpriteBatch();
+			
+			this.pixmap = new Pixmap(P_W, P_H, Format.RGBA8888);
+			this.pixmap.setColor(Color.BLACK);
+			this.pixmap.fill();
+			this.pixmap.setColor(Color.GREEN);
+			this.pixmap.drawRectangle(0, 0, P_W, P_H);
+			
+			this.promptBackground = new Sprite(new Texture(pixmap));
+			
+			this.stage.clear();
+			this.stage.addListener(new InputListener() {
+				public boolean keyUp(InputEvent event, int keyCode) {
+					switch (keyCode) {
+					case Input.Keys.BACK: cancel(); break;
+					case Input.Keys.ESCAPE: cancel(); break;
+					}
+					
+					return super .keyUp(event, keyCode);
+				}
+			});
+			
+			TextButtonStyle select = new TextButtonStyle();
+			select.font = selectionText;
+			select.up = skin.newDrawable("white", Color.BLACK);
+			
+			this.velocity1 = new TextButton(0 + "", select);
+			this.velocity2 = new TextButton(0 + "", select);
+			this.density = new TextButton(1 + "", select);
+			this.size = new TextButton(1 + "", select);
+			
+			this.velocity1.setBounds(0, 0, 100, 100);
+			this.velocity2.setBounds(0, 0, 100, 100);
+			this.density.setBounds(0, 0, 100, 100);
+			this.size.setBounds(0, 0, 100, 100);
+			
+			this.velocity1.setPosition(P_W/4, P_H - 275);
+			this.velocity2.setPosition(P_W/3, P_H - 275);
+			this.density.setPosition(P_W/3, P_H - 375);
+			this.size.setPosition(P_W/3, P_H - 475);
+			
+			this.stage.addActor(velocity1);
+			this.stage.addActor(velocity2);
+			this.stage.addActor(density);
+			this.stage.addActor(size);
+		}
+		public void show() {
+			Gdx.input.setInputProcessor(this.stage);
+			this.active = true;
+		}
+		public void cancel() {
+			LevelEdit.this.removeScreen(AsteroidEditPrompt.this);
+		}
+		public void render(float delta) {
+			if (active) {
+				this.batch.begin();
+				this.batch.draw(promptBackground, 0, 0);
+				this.editorText.draw(batch, "Asteroid Creation", P_W/3, P_H - 100);
+				this.editorText.draw(batch, "Velocity Vector", P_W/5, P_H - 200);
+				this.editorText.draw(batch, "Density", P_W/5, P_H - 300);
+				this.editorText.draw(batch, "Size", P_W/5, P_H - 400);
+				this.batch.end();
+				
+				this.stage.act();
+				this.stage.draw();
+			}
+		}
+		public void resize(int width, int height) {
+			
+		}
+		public void pause() {
+			
+		}
+		public void resume() {
+			
+		}
+		public void hide() {
+			active = false;
+		}
+		public void dispose() {
+			Gdx.input.setInputProcessor(previousInputProcessor);
+		}
+		
 	}
 	
 	private class LevelSizePrompt implements Screen {
@@ -464,7 +669,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 						GRID_MAX_Y = i;
 						LevelSizePrompt.this.y.setText(i + "");
 					}
-					data = new Object[GRID_MAX_X][GRID_MAX_Y];
+					data = new GridData[GRID_MAX_X][GRID_MAX_Y];
 					for (int x = 0; x < GRID_MAX_X; x++) {
 						for (int y = 0; y < GRID_MAX_Y; y++) {
 							if (data[x][y] != null) {
@@ -490,83 +695,4 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 	}
 
-	/**
-	 * Input processor stuff for the editor only
-	 */
-	private Vector3 tp = new Vector3();
-	private boolean dragging;
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (asteroid.isChecked()) {
-			clickPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			gridCam.unproject(clickPos);
-			if (isOnGrid((int)clickPos.x, (int)clickPos.y)) {
-				Object o = data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE];
-				if (o == null) {
-					data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE] = new Object();
-				} else {
-					data[(int)clickPos.x/GRID_SQUARE_SIZE][(int)clickPos.y/GRID_SQUARE_SIZE] = null;
-				}
-			}
-			return true;
-		}
-        if (button != Input.Buttons.LEFT || pointer > 0) return false;
-        dragging = true;
-        return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (button != Input.Buttons.LEFT || pointer > 0) return false;
-        dragging = false;
-        return true;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-	    if (!dragging) return false;
-	      gridCam.translate(-Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
-	      return true;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		if(!(LevelEdit.gridCam.zoom + amount < 1)){
-			LevelEdit.gridCam.zoom += amount;
-			Console.setLine8(""+LevelEdit.cam.zoom);
-		}
-		if(LevelEdit.gridCam.zoom < 0){
-			LevelEdit.gridCam.zoom = 1;
-		}
-		return false;
-	}
-
-	public Vector3 getTp() {
-		return tp;
-	}
-
-	public void setTp(Vector3 tp) {
-		this.tp = tp;
-	}
-	
 }
