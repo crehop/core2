@@ -71,9 +71,9 @@ public class EffectUtils {
 		lineRenderer.color(r, g, b, a);
 		lineRenderer.vertex(x2, y2, z2);
 	}
-	public static void grid(float GAME_WORLD_WIDTH, float GAME_WORLD_HEIGHT,Color color,int numberOfLines) {		
-		spacingH = 10;		
-		spacingW = 10;
+	public static void grid(float GAME_WORLD_WIDTH, float GAME_WORLD_HEIGHT,Color color) {		
+		spacingH = 45;		
+		spacingW = 45;
 		for(int x = 0; x <= GAME_WORLD_WIDTH; x += spacingH) {		
 			line(x, 0, 0,		
 					x, GAME_WORLD_HEIGHT, 0,		
@@ -87,7 +87,7 @@ public class EffectUtils {
 	}		
 	public static void drawGrid(Camera cam){				
 		lineRenderer.begin(cam.combined, GL20.GL_LINES);		
-		grid(Main.GAME_WORLD_WIDTH,Main.GAME_WORLD_HEIGHT,Color.DARK_GRAY,25);		
+		grid(Main.GAME_WORLD_WIDTH,Main.GAME_WORLD_HEIGHT,Color.DARK_GRAY);		
 		lineRenderer.end();		
 	}
 	public static void thrustEffect(Vector2 position, Batch batch, float rotation){
