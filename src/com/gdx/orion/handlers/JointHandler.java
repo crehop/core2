@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class JointHandler {
 	private static EntityData entityDataA;
+	private static EntityData entityDataB;
 
 	public static void handleJoints(World gameWorld,Array<JointDef> addJoint,
 			Array<Joint> clearJoint, PlayerShip ship) {
@@ -36,7 +37,7 @@ public class JointHandler {
 					}
 				}else if(joint.getBodyB().getUserData() instanceof EntityData){
 					entityDataA = (EntityData)joint.getBodyB().getUserData();
-					if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
+					if(entityDataB.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
 						if(joint.getBodyA().getUserData() instanceof EntityData){
 							entityDataA = (EntityData)joint.getBodyA().getUserData();
 							if(entityDataA.getType() == EntityType.SHIELD){

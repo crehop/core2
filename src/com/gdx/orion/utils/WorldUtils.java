@@ -163,8 +163,13 @@ public class WorldUtils {
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
-		body.setUserData(new EntityData(1,EntityType.PRE_FRAG_ASTEROID,null));
-		((EntityData)body.getUserData()).setEntropy(((EntityData)body2.getUserData()).getEntropy() + 1);
+		body.setUserData(body2.getUserData());
+		if(((EntityData)body.getUserData()).getEntropy() + MathUtils.random(0, 1) < 3){
+			((EntityData)body.getUserData()).setType(EntityType.PRE_FRAG_ASTEROID);
+		}else{
+			((EntityData)body.getUserData()).setType(EntityType.ASTEROID_FRAGMENT);
+			((EntityData)body.getUserData()).setEntropy(((EntityData)body.getUserData()).getEntropy() + 1);
+		}
 	}
 	public static void fragmentComet(float points, float points2, float points3, float points4, float points5, float points6, World world, Body body2){
 		shape = new PolygonShape();
@@ -191,8 +196,9 @@ public class WorldUtils {
 		body.setAngularVelocity(body2.getAngularVelocity());
 		force = 3;
 		body.applyForce(body.getPosition().x, body.getPosition().y, body.getPosition().x + MathUtils.random(-force * body.getMass(),force * body.getMass()), body.getPosition().y + MathUtils.random(-force * body.getMass(),force * body.getMass()), true);
-		body.setUserData(new EntityData(1,EntityType.PRE_FRAG_COMET,null));
-		((EntityData)body.getUserData()).setEntropy(((EntityData)body2.getUserData()).getEntropy() + 1);
+		body.setUserData(body2.getUserData());
+		((EntityData)body.getUserData()).setType(EntityType.PRE_FRAG_ASTEROID);
+		((EntityData)body.getUserData()).setEntropy(((EntityData)body.getUserData()).getEntropy() + 1);
 	}
 	public Body getBody() {
 		return body;

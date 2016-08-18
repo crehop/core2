@@ -56,7 +56,7 @@ public class BodyHandler {
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 					ps.getVertex(0, midPoint);
 					ps.getVertex(1, tempV2);
-					if(((entityDataA.getEntropy() < 3)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
+					if(((entityDataA.getEntropy() < 13)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
 						for(int i = 0; i < ps.getVertexCount(); i++){
 							ps.getVertex(i, tempV2);
 							tempAsteroid[count++] = tempV2.x;
@@ -159,10 +159,10 @@ public class BodyHandler {
 			if(body.getUserData() instanceof EntityData){
 			entityDataA = (EntityData)body.getUserData();
 				if(entityDataA.getType() == EntityType.DESTROYME_ASTEROID){
-					((Asteroid)entityDataA.getObject()).fragment(10);
+					((Asteroid)entityDataA.getObject()).fragment(0);
 				}
 				if(entityDataA.getType() == EntityType.DESTROYME_COMET){
-					((Comet)entityDataA.getObject()).fragment(10);
+					((Comet)entityDataA.getObject()).fragment(0);
 				}
 				if(entityDataA.getType() == EntityType.DELETEME){
 					gameWorld.destroyBody(body);

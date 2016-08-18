@@ -63,7 +63,7 @@ public class Play extends GameState implements Screen{
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
     private Texture texture3 = new Texture(Gdx.files.internal("images/planets/Titan.png"));
-    private Sprite sprite = new Sprite(texture);
+    private Sprite stars = new Sprite(texture);
     private Sprite jupiter = new Sprite(texture2);
     private Sprite titan = new Sprite(texture3);
     
@@ -99,8 +99,8 @@ public class Play extends GameState implements Screen{
 	
 	protected Play (Game game, int level) {
 		super(GameStateManager.PLAY);
-		sprite.scale(10f);
-		sprite.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+		stars.scale(10f);
+		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();
 		consoleCam = new OrthographicCamera();
 		mapCam = new OrthographicCamera();
@@ -154,9 +154,10 @@ public class Play extends GameState implements Screen{
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(sprite, 0 , 0, Main.GAME_WORLD_WIDTH, Main.GAME_WORLD_HEIGHT);
+			batch.draw(stars, 0 , 0, Main.GAME_WORLD_WIDTH, Main.GAME_WORLD_HEIGHT);
 			batch.end();
 			EffectUtils.drawGrid(cam);
+			BodyHandler.update(cam, gameWorld, bodies);
 			batch.begin();
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
@@ -168,9 +169,6 @@ public class Play extends GameState implements Screen{
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
 			ship.draw(batch, true,mapCam.position);
-			batch.end();
-			BodyHandler.update(cam, gameWorld, bodies);
-			batch.begin();
 			batch.setProjectionMatrix(cam.combined);
 			BodyHandler.applyEffects(batch);
 			BodyHandler.destroyBodies(gameWorld,destroy);
@@ -194,7 +192,7 @@ public class Play extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 			accumulator += delta;
 		    while (accumulator >= step) {
-		        gameWorld.step(step, 8, 6);
+		        gameWorld.step(step, 1, 1);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
