@@ -148,6 +148,7 @@ public class Play extends GameState implements Screen{
 			cam.position.set(ship.getBody().getWorldCenter(), 0);
 			mapCam.position.set(ship.getBody().getWorldCenter(), 0);
 			playController.checkInput();
+			BodyHandler.applyEffects(batch);
 			asteroids.clear();
 			comets.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -155,9 +156,6 @@ public class Play extends GameState implements Screen{
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(sprite, 0 , 0, Main.GAME_WORLD_WIDTH, Main.GAME_WORLD_HEIGHT);
-			batch.end();
-			EffectUtils.drawGrid(cam);
-			batch.begin();
 			GravityUtils.renderWells(batch);
 			ship.draw(batch,false,cam.position);
 			BodyHandler.handleStates(gameWorld,bodies);
@@ -168,13 +166,13 @@ public class Play extends GameState implements Screen{
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
 			ship.draw(batch, true,mapCam.position);
-			batch.end();
 			BodyHandler.update(cam, gameWorld, bodies);
-			batch.begin();
-			batch.setProjectionMatrix(cam.combined);
-			BodyHandler.applyEffects(batch);
 			BodyHandler.destroyBodies(gameWorld,destroy);
 			batch.end();
+			
+			
+			EffectUtils.drawGrid(cam);
+
 			destroy.clear();
 			
 			
