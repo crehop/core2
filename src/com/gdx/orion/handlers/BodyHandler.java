@@ -159,10 +159,10 @@ public class BodyHandler {
 			if(body.getUserData() instanceof EntityData){
 			entityDataA = (EntityData)body.getUserData();
 				if(entityDataA.getType() == EntityType.DESTROYME_ASTEROID){
-					((Asteroid)entityDataA.getObject()).fragment(0);
+					((Asteroid)entityDataA.getObject()).fragment(10);
 				}
 				if(entityDataA.getType() == EntityType.DESTROYME_COMET){
-					((Comet)entityDataA.getObject()).fragment(0);
+					((Comet)entityDataA.getObject()).fragment(10);
 				}
 				if(entityDataA.getType() == EntityType.DELETEME){
 					gameWorld.destroyBody(body);
