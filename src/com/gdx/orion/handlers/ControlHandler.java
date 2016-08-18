@@ -10,8 +10,8 @@ import com.gdx.orion.utils.WorldUtils;
 
 public class ControlHandler extends InputAdapter {
 	public static final float TURN_RATE = 150f;
-	public static final int THRUST_REVERSE_FACTOR = -12000;
-	public static final int THRUST_FORWARD_FACTOR = 60000;
+	public static final int THRUST_REVERSE_FACTOR = -150000;
+	public static final int THRUST_FORWARD_FACTOR = 300000;
 	private boolean exitKey = false;
 	private boolean forward = false;
 	private boolean back = false;

@@ -117,7 +117,7 @@ public class EffectUtils {
 		particleEffect.draw(batch);
 	}
 	public static void cometFragmentTrailEffect(Vector2 position, Batch batch, float rotation){
-		emitters = thrust.getEmitters();
+		emitters = cometFragmentTrail.getEmitters();
 		for(int i = 0; i< emitters.size; i++){
 			val = emitters.get(i).getAngle();
 			h1 = rotation;
@@ -125,18 +125,17 @@ public class EffectUtils {
 			val.setHigh(h1,h2);
 			val.setLow(h1,h2);
 		}
-		thrust.setPosition(position.x, position.y);
-		thrust.start();
-		thrust.draw(batch);
+		cometFragmentTrail.setPosition(position.x, position.y);
+		cometFragmentTrail.start();
+		cometFragmentTrail.draw(batch);
 	}
 	public static void rotationThrustEffect(Vector2 position, Batch batch, float rotation){
 		emitters = rotationThrusters.getEmitters();
 		for(int i = 0; i< emitters.size; i++){
 			val = emitters.get(i).getAngle();
-			h1 = rotation;
-			h2 = rotation;
-			val.setHigh(h1,h2);
-			val.setLow(h1,h2);
+			h1 = rotation - 90f;
+			val.setHigh(h1,h1);
+			val.setLow(h1,h1);
 		}
 		rotationThrusters.setPosition(position.x, position.y);
 		rotationThrusters.start();

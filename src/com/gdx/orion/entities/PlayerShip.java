@@ -28,6 +28,7 @@ import com.gdx.orion.utils.Box2DUtils;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.Side;
+import com.gdx.orion.utils.WorldUtils;
 
 public class PlayerShip {
 	private float offset = (float) Math.toRadians(90);
@@ -221,16 +222,18 @@ public class PlayerShip {
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(7)))) * 3.5f * SIZE_MOD;
 				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(3))) * 23.6f * SIZE_MOD);
 				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(3))) * 23.6f * SIZE_MOD);
-				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
-				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
-				EffectUtils.line(fireSpot,force,100,0,0,1);
+				//WorldUtils.fireBullet(world, fireSpot, 1, .01f, force);
+				//EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				//RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
+				//EffectUtils.line(fireSpot,force,100,0,0,1);
 				fireSpot.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
 				fireSpot.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-7))) * 3.5f * SIZE_MOD);
-				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-3))) * 23.6f * SIZE_MOD);
-				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-3))) * 23.6f * SIZE_MOD);
-				EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
-				RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
-				EffectUtils.line(fireSpot,force,100,0,0,1);
+				force.x = body.getWorldCenter().x + (float) ((Math.cos(body.getAngle() + offset + Math.toRadians(-3))) * 33.6f * SIZE_MOD);
+				force.y = body.getWorldCenter().y + (float) ((Math.sin(body.getAngle() + offset + Math.toRadians(-3))) * 33.6f * SIZE_MOD);
+				//WorldUtils.fireBullet(world, fireSpot, 1, .01f, force);
+				//EffectUtils.bullet(world,fireSpot, batch,(float)(this.getBody().getAngle() * 57.2958) + 90);
+				//RaycastHandler.ray(fireSpot, force, EntityType.BULLET,world);
+				//EffectUtils.line(fireSpot,force,100,0,0,1);
 
 				
 			}
