@@ -114,6 +114,7 @@ public class Play extends GameState implements Screen{
 		this.stage = new Stage(viewport);
 		this.game = game;
 		this.setGameWorld(new World(new Vector2(0f,0f), false));
+		this.getGameWorld().setVelocityThreshold(1.99f);
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, Main.GAME_WORLD_WIDTH, 0, Main.GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
 		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
@@ -182,6 +183,9 @@ public class Play extends GameState implements Screen{
 			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
+			Console.setLine3("SHIP SPEED: " + ship.getBody().getLinearVelocity().x +"/" + ship.getBody().getLinearVelocity().y);
+			Console.setLine4("WORLD MAX VELOCITY: " + this.getGameWorld().getVelocityThreshold());
+
 			cam.update();
 			
 			
