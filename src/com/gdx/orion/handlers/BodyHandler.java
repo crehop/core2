@@ -31,36 +31,16 @@ public class BodyHandler {
 	private static float[] tempAsteroid = new float[48];
 	private static int fragmentsCulled;
 	private static int count;
-	private static final int MAX_OPS_PER_FRAME = 10;
     private static PolygonShape ps = new PolygonShape();
 	private static ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
 	private static ShapeRenderer sr = new ShapeRenderer();
 	public static void update(OrthographicCamera cam,World gameWorld,Array<Body> bodies){
 		fragmentsCulled = 0;
-		count = 0;
 		for(Body body:bodies){
 			if(body.getUserData() instanceof EntityData){
+				count = 0;
 				entityDataA = (EntityData)body.getUserData();
 				tempAsteroid = WorldUtils.getRenderAsteroidData(body);
-				if(entityDataA.getType() == EntityType.ASTEROID 
-						|| entityDataA.getType() == EntityType.COMET 
-						|| entityDataA.getType() == EntityType.GRAVITY_WELL){
-					if(body.getLinearVelocity().len() > 10){
-						body.getLinearVelocity().setLength(body.getLinearVelocity().len() - 1); 
-					}
-					if(body.getLinearVelocity().y > 10){
-						body.getLinearVelocity().setLength(body.getLinearVelocity().len() - 1); 
-					}
-					if(body.getLinearVelocity().x < -10){
-						body.getLinearVelocity().setLength(body.getLinearVelocity().len() + 1); 
-					}
-					if(body.getLinearVelocity().y < -10){
-						body.getLinearVelocity().setLength(body.getLinearVelocity().len() + 1); 
-					}
-				}
-				if(entityDataA.getType() == EntityType.SHIP ){
-					
-				}
 				if(entityDataA.getType() == EntityType.ASTEROID){
 					if(GameStateManager.play.isOnScreen(GameStateManager.play.getPlayerShip().getBody().getPosition(),body.getPosition())){
 						((Asteroid)entityDataA.getObject()).draw(r,cam);
@@ -72,12 +52,11 @@ public class BodyHandler {
 					}
 					effectBody.add(body);
 				}
-				if(entityDataA.getType() == EntityType.PRE_FRAG_ASTEROID && count < MAX_OPS_PER_FRAME){
-					count++;
+				if(entityDataA.getType() == EntityType.PRE_FRAG_ASTEROID){
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 					ps.getVertex(0, midPoint);
 					ps.getVertex(1, tempV2);
-					if(((entityDataA.getEntropy() < 3)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
+					if(((entityDataA.getEntropy() < 13)) &&((int)midPoint.x - (int)tempV2.x > GameStateManager.play.MAX_FRAGMENT_SIZE ||(int)midPoint.y - (int)tempV2.y > GameStateManager.play.MAX_FRAGMENT_SIZE)){
 						for(int i = 0; i < ps.getVertexCount(); i++){
 							ps.getVertex(i, tempV2);
 							tempAsteroid[count++] = tempV2.x;
@@ -99,8 +78,7 @@ public class BodyHandler {
 						entityDataA.setType(EntityType.ASTEROID_FRAGMENT);
 					}
 				}
-				if(entityDataA.getType() == EntityType.PRE_FRAG_COMET && count < MAX_OPS_PER_FRAME){
-					count++;
+				if(entityDataA.getType() == EntityType.PRE_FRAG_COMET){
 					ps = (PolygonShape)body.getFixtureList().get(0).getShape();
 					ps.getVertex(0, midPoint);
 					ps.getVertex(1, tempV2);
