@@ -30,7 +30,7 @@ public class GameStateManager {
 	public static void initiate(Game game2){
 		game = game2;
 		levelEdit = new LevelEdit(game);
-		levelSelect = new LevelSelect(game);
+		levelSelect = new LevelSelect(game,1);
 		play = new Play(game, 1);
 		menu = new Menu(game, 0);
 		store = new Store(game);

@@ -22,7 +22,7 @@ public class Main extends Game implements ApplicationListener{
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.setVSync(true);
 		Gdx.input.setCursorCatched(false);
-		GameStateManager.setScreen(GameStateManager.MENU);
+		GameStateManager.setScreen(GameStateManager.LEVELSELECT);
 		//music.play();
 		
 		// TODO: Configure the campaign singleton by reading back from persistent storage
