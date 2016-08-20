@@ -6,4 +6,5 @@ import com.badlogic.gdx.utils.Array;
 
 public class VoxelizedPhysicsHandler {
 	ArrayList<Array[][]> buildMe = new ArrayList<Array[][]>();
+	ArrayList<Array[][]> deconstructMe = new ArrayList<Array[][]>();
 }
