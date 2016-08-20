@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -97,7 +96,7 @@ public class LevelSelect extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(10f,-10.9f), false));
+		this.setGameWorld(new World(new Vector2(.9f,-.9f), false));
 		this.getGameWorld().setVelocityThreshold(1.99f);
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 25, 0, 25);
 		this.gameWorld.setContactListener(new ContactHandler());
