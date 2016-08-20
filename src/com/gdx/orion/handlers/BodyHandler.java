@@ -3,7 +3,6 @@ package com.gdx.orion.handlers;
 import java.util.ArrayList;
 
 import com.gdx.orion.entities.Asteroid;
-import com.gdx.orion.entities.Comet;
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
 import com.badlogic.gdx.graphics.Color;
@@ -74,9 +73,6 @@ public class BodyHandler {
 				if(count == GameStateManager.play.aliveTime){
 					GameStateManager.play.destroy.add(body);
 				}
-				if(GameStateManager.play.isOnScreen(GameStateManager.play.getPlayerShip().getBody().getPosition(),body.getPosition())){
-					WorldUtils.drawBullet(body,sr,cam,Color.YELLOW);
-				}
 			}
 		}
 	}
@@ -86,15 +82,10 @@ public class BodyHandler {
 				if(entityDataA.getType() == EntityType.DESTROYME_ASTEROID){
 					((Asteroid)entityDataA.getObject()).fragment(0);
 				}
-				if(entityDataA.getType() == EntityType.DESTROYME_COMET){
-					((Comet)entityDataA.getObject()).fragment(0);
-				}
 				if(entityDataA.getType() == EntityType.DELETEME){
 					gameWorld.destroyBody(body);
 				}
 				if(entityDataA.getType() == EntityType.ASTEROID){
-				}
-				if(entityDataA.getType() == EntityType.COMET){
 				}
 		}		
 	}
@@ -106,9 +97,6 @@ public class BodyHandler {
 	public static void applyEffects(Batch batch){
 		for(Body body:effectBody){
 			entityDataA = (EntityData)body.getUserData();
-			 if(entityDataA.getType() == EntityType.COMET){
-					EffectUtils.cometTrailEffect(body.getWorldCenter(),((Comet)entityDataA.getObject()).getParticleEffect(), batch, body.getLinearVelocity().angle() - 90);
-			}
 		}
 		effectBody.clear();
 	}

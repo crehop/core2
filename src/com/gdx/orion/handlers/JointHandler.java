@@ -1,13 +1,10 @@
 package com.gdx.orion.handlers;
 
 import com.gdx.orion.entities.EntityData;
-import com.gdx.orion.entities.EntityType;
-import com.gdx.orion.entities.PlayerShip;
 
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.utils.Array;
 
 public class JointHandler {

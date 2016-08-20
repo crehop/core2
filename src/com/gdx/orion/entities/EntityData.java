@@ -35,11 +35,6 @@ public class EntityData {
 					((EntityData)((Asteroid)object).getBody().getUserData()).setType(EntityType.DESTROYME_ASTEROID);
 				}
 			}
-			if(this.object instanceof Comet){
-				if(((Comet)object).getBody().getUserData() instanceof EntityData){
-					((EntityData)((Comet)object).getBody().getUserData()).setType(EntityType.DESTROYME_COMET);
-				}
-			}
 		}
 	}
 	public void setType(EntityType type) {
