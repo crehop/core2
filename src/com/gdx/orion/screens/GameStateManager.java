@@ -13,7 +13,6 @@ public class GameStateManager {
 	public static final int LEVELSELECT = 3;
 	public static final int STORE = 4;
 	public static final int PAUSE = 5;
-	public static final int HANGAR = 6;
 	
 	public static Screen state;
 	public static Play play;
@@ -22,24 +21,21 @@ public class GameStateManager {
 	public static Store store;
 	public static Game game;
 	public static Pause pause;
-	public static Hangar hangar;
 	public static ArrayList<GameState> gameStates = new ArrayList<GameState>();
 	private static int lastScreen = 0;
 	
 	public static void initiate(Game game2){
 		game = game2;
-		levelSelect = new LevelSelect(game);
+		levelSelect = new LevelSelect(game, 1);
 		play = new Play(game, 1);
 		menu = new Menu(game, 0);
 		store = new Store(game);
 		pause = new Pause(game, 5);
-		hangar = new Hangar(game, HANGAR);
 		gameStates.add(play);
 		gameStates.add(menu);
 		gameStates.add(store);
 		gameStates.add(levelSelect);
 		gameStates.add(pause);
-		gameStates.add(hangar);
 	}
 	
 	public static Screen getScreen(int screen){
@@ -47,7 +43,6 @@ public class GameStateManager {
 			case PLAY:   return play;
 			case MENU:   return menu;
 			case PAUSE:  return pause;
-			case HANGAR: return hangar;
 		}
 		
 		return null;
@@ -81,9 +76,6 @@ public class GameStateManager {
 				break;
 			case PAUSE:
 				game.setScreen(pause);
-				break;
-			case HANGAR:
-				game.setScreen(hangar);
 				break;
 			default:
 				System.out.printf("ERROR IN SETSCREEN: Unknown state %d%n", levelselect2);

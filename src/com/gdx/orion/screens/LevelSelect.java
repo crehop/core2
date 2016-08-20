@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.gdx.orion.entities.PlayerShip;
 
 import java.util.Random;
 
@@ -47,7 +46,6 @@ public class LevelSelect extends GameState implements Screen{
 	private static ControlHandler playController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
-	private PlayerShip ship;
 	@SuppressWarnings("unused")
 	private Stage stage;
 	Random rand = new Random();
@@ -210,11 +208,6 @@ public class LevelSelect extends GameState implements Screen{
 		fdef.friction = 1;
 		body.createFixture(fdef);
 		body.setAngularVelocity(MathUtils.random(-4f,4f));
-	}
-
-
-	public PlayerShip getPlayerShip() {
-		return this.ship;
 	}
 
 	public World getGameWorld() {

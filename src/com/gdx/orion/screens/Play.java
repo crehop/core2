@@ -1,8 +1,6 @@
 package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Asteroid;
-import com.gdx.orion.entities.Comet;
-import com.gdx.orion.entities.PlayerShip;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -50,14 +48,12 @@ public class Play extends GameState implements Screen{
 	private static ControlHandler playController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
-	private PlayerShip ship;
 	@SuppressWarnings("unused")
 	private Stage stage;
 	Random rand = new Random();
 	public Array<Body> destroy = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
-	private ArrayList<Comet> comets= new ArrayList<Comet>();
 	private SpriteBatch batch = new SpriteBatch();
 	
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
@@ -117,7 +113,6 @@ public class Play extends GameState implements Screen{
 		this.getGameWorld().setVelocityThreshold(1.99f);
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, Main.GAME_WORLD_WIDTH, 0, Main.GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
-		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
 		count = 0;
 		while(count < 205) {
@@ -125,9 +120,6 @@ public class Play extends GameState implements Screen{
 			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT));
 			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1.1f,13.3f));
-			if(count < 20){
-				new Comet(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(0.1f,10.3f));
-			}
 		}
 		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
 		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 1300, 80.03f,1500, gameWorld, true, titan,new Vector2(-12600,0), false);
@@ -146,11 +138,10 @@ public class Play extends GameState implements Screen{
 				aliveTime = 0;
 			}
 			gameWorld.getBodies(bodies);
-			cam.position.set(ship.getBody().getWorldCenter(), 0);
-			mapCam.position.set(ship.getBody().getWorldCenter(), 0);
+			cam.position.set(0, 0, 0);
+			mapCam.position.set(0, 0, 0);
 			playController.checkInput();
 			asteroids.clear();
-			comets.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
@@ -161,15 +152,13 @@ public class Play extends GameState implements Screen{
 			BodyHandler.update(cam, gameWorld, bodies);
 			batch.begin();
 			GravityUtils.renderWells(batch);
-			ship.draw(batch,false,cam.position);
 			BodyHandler.handleStates(gameWorld,bodies);
 			gameWorld.getJoints(clearJoint);
-			JointHandler.handleJoints(gameWorld,addJoint,clearJoint,ship);
+			JointHandler.handleJoints(gameWorld,addJoint,clearJoint);
 			addJoint.clear();
 			clearJoint.clear();
 			batch.setProjectionMatrix(mapCam.combined);
 			GravityUtils.renderWells(batch);
-			ship.draw(batch, true,mapCam.position);
 			batch.setProjectionMatrix(cam.combined);
 			BodyHandler.applyEffects(batch);
 			BodyHandler.destroyBodies(gameWorld,destroy);
@@ -183,7 +172,6 @@ public class Play extends GameState implements Screen{
 			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine3("SHIP SPEED: " + ship.getBody().getLinearVelocity().x +"/" + ship.getBody().getLinearVelocity().y);
 			Console.setLine4("WORLD MAX VELOCITY: " + this.getGameWorld().getVelocityThreshold());
 
 			cam.update();
@@ -206,7 +194,7 @@ public class Play extends GameState implements Screen{
 			//MUST BE LAST
 			renderer.render(gameWorld, mapCam.combined);              
 			Console.render(consoleCam);
-			cam.position.set(ship.getBody().getWorldCenter(), 0);
+			cam.position.set(0f,0f,0f);
 			consoleCam.update();
 			//////////////
 		}
@@ -257,11 +245,7 @@ public class Play extends GameState implements Screen{
 	public boolean isActive() {
 		return super.active;
 	}
-
-	public PlayerShip getPlayerShip() {
-		return this.ship;
-	}
-
+	
 	public World getGameWorld() {
 		return gameWorld;
 	}
