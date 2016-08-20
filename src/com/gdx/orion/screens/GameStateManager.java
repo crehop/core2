@@ -19,7 +19,6 @@ public class GameStateManager {
 	public static Play play;
 	public static Menu menu;
 	public static LevelSelect levelSelect;
-	public static LevelEdit levelEdit;
 	public static Store store;
 	public static Game game;
 	public static Pause pause;
@@ -29,7 +28,6 @@ public class GameStateManager {
 	
 	public static void initiate(Game game2){
 		game = game2;
-		levelEdit = new LevelEdit(game);
 		levelSelect = new LevelSelect(game);
 		play = new Play(game, 1);
 		menu = new Menu(game, 0);
@@ -39,7 +37,6 @@ public class GameStateManager {
 		gameStates.add(play);
 		gameStates.add(menu);
 		gameStates.add(store);
-		gameStates.add(levelEdit);
 		gameStates.add(levelSelect);
 		gameStates.add(pause);
 		gameStates.add(hangar);
@@ -75,9 +72,6 @@ public class GameStateManager {
 				break;
 			case PLAY:
 				game.setScreen(play);
-				break;
-			case LEVELEDIT:
-				game.setScreen(levelEdit);
 				break;
 			case LEVELSELECT:
 				game.setScreen(levelSelect);
