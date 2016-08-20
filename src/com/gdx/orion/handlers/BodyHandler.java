@@ -87,8 +87,6 @@ public class BodyHandler {
 				}
 				if(entityDataA.getType() == EntityType.ASTEROID){
 				}
-				if(entityDataA.getType() == EntityType.COMET){
-				}
 		}		
 	}
 	public static void destroyBodies(World gameWorld,Array<Body> destroy) {
