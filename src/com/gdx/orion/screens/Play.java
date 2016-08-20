@@ -73,11 +73,11 @@ public class Play extends GameState implements Screen{
     private Vector2 position = new Vector2(0,0);
     private Vector2 force = new Vector2(-50,0);
     
-	public final int MAX_BODIES = 800;
+	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
 	public final int MAX_FRAGMENT_SIZE = 3;
 	public final int MAX_ALIVE_TIME = 30;
-	public final int VIEW_DISTANCE = 750;
+	public final int VIEW_DISTANCE = 1500;
 
 
 	int fragmentsCulled = 0;
@@ -120,9 +120,9 @@ public class Play extends GameState implements Screen{
 		ship = new PlayerShip(getGameWorld(),new Vector2(140,140));
 		cam.zoom = 2.0f;
 		count = 0;
-		while(count < 1000) {
+		while(count < 205) {
 			count++;
-			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH/4) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT/4));
+			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT));
 			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
 			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1.1f,13.3f));
 			if(count < 20){

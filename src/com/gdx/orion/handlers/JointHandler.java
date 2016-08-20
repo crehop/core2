@@ -15,42 +15,12 @@ public class JointHandler {
 	private static EntityData entityDataB;
 
 	public static void handleJoints(World gameWorld,Array<JointDef> addJoint,
-			Array<Joint> clearJoint, PlayerShip ship) {
+			Array<Joint> clearJoint) {
 		for(JointDef def:addJoint){
 			gameWorld.createJoint(def);
 		}	
 		for(Joint joint: clearJoint){
-			if(!ship.ropeFired()){
-				if(joint.getBodyA().getUserData() instanceof EntityData){
-					entityDataA = (EntityData)joint.getBodyA().getUserData();
-					if(entityDataA.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-						if(joint.getBodyB().getUserData() instanceof EntityData){
-							entityDataA = (EntityData)joint.getBodyB().getUserData();
-							if(entityDataA.getType() == EntityType.SHIELD){
-								
-							}else{
-								gameWorld.destroyJoint(joint);
-							}
-						}else{
-							gameWorld.destroyJoint(joint);
-						}
-					}
-				}else if(joint.getBodyB().getUserData() instanceof EntityData){
-					entityDataA = (EntityData)joint.getBodyB().getUserData();
-					if(entityDataB.getType() == EntityType.SHIP && joint.getType() == JointType.RopeJoint){
-						if(joint.getBodyA().getUserData() instanceof EntityData){
-							entityDataA = (EntityData)joint.getBodyA().getUserData();
-							if(entityDataA.getType() == EntityType.SHIELD){
-								
-							}else{
-								gameWorld.destroyJoint(joint);
-							}
-						}else{
-							gameWorld.destroyJoint(joint);
-						}						
-					}
-				}
-			}
+			gameWorld.destroyJoint(joint);
 		}
 	}
 

@@ -1,7 +1,5 @@
 package com.gdx.orion.handlers;
 
-import com.gdx.orion.entities.PlayerShip;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.gdx.orion.screens.GameStateManager;
@@ -21,39 +19,22 @@ public class ControlHandler extends InputAdapter {
 	
 	public void checkInput() {
 		if(exitKey){
-			if (GameStateManager.play.isActive()){
-				GameStateManager.setScreen(GameStateManager.PAUSE);
-				exitKey = false;
-			}
+			
 		}
 		if(forward){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward((THRUST_FORWARD_FACTOR  * PlayerShip.SIZE_MOD));
-			}
+			
 		}
 		if(back){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().forward(THRUST_REVERSE_FACTOR * PlayerShip.SIZE_MOD);
-			}
+			
 		}
 		if(strafeLeft){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(TURN_RATE * PlayerShip.SIZE_MOD);
-			}
+			
 		}
 		if(strafeRight){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().turn(-TURN_RATE * PlayerShip.SIZE_MOD);
-			}
+			
 		}
 		if(fired){
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().fire();  
-			}
-		}else{
-			if(GameStateManager.play.isActive()){
-				GameStateManager.play.getPlayerShip().setFired(false); 
-			}
+			
 		}
 	}
 	
