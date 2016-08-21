@@ -30,7 +30,7 @@ public class GameStateManager {
 		levelSelect = new LevelSelect(game, 1);
 		play = new Play(game, 1);
 		menu = new Menu(game, 0);
-		levelEdit = new LevelEdit(2);
+		levelEdit = new LevelEdit();
 		store = new Store(game);
 		pause = new Pause(game, 5);
 		gameStates.add(play);
@@ -84,6 +84,7 @@ public class GameStateManager {
 				break;
 			case LEVELEDIT:
 				game.setScreen(levelEdit);
+				break;
 			default:
 				System.out.printf("ERROR IN SETSCREEN: Unknown state %d%n", levelselect2);
 		}

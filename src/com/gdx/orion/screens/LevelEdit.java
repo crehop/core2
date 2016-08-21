@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -30,8 +31,8 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
 	private SpriteBatch sb;
 	
-	private Sprite background;
-	private Sprite vacantSquare;
+	private final Sprite background;
+	private final Sprite vacantSquare;
 	
 	private int gridMaxX, gridMaxY;
 	
@@ -39,21 +40,24 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
 	private boolean dragging = false;
 	
-	public LevelEdit(int ID) {
-		super(ID);
+	public LevelEdit() {
+		super(GameStateManager.LEVELEDIT);
 		
 		im = new InputMultiplexer();
 		im.addProcessor(this);
 		
 		editorCamera = new OrthographicCamera();
-		gridCamera = new OrthographicCamera();
+		gridCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		gridCamera.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, 0);
 		
 		editorViewport = new ScalingViewport(Scaling.stretch, 1000, 1000, editorCamera);
 		editorViewport.apply();
 		
 		stage = new Stage(editorViewport);
+		im.addProcessor(stage);
 		
 		sb = new SpriteBatch();
+		sb.setProjectionMatrix(gridCamera.combined);
 		
 		background = new Sprite(new Texture(Gdx.files.internal("images/stars.png")));
 		background.setSize(editorViewport.getScreenWidth(), editorViewport.getScreenHeight());
@@ -71,7 +75,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	/*
 	 * Custom Methods
 	 */
-	public void resetGrid() {
+	private void resetGrid() {
 		gridMaxX = 10;
 		gridMaxY = 10;
 		
@@ -84,7 +88,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		}
 	}
 	
-	public void renderGrid(SpriteBatch sb) {
+	private void renderGrid(SpriteBatch sb) {
 		for (int x = 0; x < gridMaxX; x++) {
 			for (int y = 0; y < gridMaxY; y++) {
 				if (voxelTypes[x][y].equals(VoxelType.AIR)) {
@@ -94,26 +98,41 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		}
 	}
 	
+	private boolean isOnGrid(int x, int y) {
+		if (x > 0 && y > 0 && x < gridMaxX * gridSquareSize && y < gridMaxY * gridSquareSize) {
+			return true;
+		}
+		return false;
+	}
+	
 	/*
 	 * GDX Methods 
 	 */
 	public void show() {
 		Gdx.input.setInputProcessor(im);
+		this.setActive(true);
 	}
 
 	public void render(float delta) {
-		sb.begin();
+		if (active) {
+			Gdx.gl.glClearColor(0,0,0,1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+			sb.begin();
 		
-		background.draw(sb);
-		renderGrid(sb);
-		stage.draw();
+			background.draw(sb);
+			renderGrid(sb);
+			stage.draw();
 		
-		sb.end();
+			sb.end();
 		
-		stage.act();
+			stage.act();
 		
-		editorCamera.update();
-		gridCamera.update();
+			editorCamera.update();
+			gridCamera.update();
+			
+			super.render(delta);
+		}
 	}
 
 	public void resize(int width, int height) {
@@ -138,11 +157,11 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	}
 
 	public void setActive(boolean active) {
-		
+		super.active = active;
 	}
 
 	public boolean isActive() {
-		return false;
+		return super.active;
 	}
 	
 	/*
