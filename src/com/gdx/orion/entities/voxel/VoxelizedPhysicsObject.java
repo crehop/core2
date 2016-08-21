@@ -6,10 +6,10 @@ import com.gdx.orion.handlers.VoxelizedPhysicsHandler;
 
 public class VoxelizedPhysicsObject {
 	
-	private int[][] voxelArray;
+	private Voxel[][] voxelArray;
 	private World world;
 	
-	public VoxelizedPhysicsObject(int[][] voxels, World world){
+	public VoxelizedPhysicsObject(Voxel[][] voxels, World world){
 		this.world = world;
 		//for(int x = 0; x < voxels.length; x++){
 		//	for(int y = 0; y < voxels[x].length; y++){
@@ -23,11 +23,11 @@ public class VoxelizedPhysicsObject {
 		VoxelizedPhysicsHandler.build(voxelArray,world);
 	}
 
-	public int[][] getVoxelArray() {
+	public Voxel[][] getVoxelArray() {
 		return voxelArray;
 	}
 
-	public void setVoxelArray(int[][] voxelArray) {
+	public void setVoxelArray(Voxel[][] voxelArray) {
 		this.voxelArray = voxelArray;
 	}
 
