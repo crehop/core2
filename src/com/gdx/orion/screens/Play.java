@@ -58,11 +58,7 @@ public class Play extends GameState implements Screen{
 	private SpriteBatch batch = new SpriteBatch();
 	
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
-    private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
-    private Texture texture3 = new Texture(Gdx.files.internal("images/planets/Titan.png"));
     private Sprite stars = new Sprite(texture);
-    private Sprite jupiter = new Sprite(texture2);
-    private Sprite titan = new Sprite(texture3);
     
     private String fragmentShader;
     private String vertexShader;
