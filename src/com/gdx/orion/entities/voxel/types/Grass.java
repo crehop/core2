@@ -1,7 +1,9 @@
-package com.gdx.orion.entities.voxel;
+package com.gdx.orion.entities.voxel.types;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.gdx.orion.entities.voxel.Voxel;
+import com.gdx.orion.entities.voxel.VoxelType;
 
 public class Grass extends Voxel { 
 	
