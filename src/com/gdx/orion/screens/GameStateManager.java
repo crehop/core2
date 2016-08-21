@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class GameStateManager {
 	
@@ -18,6 +17,7 @@ public class GameStateManager {
 	public static Screen state;
 	public static Play play;
 	public static Menu menu;
+	public static LevelEdit levelEdit;
 	public static LevelSelect levelSelect;
 	public static Store store;
 	public static Game game;
@@ -30,6 +30,7 @@ public class GameStateManager {
 		levelSelect = new LevelSelect(game, 1);
 		play = new Play(game, 1);
 		menu = new Menu(game, 0);
+		levelEdit = new LevelEdit(2);
 		store = new Store(game);
 		pause = new Pause(game, 5);
 		gameStates.add(play);
@@ -37,6 +38,7 @@ public class GameStateManager {
 		gameStates.add(store);
 		gameStates.add(levelSelect);
 		gameStates.add(pause);
+		gameStates.add(levelEdit);
 	}
 	
 	public static Screen getScreen(int screen){
@@ -45,6 +47,7 @@ public class GameStateManager {
 			case MENU:   return menu;
 			case PAUSE:  return pause;
 			case LEVELSELECT: return levelSelect;
+			case LEVELEDIT: return levelEdit;
 		}
 		
 		return null;
@@ -79,6 +82,8 @@ public class GameStateManager {
 			case PAUSE:
 				game.setScreen(pause);
 				break;
+			case LEVELEDIT:
+				game.setScreen(levelEdit);
 			default:
 				System.out.printf("ERROR IN SETSCREEN: Unknown state %d%n", levelselect2);
 		}
