@@ -104,7 +104,7 @@ public class LevelSelect extends GameState implements Screen{
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		//VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(test, gameWorld);
+		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(test, gameWorld);
 
 	}
 
