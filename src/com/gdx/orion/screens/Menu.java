@@ -87,7 +87,7 @@ public class Menu extends GameState implements Screen {
 		playButton.addListener(new ClickListener(){
             @Override 
             public void clicked(InputEvent event, float x, float y){
-            	GameStateManager.setScreen(GameStateManager.PLAY);
+            	GameStateManager.setScreen(GameStateManager.LEVELSELECT);
             }
         });
 		

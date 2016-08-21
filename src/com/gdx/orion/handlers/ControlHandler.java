@@ -3,6 +3,7 @@ package com.gdx.orion.handlers;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.gdx.orion.screens.GameStateManager;
+import com.gdx.orion.screens.LevelSelect;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.WorldUtils;
 
@@ -16,25 +17,82 @@ public class ControlHandler extends InputAdapter {
 	private boolean strafeLeft = false;
 	private boolean strafeRight = false;
 	private boolean fired = false;
+	private int screen;
 	
 	public void checkInput() {
+		screen = GameStateManager.getLastScreen();
 		if(exitKey){
-			
+			switch(screen){
+				case GameStateManager.LEVELSELECT:
+					
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
 		}
 		if(forward){
-			
+			switch(GameStateManager.getLastScreen()){
+				case GameStateManager.LEVELSELECT:
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
 		}
 		if(back){
-			
+			switch(GameStateManager.getLastScreen()){
+				case GameStateManager.LEVELSELECT:
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
 		}
 		if(strafeLeft){
-			
-		}
+			switch(GameStateManager.getLastScreen()){
+				case GameStateManager.LEVELSELECT:
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
+		}	
 		if(strafeRight){
-			
+			switch(GameStateManager.getLastScreen()){
+				case GameStateManager.LEVELSELECT:
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
 		}
 		if(fired){
-			
+			switch(GameStateManager.getLastScreen()){
+				case GameStateManager.LEVELSELECT:
+					break;
+				case GameStateManager.PLAY:
+					break;
+				case GameStateManager.LEVELEDIT:
+					break;
+				case GameStateManager.PAUSE:
+					break;
+			}
 		}
 	}
 	

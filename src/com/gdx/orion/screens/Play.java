@@ -1,6 +1,7 @@
 package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Asteroid;
+import com.gdx.orion.entities.VoxelizedPhysicsObject;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -109,25 +110,17 @@ public class Play extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(0f,0f), false));
-		this.getGameWorld().setVelocityThreshold(1.99f);
+		this.setGameWorld(new World(new Vector2(0f,-1f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, Main.GAME_WORLD_WIDTH, 0, Main.GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
 		count = 0;
-		while(count < 205) {
-			count++;
-			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT));
-			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
-			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1.1f,13.3f));
-		}
-		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
-		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 1300, 80.03f,1500, gameWorld, true, titan,new Vector2(-12600,0), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
 		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 		EffectUtils.initilize();
+		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
 	}
 	
 	@Override

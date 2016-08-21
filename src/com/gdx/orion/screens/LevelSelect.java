@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
+import com.gdx.orion.entities.VoxelizedPhysicsObject;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;
@@ -94,12 +95,13 @@ public class LevelSelect extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(.9f,-.9f), false));
+		this.setGameWorld(new World(new Vector2(0f,-1f), false));
 		this.getGameWorld().setVelocityThreshold(1.99f);
-		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 25, 0, 25);
+		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		createShape();
+		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
+
 	}
 
 	@Override
@@ -193,22 +195,7 @@ public class LevelSelect extends GameState implements Screen{
 	public boolean isActive() {
 		return super.active;
 	}
-	
-	
-	private void createShape() {
-		PolygonShape shape = new PolygonShape();
-		BodyDef def = new BodyDef();
-		def.position.set(2,22);
-		def.type = BodyType.DynamicBody;
-		def.angle = 200;
-		body = gameWorld.createBody(def);
-		shape.set(new float[]{0f,0f,0f,1f,1f,1f,1f,0f} );
-		fdef.shape = shape;
-		fdef.density = 1.0f;
-		fdef.friction = 1;
-		body.createFixture(fdef);
-		body.setAngularVelocity(MathUtils.random(-4f,4f));
-	}
+
 
 	public World getGameWorld() {
 		return gameWorld;
