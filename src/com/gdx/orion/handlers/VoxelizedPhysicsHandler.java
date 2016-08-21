@@ -9,31 +9,29 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.gdx.orion.screens.GameStateManager;
-import com.gdx.orion.screens.Play;
+import com.gdx.orion.entities.voxel.Voxel;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
 
 public class VoxelizedPhysicsHandler {
-	static ArrayList<Array[][]> buildMe = new ArrayList<Array[][]>();
-	static ArrayList<Array[][]> deconstructMe = new ArrayList<Array[][]>();
+	static ArrayList<Voxel[][]> buildMe = new ArrayList<Voxel[][]>();
+	static ArrayList<Voxel[][]> check = new ArrayList<Voxel[][]>();
+	static ArrayList<Voxel[][]> deconstructMe = new ArrayList<Voxel[][]>();
 	static Body body;
 	static FixtureDef fdef;
 	static World world;
 	
-	public static void build(Array[][] voxelArray, World world) {
+	public static void build(VoxelizedPhysicsObject object, World world) {
 			PolygonShape shape = new PolygonShape();
 			BodyDef def = new BodyDef();
 			fdef = new FixtureDef();
 			def.type = BodyType.DynamicBody;
 			def.angle = 0;
 			def.position.set(22,44);
-			shape.set(new float[]{0f,0f,0f,0.25f,0.25f,0.25f,0.25f,0f} );
+			shape.set(object.getObject());
 			fdef.shape = shape;
 			fdef.density = 1.0f;
 			fdef.friction = 1;
 			body = world.createBody(def);
-			body.createFixture(fdef);
-			body.setAngularVelocity(MathUtils.random(-4f,4f));
-			
+			body.createFixture(fdef);			
 	}
 }
