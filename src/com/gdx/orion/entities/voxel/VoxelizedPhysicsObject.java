@@ -1,4 +1,4 @@
-package com.gdx.orion.entities;
+package com.gdx.orion.entities.voxel;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;

@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
-import com.gdx.orion.entities.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;

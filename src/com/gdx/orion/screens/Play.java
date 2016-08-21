@@ -1,7 +1,7 @@
 package com.gdx.orion.screens;
 
-import com.gdx.orion.entities.Asteroid;
-import com.gdx.orion.entities.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.Projectile;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -54,7 +54,7 @@ public class Play extends GameState implements Screen{
 	Random rand = new Random();
 	public Array<Body> destroy = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
-	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+	private ArrayList<Projectile> asteroids= new ArrayList<Projectile>();
 	private SpriteBatch batch = new SpriteBatch();
 	
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
