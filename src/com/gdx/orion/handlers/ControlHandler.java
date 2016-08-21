@@ -1,7 +1,12 @@
 package com.gdx.orion.handlers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.screens.GameStateManager;
 import com.gdx.orion.screens.LevelSelect;
 import com.gdx.orion.utils.Console;
@@ -18,13 +23,14 @@ public class ControlHandler extends InputAdapter {
 	private boolean strafeRight = false;
 	private boolean fired = false;
 	private int screen;
-	
-	public void checkInput() {
+	private Vector3 position2;
+	private Vector2 position;
+	private Vector2 force = new Vector2(0,100);
+	public void checkInput(World world, Camera cam) {
 		screen = GameStateManager.getLastScreen();
 		if(exitKey){
 			switch(screen){
 				case GameStateManager.LEVELSELECT:
-					
 					break;
 				case GameStateManager.PLAY:
 					break;
@@ -85,6 +91,9 @@ public class ControlHandler extends InputAdapter {
 		if(fired){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					position2.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+					position.set(cam.unproject(position2).x,cam.unproject(position2).y);
+					WorldUtils.fireBullet(world, position, 10f, 1, force);
 					break;
 				case GameStateManager.PLAY:
 					break;

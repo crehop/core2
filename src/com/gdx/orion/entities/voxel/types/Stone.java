@@ -9,7 +9,7 @@ public class Stone extends Voxel {
 	
 	private static Texture texture = new Texture(Gdx.files.internal("Voxels/stone.jpg"));
 	
-	protected Stone() {
+	public Stone() {
 		super();
 		
 		type = VoxelType.STONE;

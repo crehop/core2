@@ -25,7 +25,9 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
+import com.gdx.orion.entities.voxel.Voxel;
 import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;
@@ -81,6 +83,8 @@ public class LevelSelect extends GameState implements Screen{
 	
 	protected LevelSelect (Game game, int level) {
 		super(GameStateManager.PLAY);
+		Voxel[][] test = new Voxel[1][1];
+		test[0][0] = new Stone();
 		stars.scale(10f);
 		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();
@@ -100,14 +104,14 @@ public class LevelSelect extends GameState implements Screen{
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
+		//VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(test, gameWorld);
 
 	}
 
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
-			playController.checkInput();
+			playController.checkInput(gameWorld,cam);
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);

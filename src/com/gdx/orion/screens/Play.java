@@ -120,7 +120,7 @@ public class Play extends GameState implements Screen{
 		shader = new ShaderProgram(vertexShader, fragmentShader);
 		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 		EffectUtils.initilize();
-		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
+		//VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
 	}
 	
 	@Override
@@ -133,7 +133,7 @@ public class Play extends GameState implements Screen{
 			gameWorld.getBodies(bodies);
 			cam.position.set(0, 0, 0);
 			mapCam.position.set(0, 0, 0);
-			playController.checkInput();
+			playController.checkInput(gameWorld,cam);
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
