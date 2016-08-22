@@ -4,7 +4,7 @@ public abstract class Voxel {
 	
 	public static final float voxelSize = 0.25f;
 	
-	protected VoxelType type;
+	public VoxelType type;
 	
 	protected int durability;
 	protected float density;

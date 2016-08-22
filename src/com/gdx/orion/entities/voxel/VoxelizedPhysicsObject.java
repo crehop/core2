@@ -38,7 +38,6 @@ public class VoxelizedPhysicsObject {
 						floatList.add(-voxelSize * (x + 1));
 						floatList.add(voxelSize * (voxelArray[0].length - y));
 					}
-					if(this.getVoxelEast(x, y).type)
 				}
 			}
 		}	
@@ -77,55 +76,5 @@ public class VoxelizedPhysicsObject {
 
 	public void setWorld(World world) {
 		this.world = world;
-	}
-	
-	public VoxelType getVoxelNorth(int currentX, int currentY){
-		if(currentY != 0){
-			return voxelArray[currentX][currentY-1].type;
-		}else{
-			return VoxelType.AIR;
-		}
-	}
-	public VoxelType getVoxelSouth(int currentX, int currentY){
-		if(currentY != voxelArray[0].length - 1){
-			return voxelArray[currentX][currentY+1].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelEast(int currentX, int currentY){
-		if(currentX != voxelArray.length - 1){
-			return voxelArray[currentX+1][currentY].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelWest(int currentX, int currentY){
-		if(currentX != 0){
-			return voxelArray[currentX-1][currentY].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelNorthWest(int currentX, int currentY){
-		if(currentY != 0 && currentX != 0){
-			return voxelArray[currentX-1][currentY - 1].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelSouthWest(int currentX, int currentY){
-		if(currentX != 0 && currentY != voxelArray[0].length - 1){
-			return voxelArray[currentX-1][currentY + 1].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelNorthEast(int currentX, int currentY){
-		if(currentY != 0 && currentX != voxelArray.length - 1){
-			return voxelArray[currentX + 1][currentY - 1].type;
-		}
-		return VoxelType.AIR;
-	}
-	public VoxelType getVoxelSouthEast(int currentX, int currentY){
-		if(currentY != voxelArray[0].length - 1 && currentX != voxelArray.length - 1){
-			return voxelArray[currentX-1][currentY- 1].type;
-		}
-		return VoxelType.AIR;
 	}
 }
