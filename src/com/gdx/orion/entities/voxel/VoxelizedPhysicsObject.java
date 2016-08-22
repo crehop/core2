@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.handlers.VoxelizedPhysicsHandler;
+import com.gdx.orion.utils.VoxelUtils;
 
 public class VoxelizedPhysicsObject {
 	
@@ -14,33 +15,15 @@ public class VoxelizedPhysicsObject {
 	private ArrayList<Float> floatList = new ArrayList<Float>();
 	private int count = 0;
 	private Vector2 stored = new Vector2 (-1,-1);
-	private float voxelSize = .25f;
 	
 	public VoxelizedPhysicsObject(Voxel[][] voxels, World world){
 		floatList.clear();
 		this.voxelArray = voxels;
 		System.out.println("" + this.getVoxelArray().length + "/" + this.getVoxelArray()[0].length);
-		if(this.getVoxelArray().length == 1 && this.getVoxelArray()[0].length == 1){
-			floatList.add(-voxelSize);
-			floatList.add(voxelSize);
-			floatList.add(voxelSize);
-			floatList.add(voxelSize);
-			floatList.add(voxelSize);
-			floatList.add(-voxelSize);
-			floatList.add(-voxelSize);
-			floatList.add(-voxelSize);
-		}
-		
-		for(int x = 0; x < this.getVoxelArray().length; x++){
-			for(int y = 0; y < this.getVoxelArray()[x].length; y++){
-				if(this.voxelArray[x][y].getType() != VoxelType.AIR){
-					if(this.getVoxelWest(x, y) == VoxelType.AIR){
-						floatList.add(-voxelSize * (x + 1));
-						floatList.add(voxelSize * (voxelArray[0].length - y));
-					}
-				}
-			}
-		}	
+		floatList = VoxelUtils.getOuterShell(voxels);
+		for(int i =0; i<floatList.size();){
+			System.out.println("X:" + floatList.get(i++) + " Y:" + floatList.get(i++));
+		}		
 		object = new float[floatList.size()];
 		count = 0;
 		for(float f:floatList){
