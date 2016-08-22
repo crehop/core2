@@ -10,11 +10,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.entities.voxel.VoxelType;
+import com.gdx.orion.object.CustomButton;
 
 public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
@@ -34,6 +36,11 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	private final Sprite background;
 	private final Sprite vacantSquare;
 	
+	private final Texture vsnormal;
+	private final Texture vspressed;
+	
+	private CustomButton selectVoxel;
+	
 	private int gridMaxX, gridMaxY;
 	
 	private VoxelType[][] voxelTypes;
@@ -48,7 +55,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 		editorCamera = new OrthographicCamera();
 		gridCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		gridCamera.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, 0);
+		gridCamera.position.set(0 + gridCamera.viewportWidth/2, 0 + gridCamera.viewportHeight/2, 0);
 		
 		editorViewport = new ScalingViewport(Scaling.stretch, 1000, 1000, editorCamera);
 		editorViewport.apply();
@@ -60,14 +67,18 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		sb.setProjectionMatrix(gridCamera.combined);
 		
 		background = new Sprite(new Texture(Gdx.files.internal("images/stars.png")));
-		background.setSize(editorViewport.getScreenWidth(), editorViewport.getScreenHeight());
-		background.setPosition(0 - editorViewport.getScreenWidth(), editorViewport.getScreenHeight());
+		background.setSize(editorCamera.viewportWidth*2, editorCamera.viewportHeight*2);
+		background.setPosition(0 - editorCamera.viewportWidth / 2, 0 - editorCamera.viewportHeight / 2);
 		
 		vacantSquare = new Sprite(new Texture(Gdx.files.internal("images/vacantSquare.png")));
 		vacantSquare.setSize(gridSquareSize, gridSquareSize);
 		
-		gridMaxX = 10;
-		gridMaxY = 10;
+		vsnormal = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbnormal.png"));
+		vspressed = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbpressed.png"));
+		
+		selectVoxel = new CustomButton(vsnormal, vspressed, editorCamera.viewportWidth/2 - 200, editorCamera.viewportHeight/2 - 100, (float)200, (float)100);
+		
+		stage.addActor(selectVoxel);
 		
 		resetGrid();
 	}
@@ -76,8 +87,8 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	 * Custom Methods
 	 */
 	private void resetGrid() {
-		gridMaxX = 10;
-		gridMaxY = 10;
+		gridMaxX = 40;
+		gridMaxY = 40;
 		
 		voxelTypes = new VoxelType[gridMaxX][gridMaxY];
 		
@@ -92,7 +103,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		for (int x = 0; x < gridMaxX; x++) {
 			for (int y = 0; y < gridMaxY; y++) {
 				if (voxelTypes[x][y].equals(VoxelType.AIR)) {
-					sb.draw(vacantSquare, x * gridSquareSize, y * gridSquareSize);
+					sb.draw(vacantSquare, (x * gridSquareSize), (y * gridSquareSize));
 				}
 			}
 		}
@@ -118,15 +129,28 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			Gdx.gl.glClearColor(0,0,0,1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			
-			sb.begin();
-		
-			background.draw(sb);
-			renderGrid(sb);
-			stage.draw();
-		
-			sb.end();
-		
 			stage.act();
+			
+			sb.begin();
+			
+			// Layer 1
+			sb.setProjectionMatrix(editorCamera.combined);
+			
+			background.draw(sb);
+			
+			// Layer 2
+			sb.setProjectionMatrix(gridCamera.combined);
+			
+			renderGrid(sb);
+			
+			// Layer 3
+			sb.setProjectionMatrix(editorCamera.combined);
+			
+			selectVoxel.update(sb);
+			
+			sb.end();
+			
+			stage.draw();
 		
 			editorCamera.update();
 			gridCamera.update();
@@ -153,6 +177,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	}
 
 	public void dispose() {
+		sb.dispose();
 		stage.dispose();
 	}
 
