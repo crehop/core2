@@ -43,7 +43,7 @@ public class WorldUtils {
 	public static final float LARGE_BODY_DAMPING = 0.45f;
 	private static float[] temp = new float[48];
 	private static float[] vertices = new float[6];
-	private static boolean wireframe = false;
+	private static boolean wireframe = true;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
 	private static Color comet = Color.BLUE;
