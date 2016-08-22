@@ -9,9 +9,9 @@ public class VoxelUtils {
 
 	public static int blockFoundX = 0;
 	public static int blockFoundY = 0;
-	public enum Direction {
+	public static enum Direction {
 
-		UP, DOWN, LEFT, RIGHT;
+		RIGHT_DOWN, LEFT_UP;
 		
 		private Direction() {
 			
@@ -25,12 +25,12 @@ public class VoxelUtils {
 	public static int y;
 	public static boolean blockFound = false;
 	public static boolean chainComplete = false;
-	public static Direction currentDirection = Direction.RIGHT;
-	public static ArrayList<float[][]> result = new ArrayList<float[][]>();
+	public static Direction currentDirection = Direction.RIGHT_DOWN;
+	public static ArrayList<Float> result = new ArrayList<Float>();
 	public static ArrayList<Voxel> unChecked = new ArrayList<Voxel>();
 	public static ArrayList<Float> buildQueue = new ArrayList<Float>();
 
-    public static ArrayList<float[][]> getOuterShell(Voxel[][] voxelArray) {
+    public static ArrayList<Float> getOuterShell(Voxel[][] voxelArray) {
     	result.clear();
         if(voxelArray == null || voxelArray.length == 0) return result;
  
@@ -41,8 +41,6 @@ public class VoxelUtils {
         y = 0;
         
         blockFound = false;
-        chainComplete = false;
-        
         while(!blockFound){
         	if(voxelArray[x++][y].type != VoxelType.AIR){
         		blockFound = true;
@@ -52,101 +50,13 @@ public class VoxelUtils {
         		y++;
         	}
         	if(y > height - 1){
-        		return result;
+        		System.out.println("ARRAY CONTAINS NO VOXELS (VoxelUtils.java)");
+        		return null;
         	}
         }
-        currentDirection = Direction.RIGHT;
-        buildQueue.add(x * Voxel.voxelSize);
-        buildQueue.add(y * Voxel.voxelSize);
+        currentDirection = Direction.RIGHT_DOWN;
         while(!chainComplete){
-        	if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR){
-        		//start bottom left end top left
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		y--;
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        	}else if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR && 
-        			getVoxelRight(voxelArray,x,y) != VoxelType.AIR){
-        		//start top left end top left
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		if(isComplete()){
-        			break;
-        		}
-        		x++;
-        		y--;
-        	}else if(getVoxelRight(voxelArray,x,y) != VoxelType.AIR){
-        		//start top left end top left
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		x++;
-        		if(isComplete()){
-        			break;
-        		}
-        	}else if(getVoxelDownRight(voxelArray,x,y) != VoxelType.AIR &&
-        			getVoxelDown(voxelArray,x,y) != VoxelType.AIR){
-        		//start top left end top left
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		y++;
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		x++;
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		if(chainComplete){
-        			break;
-        		}
-        	}else if(getVoxelDown(voxelArray,x,y) != VoxelType.AIR){
-        		//start top left end bottom right
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		y++;
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		if(chainComplete){
-        			break;
-        		}
-        	}else if(getVoxelDownLeft(voxelArray,x,y) != VoxelType.AIR &&
-        			getVoxelLeft(voxelArray,x,y) != VoxelType.AIR){
-        		//start bottom right end bottom right
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		y++;
-        		x--;
-        		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		if(chainComplete){
-        			break;
-        		}
-        	}else if(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR){
-        		//start bottom right end bottom right
-        		//bottom left
-        		x--;
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		if(chainComplete){
-        			break;
-        		}
-        	}else if(getVoxelUpLeft(voxelArray,x,y) != VoxelType.AIR && 
-        			getVoxelUp(voxelArray,x,y) != VoxelType.AIR){
-        		//start bottom right end bottom left
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize);
-        		x--;
-        		buildQueue.add(x * Voxel.voxelSize);
-        		buildQueue.add(y * Voxel.voxelSize + Voxel.voxelSize);
-    			if(chainComplete){
-    				break;
-    			}
-        	}
+        	
         }
         return result;
     }
@@ -213,5 +123,27 @@ public class VoxelUtils {
 			return voxelArray[currentX-1][currentY- 1].type;
 		}
 		return VoxelType.AIR;
+	}
+	public static void addTopWall(){
+		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize);
+	} 
+	public static void addRightWall(){
+		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize);
+		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize - Voxel.voxelSize);
+	}
+	public static void addBottomWall(){
+		buildQueue.add(x * Voxel.voxelSize + Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize - Voxel.voxelSize);
+		buildQueue.add(x * Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize - Voxel.voxelSize);
+	}
+	public static void addLeftWall(){
+		buildQueue.add(x * Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize - Voxel.voxelSize);
+		buildQueue.add(x * Voxel.voxelSize);
+		buildQueue.add(y * Voxel.voxelSize);
 	}
 }
