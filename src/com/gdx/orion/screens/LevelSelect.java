@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
 import com.gdx.orion.entities.voxel.Voxel;
 import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.voxel.types.Air;
 import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
@@ -83,8 +84,16 @@ public class LevelSelect extends GameState implements Screen{
 	
 	protected LevelSelect (Game game, int level) {
 		super(GameStateManager.PLAY);
-		Voxel[][] test = new Voxel[1][1];
+		Voxel[][] test = new Voxel[3][3];
 		test[0][0] = new Stone();
+		test[0][1] = new Air();
+		test[0][2] = new Air();
+		test[1][0] = new Stone();
+		test[1][1] = new Air();
+		test[1][2] = new Air();
+		test[2][0] = new Air();
+		test[2][1] = new Air();
+		test[2][2] = new Air();
 		stars.scale(10f);
 		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();

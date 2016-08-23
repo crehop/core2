@@ -23,7 +23,8 @@ public class VoxelizedPhysicsObject {
 		floatList = VoxelUtils.getOuterShell(voxels);
 		for(int i =0; i<floatList.size();){
 			System.out.println("X:" + floatList.get(i++) + " Y:" + floatList.get(i++));
-		}		
+		}
+		
 		object = new float[floatList.size()];
 		count = 0;
 		for(float f:floatList){
