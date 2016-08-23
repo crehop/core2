@@ -60,6 +60,10 @@ public class VoxelUtils {
         direction = Direction.RIGHT_DOWN;
         count = 0;
         while(!chainComplete){
+        	
+        	//CHANGE TO TOP LEFT /BOTTOM RIGHT CHECKER
+        	//THEN STORE CURRENT POINT LOCATION SOMEWHERE (TOP LEFT OR BOTTOM RIGHT ONLY
+        	//THEN ITTERATE AROUND FOR BOTH WAYS (TOP LEFT AND RIGHT BOTTOM)
         	count++;
         	if(direction == Direction.RIGHT_DOWN){
             	if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR &&
@@ -127,6 +131,7 @@ public class VoxelUtils {
             		addTopWall();
             		addRightWall();
             		addBottomWall();
+            		direction = Direction.LEFT_UP;
             		x--;
             	}else if(getVoxelUpLeft(voxelArray,x,y) != VoxelType.AIR &&
             			getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
@@ -178,6 +183,8 @@ public class VoxelUtils {
         			chainComplete = true;
         			break;
             	}
+        	}else{
+        		//LEFT UP LOOP
         	}
         }
         return buildQueue;

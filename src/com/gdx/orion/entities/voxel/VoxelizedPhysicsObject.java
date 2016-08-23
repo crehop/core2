@@ -21,6 +21,7 @@ public class VoxelizedPhysicsObject {
 		this.voxelArray = voxels;
 		System.out.println("" + this.getVoxelArray().length + "/" + this.getVoxelArray()[0].length);
 		floatList = VoxelUtils.getOuterShell(voxels);
+		System.out.println(""+floatList.size());
 		for(int i =0; i<floatList.size();){
 			System.out.println("X:" + floatList.get(i++) + " Y:" + floatList.get(i++));
 		}
