@@ -61,9 +61,7 @@ public class VoxelUtils {
         count = 0;
         while(!chainComplete){
         	
-        	//CHANGE TO TOP LEFT /BOTTOM RIGHT CHECKER
-        	//THEN STORE CURRENT POINT LOCATION SOMEWHERE (TOP LEFT OR BOTTOM RIGHT ONLY
-        	//THEN ITTERATE AROUND FOR BOTH WAYS (TOP LEFT AND RIGHT BOTTOM)
+        	// Top Right then Bottom Right then Bottom Left then Top Left L shape Checker to properly handle corners.
         	count++;
            	if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
            			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
