@@ -29,13 +29,11 @@ public class VoxelUtils {
 	public static Direction direction = Direction.RIGHT_DOWN;
 	public static boolean blockFound = false;
 	public static boolean chainComplete = false;
-	public static ArrayList<Float> result = new ArrayList<Float>();
-	public static ArrayList<Voxel> unChecked = new ArrayList<Voxel>();
 	public static ArrayList<Float> buildQueue = new ArrayList<Float>();
 
     public static ArrayList<Float> getOuterShell(Voxel[][] voxelArray) {
     	buildQueue.clear();
-        if(voxelArray == null || voxelArray.length == 0) return result;
+        if(voxelArray == null || voxelArray.length == 0) return buildQueue;
  
         width = voxelArray.length;
         height = voxelArray[0].length;
@@ -63,77 +61,304 @@ public class VoxelUtils {
         	
         	// Top Right then Bottom Right then Bottom Left then Top Left L shape Checker to properly handle corners.
         	count++;
-           	if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
+    		System.out.println("Direction:" + direction);
+        	if(direction == Direction.RIGHT_DOWN){
+               	if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 1:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		x++;
+               		y--;
+               		addLeftWall();
+               		addTopWall();
+               		y++;
+               		addRightWall();
+               		x--;
+               		addBottomWall();
+               		x++;
+               		y--;
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.LEFT_UP;
+               	}else if(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
+               			getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 2:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		while(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
+               				getVoxelUp(voxelArray,x,y) == VoxelType.AIR &&
+               				getVoxelUpRight(voxelArray,x,y) ==VoxelType.AIR){
+               			x++;
+               		}
+               		addRightWall();
+               		addBottomWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               	}else if(getVoxelRightDown(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelDown(voxelArray,x,y) !=  VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) ==  VoxelType.AIR){
+               		System.out.println("FUNCTION 3:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		x++;
+               		y++;
+               		addLeftWall();
+               		addTopWall();
+               		x--;
+               		addBottomWall();
+               		x++;
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               	}else if(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 4:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		while(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               				&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
+               			y++;
+               		}
+               		addRightWall();
+               		addBottomWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               	}else if(getVoxelDownLeft(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 5:" + x + "/" + y);
+               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
+               		y++;
+               		addRightWall();
+               		x--;
+               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               	}else if(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
+               			getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 6:" + x + "/" + y);
+               		addTopWall();
+               		addRightWall();
+               		while(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
+               				getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
+               			x--;
+               		}
+               		addBottomWall();
+               		addLeftWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.LEFT_UP;
+               	}else if(getVoxelUpLeft(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelUp(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 7:" + x + "/" + y);
+               		addRightWall();
+               		addBottomWall();
+               		addLeftWall();
+               		x--;
+               		y--;
+               		addBottomWall();
+               		addLeftWall();    
+               		x++;
+               		addTopWall();
+               		x--;
+                	if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+                	direction = Direction.LEFT_UP;
+               	}else if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
            			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
-           		addRightWall();
-            	addBottomWall();
-            	while(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
+               		System.out.println("FUNCTION 8:" + x + "/" + y);
+               		addRightWall();
+               		addBottomWall();
+            		while(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
             			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
-            		y--;
-            	}
-            	addLeftWall();
-            	addTopWall();
-            	//COMP
-           	}else if(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
-           			getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
-           		addLeftWall();
-           		addTopWall();
-           		System.out.println("FUNCTION 2:" + x + "/" + y);
-           		while(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
-           				getVoxelUp(voxelArray,x,y) == VoxelType.AIR &&
-           				getVoxelUpRight(voxelArray,x,y) ==VoxelType.AIR){
-           			x++;
-           		}
-           		addRightWall();
-           		addBottomWall();
-           		if(isComplete()){
-           			chainComplete = true;
-           			break;
-           		}
-           		//COMP
-           	}else if(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
-           			&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
-           		addLeftWall();
-           		addTopWall();
-           		while(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
-           				&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
-           			y++;
-           		}
-           		addRightWall();
-           		addBottomWall();
-           		System.out.println("FUNCTION 3:" + x + "/" + y);
-           		if(isComplete()){
-           			chainComplete = true;
-           			break;
-           		}
-           		//COMP
-           	}else if(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
-           			getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
-           		System.out.println("FUNCTION 6:" + x + "/" + y);
-           		addTopWall();
-           		addRightWall();
-           		while(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
-           				getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
-           			x--;
-           		}
-           		if(isComplete()){
-           			chainComplete = true;
-           			break;
-           		}
-            	//COMP
-           	}else{
-           		System.out.println("FUNCTION 10:" + x + "/" + y);
-           		addTopWall();
-           		addRightWall();
-           		addBottomWall();
-           		addLeftWall();
-           		chainComplete = true;
-           		break;
-           	}
+            			y--;
+            		}
+            		addLeftWall();
+            		addTopWall();
+            		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+            		direction = Direction.LEFT_UP;
+               	}else{
+               		System.out.println("FUNCTION 9:" + x + "/" + y);
+               		addTopWall();
+               		addRightWall();
+               		addBottomWall();
+               		addLeftWall();
+               		chainComplete = true;
+               		break;
+               	}
+        	}else if(direction == Direction.LEFT_UP){
+        		if(getVoxelDownLeft(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 17:" + x + "/" + y);
+               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
+               		y++;
+               		addRightWall();
+               		x--;
+               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.RIGHT_DOWN;
+               	}else if(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
+               			getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 10:" + x + "/" + y);
+               		addTopWall();
+               		addRightWall();
+               		while(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
+               				getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
+               			x--;
+               		}
+               		addBottomWall();
+               		addLeftWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+        		}else if(getVoxelUpLeft(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelUp(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 11:" + x + "/" + y);
+               		addRightWall();
+               		addBottomWall();
+               		addLeftWall();
+               		x--;
+               		y--;
+               		addBottomWall();
+               		addLeftWall();    
+               		x++;
+               		addTopWall();
+               		x--;
+                	while(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
+                			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+                		y--;
+                	}
+               	}else if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
+           			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 12:" + x + "/" + y);
+               		addRightWall();
+               		addBottomWall();
+               		while(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
+               				getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
+               			y--;
+               		}
+               		addLeftWall();
+               		addTopWall();
+               	}else if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 13:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		x++;
+               		y--;
+               		addLeftWall();
+               		addTopWall();
+               		y++;
+               		addRightWall();
+               		x--;
+               		addBottomWall();
+               		x++;
+               		y--;
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               	}else if(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
+               			getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 14:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		while(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
+               				getVoxelUp(voxelArray,x,y) == VoxelType.AIR &&
+               				getVoxelUpRight(voxelArray,x,y) ==VoxelType.AIR){
+               			x++;
+               		}
+               		addRightWall();
+               		addBottomWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.RIGHT_DOWN;
+               		//COMP
+               	}else if(getVoxelRightDown(voxelArray,x,y) != VoxelType.AIR 
+               			&& getVoxelDown(voxelArray,x,y) !=  VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) ==  VoxelType.AIR){
+               		System.out.println("FUNCTION 15:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		x++;
+               		y++;
+               		addLeftWall();
+               		addTopWall();
+               		x--;
+               		addBottomWall();
+               		x++;
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.RIGHT_DOWN;
+               		//COMP
+               	}else if(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               			&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
+               		System.out.println("FUNCTION 16:" + x + "/" + y);
+               		addLeftWall();
+               		addTopWall();
+               		while(getVoxelDown(voxelArray,x,y) != VoxelType.AIR
+               				&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
+               			y++;
+               		}
+               		addRightWall();
+               		addBottomWall();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
+               		direction = Direction.RIGHT_DOWN;
+               		//COMP
+               	}
+        	}
+           	
         }
         return buildQueue;
     }
 	
+	private static VoxelType getVoxelRightDown(Voxel[][] voxelArray, int x2,
+			int y2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private static boolean isComplete() {
 		if(x == completeX && y == completeY && count != 1){
 			return true;

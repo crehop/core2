@@ -191,6 +191,7 @@ public class ControlHandler extends InputAdapter {
 		if(GameStateManager.play.isActive()){
 			if(!(GameStateManager.play.cam.zoom + amount < 1)){
 				GameStateManager.play.cam.zoom += amount;
+				GameStateManager.levelSelect.cam.zoom += amount;
 				Console.setLine8(""+GameStateManager.play.cam.zoom);
 			}
 			if(GameStateManager.play.cam.zoom < 0){
