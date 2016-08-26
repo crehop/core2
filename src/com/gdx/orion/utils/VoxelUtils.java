@@ -58,8 +58,6 @@ public class VoxelUtils {
         direction = Direction.RIGHT_DOWN;
         count = 0;
         while(!chainComplete){
-        	
-        	// Top Right then Bottom Right then Bottom Left then Top Left L shape Checker to properly handle corners.
         	count++;
     		System.out.println("Direction:" + direction);
         	if(direction == Direction.RIGHT_DOWN){

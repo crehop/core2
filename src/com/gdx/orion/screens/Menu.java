@@ -39,9 +39,8 @@ public class Menu extends GameState implements Screen {
     private static TextButton.TextButtonStyle style;
 	private SpriteBatch batch;
 	private Sprite titleS = new Sprite(new Texture(Gdx.files.internal("images/TitleScreen.png")));
-	private Sprite text = new Sprite(new Texture(Gdx.files.internal("images/AsteroidsText.png")));
     
-	private static final int BUTTON_X_OFFSET = 70;
+	private static final int BUTTON_X_OFFSET = 0;
 	private static final int BUTTON_Y_OFFSET = 0;
 	
 	protected Menu(Game game, int level) {
@@ -61,22 +60,28 @@ public class Menu extends GameState implements Screen {
 		pixmap.setColor(Color.BLACK);
 		pixmap.drawRectangle(0, 0, 240, 200);
 
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 50;
 		skin.add("white", new Texture(pixmap));
 		skin.add("default",
-				new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Thin.ttf")).generateFont(new FreeTypeFontParameter()));
-
+				new FreeTypeFontGenerator(Gdx.files.internal("fonts/Exo2-Regular.ttf")).generateFont(parameter));
 		style = Scene2dUtils.createTextButtonStyle(skin, "default");
 
 		final Button playButton = new TextButton("Play", style);
 		playButton.setPosition(0 /5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
-		final Button hangar = new TextButton("Hanger", style);
+		playButton.setWidth(400);
+		final Button hangar = new TextButton("Level\nSelect", style);
 		hangar.setPosition(1 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		hangar.setWidth(400);
 		final Button settings = new TextButton("Settings", style);
 		settings.setPosition(2 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		settings.setWidth(400);
 		final Button levelEditor = new TextButton("Editor", style);
 		levelEditor.setPosition(3 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		levelEditor.setWidth(400);
 		final Button exit = new TextButton("Exit", style);
 		exit.setPosition(4 * cam.viewportWidth / 5 + BUTTON_X_OFFSET, BUTTON_Y_OFFSET);
+		exit.setWidth(400);
 		
 		stage.addActor(playButton);
 		stage.addActor(hangar);
@@ -112,7 +117,7 @@ public class Menu extends GameState implements Screen {
         });
 		
 		consoleCam = new OrthographicCamera();
-		consoleViewport = new ScalingViewport(Scaling.fit, 1280, 720, consoleCam);
+		consoleViewport = new ScalingViewport(Scaling.stretch, 1280, 720, consoleCam);
 		consoleViewport.apply();
 		
 	}
@@ -124,8 +129,7 @@ public class Menu extends GameState implements Screen {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
 			batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
-			batch.draw(titleS, 0, 0, cam.viewportWidth, cam.viewportHeight);
-			batch.draw(text, 40, 240, 700, 300);
+			batch.draw(titleS, 0, 200, cam.viewportWidth, cam.viewportHeight - 200);
 			batch.end();
 			stage.act();
 			stage.draw();
