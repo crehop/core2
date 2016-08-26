@@ -20,18 +20,12 @@ public class VoxelizedPhysicsHandler {
 	static FixtureDef fdef;
 	static World world;
 	
-	public static void build(VoxelizedPhysicsObject object, World world) {
-			PolygonShape shape = new PolygonShape();
+	public static Body build(VoxelizedPhysicsObject object, World world) {
 			BodyDef def = new BodyDef();
-			fdef = new FixtureDef();
 			def.type = BodyType.DynamicBody;
 			def.angle = 0;
 			def.position.set(22,44);
-			shape.set(object.getObject());
-			fdef.shape = shape;
-			fdef.density = 1.0f;
-			fdef.friction = 1;
 			body = world.createBody(def);
-			body.createFixture(fdef);			
+			return body;
 	}
 }

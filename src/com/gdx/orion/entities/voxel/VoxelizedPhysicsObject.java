@@ -2,7 +2,9 @@ package com.gdx.orion.entities.voxel;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.handlers.VoxelizedPhysicsHandler;
 import com.gdx.orion.utils.VoxelUtils;
@@ -11,36 +13,37 @@ public class VoxelizedPhysicsObject {
 	
 	private Voxel[][] voxelArray;
 	private World world;
-	private float[] object;
-	private ArrayList<Float> floatList = new ArrayList<Float>();
+	private float[] object4 = new float[8];
+	private float[] object6 = new float[12];;
 	private int count = 0;
-	private Vector2 stored = new Vector2 (-1,-1);
+	private VoxelShell shell;
+	private Body body;
+	private float density = 1;
+	private PolygonShape shape = new PolygonShape();
 	
 	public VoxelizedPhysicsObject(Voxel[][] voxels, World world){
-		floatList.clear();
 		this.voxelArray = voxels;
 		System.out.println("" + this.getVoxelArray().length + "/" + this.getVoxelArray()[0].length);
-		floatList = VoxelUtils.getOuterShell(voxels);
-		System.out.println(""+floatList.size());
-		for(int i =0; i<floatList.size();){
-			System.out.println("X:" + floatList.get(i++) + " Y:" + floatList.get(i++));
-		}
-		
-		object = new float[floatList.size()];
-		count = 0;
-		for(float f:floatList){
-			object[count++] = f;
+		shell = VoxelUtils.getOuterShell(voxels);
+		body = VoxelizedPhysicsHandler.build(this,world);
+		for(VoxelShellSegment segment:
+			shell.getSegments()){
+			count = 0;
+			if(segment.getVertices().length == 8){
+				for(float f:segment.getVertices()){
+					object4[count++] = f;
+					shape.set(object4);
+				}
+			}else if(segment.getVertices().length == 12){
+				for(float f:segment.getVertices()){
+					object6[count++] = f;
+				}
+				shape.set(object6);
+			}
+			body.createFixture(shape, density);
+
 		}
 		this.world = world;
-		VoxelizedPhysicsHandler.build(this,world);
-	}
-	
-	public float[] getObject() {
-		return object;
-	}
-
-	public void setObject(float[] object) {
-		this.object = object;
 	}
 
 	public VoxelizedPhysicsObject() {

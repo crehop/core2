@@ -3,6 +3,8 @@ package com.gdx.orion.utils;
 import java.util.ArrayList;
 
 import com.gdx.orion.entities.voxel.Voxel;
+import com.gdx.orion.entities.voxel.VoxelShell;
+import com.gdx.orion.entities.voxel.VoxelShellSegment;
 import com.gdx.orion.entities.voxel.VoxelType;
 
 public class VoxelUtils {
@@ -30,10 +32,13 @@ public class VoxelUtils {
 	public static boolean blockFound = false;
 	public static boolean chainComplete = false;
 	public static ArrayList<Float> buildQueue = new ArrayList<Float>();
+	public static ArrayList<VoxelShellSegment> segQueue = new ArrayList<VoxelShellSegment>();
+	public static VoxelShell shell;
 
-    public static ArrayList<Float> getOuterShell(Voxel[][] voxelArray) {
+    public static VoxelShell getOuterShell(Voxel[][] voxelArray) {
+    	shell = null;
     	buildQueue.clear();
-        if(voxelArray == null || voxelArray.length == 0) return buildQueue;
+        if(voxelArray == null || voxelArray.length == 0) return shell;
  
         width = voxelArray.length;
         height = voxelArray[0].length;
@@ -77,6 +82,7 @@ public class VoxelUtils {
                		addBottomWall();
                		x++;
                		y--;
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -94,6 +100,7 @@ public class VoxelUtils {
                		}
                		addRightWall();
                		addBottomWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -111,6 +118,7 @@ public class VoxelUtils {
                		x--;
                		addBottomWall();
                		x++;
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -126,6 +134,7 @@ public class VoxelUtils {
                		}
                		addRightWall();
                		addBottomWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -143,6 +152,7 @@ public class VoxelUtils {
                		addBottomWall();
                		addLeftWall();
                		addTopWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -158,6 +168,7 @@ public class VoxelUtils {
                		}
                		addBottomWall();
                		addLeftWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -177,6 +188,7 @@ public class VoxelUtils {
                		x++;
                		addTopWall();
                		x--;
+               		createSegment();
                 	if(isComplete()){
                			chainComplete = true;
                			break;
@@ -193,6 +205,7 @@ public class VoxelUtils {
             		}
             		addLeftWall();
             		addTopWall();
+               		createSegment();
             		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -204,6 +217,7 @@ public class VoxelUtils {
                		addRightWall();
                		addBottomWall();
                		addLeftWall();
+               		createSegment();
                		chainComplete = true;
                		break;
                	}
@@ -221,6 +235,7 @@ public class VoxelUtils {
                		addBottomWall();
                		addLeftWall();
                		addTopWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -237,6 +252,7 @@ public class VoxelUtils {
                		}
                		addBottomWall();
                		addLeftWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -255,10 +271,11 @@ public class VoxelUtils {
                		x++;
                		addTopWall();
                		x--;
-                	while(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
-                			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
-                		y--;
-                	}
+               		createSegment();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
                	}else if(getVoxelUp(voxelArray,x,y) != VoxelType.AIR &&
            			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
                		System.out.println("FUNCTION 12:" + x + "/" + y);
@@ -270,6 +287,11 @@ public class VoxelUtils {
                		}
                		addLeftWall();
                		addTopWall();
+               		createSegment();
+               		if(isComplete()){
+               			chainComplete = true;
+               			break;
+               		}
                	}else if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR
                			&& getVoxelRight(voxelArray,x,y) != VoxelType.AIR
                			&& getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
@@ -286,6 +308,7 @@ public class VoxelUtils {
                		addBottomWall();
                		x++;
                		y--;
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -302,6 +325,7 @@ public class VoxelUtils {
                		}
                		addRightWall();
                		addBottomWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -321,6 +345,7 @@ public class VoxelUtils {
                		x--;
                		addBottomWall();
                		x++;
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -338,19 +363,33 @@ public class VoxelUtils {
                		}
                		addRightWall();
                		addBottomWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
                		}
                		direction = Direction.RIGHT_DOWN;
-               		//COMP
                	}
         	}
            	
         }
-        return buildQueue;
+        return shell;
     }
 	
+	private static void createSegment() {
+		if(buildQueue.size() == 8){
+			segQueue.add(new VoxelShellSegment(buildQueue.get(0),buildQueue.get(1),buildQueue.get(2)
+					,buildQueue.get(3),buildQueue.get(4),buildQueue.get(5),buildQueue.get(6)
+					,buildQueue.get(7)));
+		}else if(buildQueue.size() == 12){
+			segQueue.add(new VoxelShellSegment(buildQueue.get(0),buildQueue.get(1),buildQueue.get(2)
+					,buildQueue.get(3),buildQueue.get(4),buildQueue.get(5),buildQueue.get(6)
+					,buildQueue.get(7),buildQueue.get(8),buildQueue.get(9),buildQueue.get(10)
+					,buildQueue.get(11)));
+		}
+		buildQueue.clear();
+	}
+
 	private static VoxelType getVoxelRightDown(Voxel[][] voxelArray, int x2,
 			int y2) {
 		// TODO Auto-generated method stub
@@ -359,6 +398,7 @@ public class VoxelUtils {
 
 	private static boolean isComplete() {
 		if(x == completeX && y == completeY && count != 1){
+			shell = new VoxelShell(segQueue);
 			return true;
 		}else{
 			return false;
@@ -371,14 +411,15 @@ public class VoxelUtils {
 	}
 
 	public static VoxelType getVoxelUp(Voxel[][] voxelArray,int currentX, int currentY){
-		if(currentY != 0){
+		if(currentY > 0){
 			return voxelArray[currentX][currentY-1].type;
 		}else{
 			return VoxelType.AIR;
 		}
 	}
 	public static VoxelType getVoxelDown(Voxel[][] voxelArray,int currentX, int currentY){
-		if(currentY != voxelArray[0].length - 1){
+		if(currentY < voxelArray[0].length - 1){
+			System.out.println(currentX);
 			return voxelArray[currentX][currentY+1].type;
 		}
 		return VoxelType.AIR;

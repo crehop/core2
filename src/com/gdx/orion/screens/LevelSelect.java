@@ -91,8 +91,8 @@ public class LevelSelect extends GameState implements Screen{
 		test[1][0] = new Stone();
 		test[1][1] = new Air();
 		test[1][2] = new Air();
-		test[2][0] = new Air();
-		test[2][1] = new Air();
+		test[2][0] = new Stone();
+		test[2][1] = new Stone();
 		test[2][2] = new Air();
 		stars.scale(10f);
 		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
@@ -109,11 +109,10 @@ public class LevelSelect extends GameState implements Screen{
 		this.stage = new Stage(viewport);
 		this.game = game;
 		this.setGameWorld(new World(new Vector2(0f,-1f), false));
-		this.getGameWorld().setVelocityThreshold(1.99f);
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(test, gameWorld);
+		new VoxelizedPhysicsObject(test, gameWorld);
 
 	}
 
