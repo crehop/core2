@@ -3,7 +3,6 @@ package com.gdx.orion.object;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 public class CustomButton extends Button {
@@ -22,17 +21,17 @@ public class CustomButton extends Button {
 		this.current.setSize(width, height);
 	}
 	
-	public void update(SpriteBatch sb) {
-		if (this.isChecked()) {
-			current.setTexture(pressed);
+	public void switchImage() {
+		if (this.current.getTexture().equals(this.normal)) {
+			this.current.setTexture(pressed);
 		} else {
-			if (current.getTexture() != normal) current.setTexture(normal);
+			this.current.setTexture(normal);
 		}
-		current.draw(sb);
 	}
 	
 	@Override
 	public void draw(Batch batch, float parcentAlpha) {
+		current.draw(batch);
 		return;
 	}
 	

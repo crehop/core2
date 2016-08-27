@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -61,7 +62,6 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		editorViewport.apply();
 		
 		stage = new Stage(editorViewport);
-		im.addProcessor(stage);
 		
 		sb = new SpriteBatch();
 		sb.setProjectionMatrix(gridCamera.combined);
@@ -76,9 +76,19 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		vsnormal = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbnormal.png"));
 		vspressed = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbpressed.png"));
 		
-		selectVoxel = new CustomButton(vsnormal, vspressed, editorCamera.viewportWidth/2 - 200, editorCamera.viewportHeight/2 - 100, (float)200, (float)100);
+		selectVoxel = new CustomButton(vsnormal, vspressed, editorCamera.viewportWidth - 200, editorCamera.viewportHeight - 100, (float)200, (float)100);
+		
+		selectVoxel.addListener(new ClickListener() {
+			@Override
+		    public void clicked(InputEvent event, float x, float y) {
+		    	LevelEdit.this.selectVoxel.switchImage();
+		    	System.out.println("Press");
+			}
+		});
 		
 		stage.addActor(selectVoxel);
+		
+		im.addProcessor(stage);
 		
 		resetGrid();
 	}
@@ -145,8 +155,6 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			
 			// Layer 3
 			sb.setProjectionMatrix(editorCamera.combined);
-			
-			selectVoxel.update(sb);
 			
 			sb.end();
 			
