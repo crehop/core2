@@ -25,6 +25,10 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
+import com.gdx.orion.entities.voxel.Voxel;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.voxel.types.Air;
+import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;
@@ -80,6 +84,16 @@ public class LevelSelect extends GameState implements Screen{
 	
 	protected LevelSelect (Game game, int level) {
 		super(GameStateManager.PLAY);
+		Voxel[][] test = new Voxel[3][3];
+		test[0][0] = new Stone();
+		test[0][1] = new Stone();
+		test[0][2] = new Stone();
+		test[1][0] = new Stone();
+		test[1][1] = new Stone();
+		test[1][2] = new Stone();
+		test[2][0] = new Stone();
+		test[2][1] = new Stone();
+		test[2][2] = new Stone();
 		stars.scale(10f);
 		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
 		cam = new OrthographicCamera();
@@ -94,18 +108,18 @@ public class LevelSelect extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(.9f,-.9f), false));
-		this.getGameWorld().setVelocityThreshold(1.99f);
-		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 25, 0, 25);
+		this.setGameWorld(new World(new Vector2(0f,-1f), false));
+		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		createShape();
+		new VoxelizedPhysicsObject(test, gameWorld);
+
 	}
 
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
-			playController.checkInput();
+			playController.checkInput(gameWorld,cam);
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
@@ -193,22 +207,7 @@ public class LevelSelect extends GameState implements Screen{
 	public boolean isActive() {
 		return super.active;
 	}
-	
-	
-	private void createShape() {
-		PolygonShape shape = new PolygonShape();
-		BodyDef def = new BodyDef();
-		def.position.set(2,22);
-		def.type = BodyType.DynamicBody;
-		def.angle = 200;
-		body = gameWorld.createBody(def);
-		shape.set(new float[]{0f,0f,0f,1f,1f,1f,1f,0f} );
-		fdef.shape = shape;
-		fdef.density = 1.0f;
-		fdef.friction = 1;
-		body.createFixture(fdef);
-		body.setAngularVelocity(MathUtils.random(-4f,4f));
-	}
+
 
 	public World getGameWorld() {
 		return gameWorld;

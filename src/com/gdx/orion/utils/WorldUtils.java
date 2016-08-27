@@ -43,7 +43,7 @@ public class WorldUtils {
 	public static final float LARGE_BODY_DAMPING = 0.45f;
 	private static float[] temp = new float[48];
 	private static float[] vertices = new float[6];
-	private static boolean wireframe = false;
+	private static boolean wireframe = true;
 	private static Vector2 tempV2 = new Vector2();
 	private static Color asteroid = Color.GRAY;
 	private static Color comet = Color.BLUE;
@@ -68,7 +68,7 @@ public class WorldUtils {
 		worldBorder[7] = y1;
 		shape.set(worldBorder);
 		fdef.shape = shape;
-		fdef.restitution = 2;
+		fdef.restitution = 0;
 		body.createFixture(fdef);
 		
 		worldBorder[0] = x1;
@@ -81,7 +81,7 @@ public class WorldUtils {
 		worldBorder[7] = y1 - 2;
 		shape.set(worldBorder);
 		fdef.shape = shape;
-		fdef.restitution = 2;
+		fdef.restitution = 0;
 		body.createFixture(fdef);		
 		
 		worldBorder[0] = x1;
@@ -94,7 +94,7 @@ public class WorldUtils {
 		worldBorder[7] = y2 - 2;
 		shape.set(worldBorder);
 		fdef.shape = shape;
-		fdef.restitution = 2;
+		fdef.restitution = 0;
 		body.createFixture(fdef);
 		
 		worldBorder[0] = x2;
@@ -107,7 +107,7 @@ public class WorldUtils {
 		worldBorder[7] = y1;
 		shape.set(worldBorder);
 		fdef.shape = shape;
-		fdef.restitution = 2;
+		fdef.restitution = 0;
 		body.createFixture(fdef);
 		body.setSleepingAllowed(false);
 		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null));

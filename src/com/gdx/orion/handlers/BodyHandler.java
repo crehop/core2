@@ -2,7 +2,7 @@ package com.gdx.orion.handlers;
 
 import java.util.ArrayList;
 
-import com.gdx.orion.entities.Asteroid;
+import com.gdx.orion.entities.Projectile;
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
 import com.badlogic.gdx.graphics.Color;
@@ -80,7 +80,7 @@ public class BodyHandler {
 	public static void handleStates(World gameWorld , Array<Body> bodies) {
 		for(Body body:bodies){
 				if(entityDataA.getType() == EntityType.DESTROYME_ASTEROID){
-					((Asteroid)entityDataA.getObject()).fragment(0);
+					((Projectile)entityDataA.getObject()).fragment(0);
 				}
 				if(entityDataA.getType() == EntityType.DELETEME){
 					gameWorld.destroyBody(body);

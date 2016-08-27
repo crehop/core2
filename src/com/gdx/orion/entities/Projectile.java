@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
-public class Asteroid {
+public class Projectile {
 	private PolygonShape shape = new PolygonShape();
 	private Body body;
 	private BodyDef def;
@@ -33,7 +33,7 @@ public class Asteroid {
 	private Color[] colors = new Color[15];
 	private int ID;
 
-	public Asteroid(World world, Vector2 position, Vector2 force, float density, float size){
+	public Projectile(World world, Vector2 position, Vector2 force, float density, float size){
 		ID = UIDGetter.getID();
 		this.density = density;
 		this.world = world;

@@ -1,6 +1,7 @@
 package com.gdx.orion.screens;
 
-import com.gdx.orion.entities.Asteroid;
+import com.gdx.orion.entities.Projectile;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -53,15 +54,11 @@ public class Play extends GameState implements Screen{
 	Random rand = new Random();
 	public Array<Body> destroy = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
-	private ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+	private ArrayList<Projectile> asteroids= new ArrayList<Projectile>();
 	private SpriteBatch batch = new SpriteBatch();
 	
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
-    private Texture texture2 = new Texture(Gdx.files.internal("images/planets/Jupiter.png"));
-    private Texture texture3 = new Texture(Gdx.files.internal("images/planets/Titan.png"));
     private Sprite stars = new Sprite(texture);
-    private Sprite jupiter = new Sprite(texture2);
-    private Sprite titan = new Sprite(texture3);
     
     private String fragmentShader;
     private String vertexShader;
@@ -109,25 +106,17 @@ public class Play extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(0f,0f), false));
-		this.getGameWorld().setVelocityThreshold(1.99f);
+		this.setGameWorld(new World(new Vector2(0f,-1f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, Main.GAME_WORLD_WIDTH, 0, Main.GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
 		count = 0;
-		while(count < 205) {
-			count++;
-			position.set(MathUtils.random(0, Main.GAME_WORLD_WIDTH) ,MathUtils.random(0, Main.GAME_WORLD_HEIGHT));
-			//new Asteroid(getGameWorld(), position,MathUtils.random(5,500),MathUtils.random(1,3));
-			new Asteroid(getGameWorld(), position,force,MathUtils.random(5,500),MathUtils.random(1.1f,13.3f));
-		}
-		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2, 300.03f,4500, gameWorld, true, jupiter,new Vector2(0,0), true);
-		//GravityUtils.addGravityWell(Main.GAME_WORLD_WIDTH/2, Main.GAME_WORLD_HEIGHT/2 + 1300, 80.03f,1500, gameWorld, true, titan,new Vector2(-12600,0), false);
         vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
         fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
 		shader = new ShaderProgram(vertexShader, fragmentShader);
 		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 		EffectUtils.initilize();
+		//VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
 	}
 	
 	@Override
@@ -140,7 +129,7 @@ public class Play extends GameState implements Screen{
 			gameWorld.getBodies(bodies);
 			cam.position.set(0, 0, 0);
 			mapCam.position.set(0, 0, 0);
-			playController.checkInput();
+			playController.checkInput(gameWorld,cam);
 			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
