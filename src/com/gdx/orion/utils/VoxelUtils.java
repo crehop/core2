@@ -64,7 +64,7 @@ public class VoxelUtils {
         count = 0;
         while(!chainComplete){
         	count++;
-    		System.out.println("Direction:" + direction);
+    		//System.out.println("Direction:" + direction);
         	if(direction == Direction.RIGHT_DOWN){
                	if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR
                			&& getVoxelRight(voxelArray,x,y) != VoxelType.AIR
@@ -84,7 +84,7 @@ public class VoxelUtils {
                		direction = Direction.LEFT_UP;
                	}else if(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
                			getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
-               		System.out.println("FUNCTION 2:RIGHT ^ -> :" + x + "/" + y);
+               		System.out.println("FUNCTION 2:RIGHT -> :" + x + "/" + y);
                		addBottomWall();
                		addLeftWall();
                		while(getVoxelRight(voxelArray,x,y) != VoxelType.AIR &&
