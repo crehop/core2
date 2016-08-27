@@ -14,7 +14,7 @@ public class VoxelizedPhysicsObject {
 	private Voxel[][] voxelArray;
 	private World world;
 	private float[] object4 = new float[8];
-	private float[] object6 = new float[12];;
+	private float[] object4R = new float[8];
 	private int count = 0;
 	private VoxelShell shell;
 	private Body body;
@@ -30,18 +30,18 @@ public class VoxelizedPhysicsObject {
 			shell.getSegments()){
 			count = 0;
 			if(segment.getVertices().length == 8){
-				for(float f:segment.getVertices()){
-					object4[count++] = f;
-					shape.set(object4);
-				}
-			}else if(segment.getVertices().length == 12){
-				for(float f:segment.getVertices()){
-					object6[count++] = f;
-				}
-				shape.set(object6);
+				//REVERSE WINDING ORDER
+				object4R[0] = segment.getVertices()[6];
+				object4R[1] = segment.getVertices()[7];
+				object4R[2] = segment.getVertices()[4];
+				object4R[3] = segment.getVertices()[5];
+				object4R[4] = segment.getVertices()[2];
+				object4R[5] = segment.getVertices()[3];
+				object4R[6] = segment.getVertices()[0];
+				object4R[7] = segment.getVertices()[1];
+				shape.set(object4R);
 			}
 			body.createFixture(shape, density);
-
 		}
 		this.world = world;
 	}
