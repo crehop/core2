@@ -43,7 +43,10 @@ public class VoxelUtils {
     public static VoxelShell getOuterShell(Voxel[][] voxelArray) {
     	shell = null;
     	buildQueue.clear();
-        if(voxelArray == null || voxelArray.length == 0) return shell;
+        if(voxelArray == null || voxelArray.length == 0){
+    		System.out.println("ARRAY CONTAINS NO VOXELS (VoxelUtils.java)");
+        	return shell;
+        }
  
         width = voxelArray.length;
         height = voxelArray[0].length;
@@ -69,6 +72,7 @@ public class VoxelUtils {
         direction = Direction.RIGHT_DOWN;
         count = 0;
 		System.out.println("Start:" + x + ":" +y);
+		chainComplete = false;
         while(!chainComplete){
         	count++;
     		System.out.println("Direction:" + direction);

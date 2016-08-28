@@ -24,7 +24,7 @@ public class VoxelizedPhysicsHandler {
 			BodyDef def = new BodyDef();
 			def.type = BodyType.DynamicBody;
 			def.angle = 0;
-			def.position.set(22,44);
+			def.position.set(11,22);
 			body = world.createBody(def);
 			return body;
 	}
