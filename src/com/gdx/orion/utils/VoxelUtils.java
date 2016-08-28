@@ -95,8 +95,8 @@ public class VoxelUtils {
                				getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
                			x++;
                		}
-               		addBottomWall();
-               		addLeftWall();
+               		addTopWall();
+               		addRightWall();
                		createSegment();
                		System.out.println("FUNCTION 2:RIGHT -> :" + x + "/" + y);
                		if(isComplete()){
@@ -104,7 +104,7 @@ public class VoxelUtils {
                			break;
                		}
                		
-               	}else if(getVoxelRightDown(voxelArray,x,y) != VoxelType.AIR 
+               	}else if(getVoxelDownRight(voxelArray,x,y) != VoxelType.AIR 
                			&& getVoxelDown(voxelArray,x,y) !=  VoxelType.AIR
                			&& getVoxelRight(voxelArray,x,y) ==  VoxelType.AIR){
                		x++;
@@ -128,8 +128,8 @@ public class VoxelUtils {
                				&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
                			y++;
                		}
-               		addLeftWall();
-               		addTopWall();
+               		addRightWall();
+               		addBottomWall();
                		createSegment();
                		if(isComplete()){
                			chainComplete = true;
@@ -151,7 +151,17 @@ public class VoxelUtils {
                			break;
                		}
                	}else if(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
-               			getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
+               			getVoxelUpLeft(voxelArray,x,y) == VoxelType.AIR){
+               		addTopWall();
+               		addRightWall();
+               		while(getVoxelLeft(voxelArray,x,y) != VoxelType.AIR &&
+                   			getVoxelUpLeft(voxelArray,x,y) == VoxelType.AIR){
+               			x--;
+               		}
+               		x--;
+               		addBottomWall();
+               		addLeftWall();
+               		createSegment();
                		if(isComplete()){
                			chainComplete = true;
                			break;
@@ -160,14 +170,6 @@ public class VoxelUtils {
                	}else if(getVoxelUpLeft(voxelArray,x,y) != VoxelType.AIR 
                			&& getVoxelUp(voxelArray,x,y) != VoxelType.AIR
                			&& getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
-               		System.out.println("FUNCTION 7 LEFT > UP ^:" + x + "/" + y);
-               		x--;
-               		y--;
-               		addLeftWall();    
-               		addTopWall();
-               		addRightWall();
-               		addBottomWall();
-               		createSegment();
                 	if(isComplete()){
                			chainComplete = true;
                			break;
@@ -182,8 +184,8 @@ public class VoxelUtils {
             			getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
             			y--;
             		}
-               		addRightWall();
-               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
                		createSegment();
             		if(isComplete()){
                			chainComplete = true;
@@ -191,14 +193,7 @@ public class VoxelUtils {
                		}
             		direction = Direction.LEFT_UP;
                	}else{
-               		System.out.println("FUNCTION 9: BOX" + x + "/" + y);
-               		addTopWall();
-               		addRightWall();
-               		addBottomWall();
-               		addLeftWall();
-               		createSegment();
-               		chainComplete = true;
-               		break;
+               		direction = Direction.LEFT_UP;
                	}
         	}else if(direction == Direction.LEFT_UP){
         		if(getVoxelDownLeft(voxelArray,x,y) != VoxelType.AIR 
@@ -225,8 +220,8 @@ public class VoxelUtils {
                				getVoxelDown(voxelArray,x,y) == VoxelType.AIR){
                			x--;
                		}
-               		addTopWall();
-               		addRightWall();
+               		addBottomWall();
+               		addLeftWall();
                		createSegment();
                		System.out.println("FUNCTION 10: LEFT <" + x + "/" + y);
                		if(isComplete()){
@@ -257,8 +252,8 @@ public class VoxelUtils {
                				getVoxelLeft(voxelArray,x,y) == VoxelType.AIR){
                			y--;
                		}
-               		addRightWall();
-               		addBottomWall();
+               		addLeftWall();
+               		addTopWall();
                		createSegment();
                		if(isComplete()){
                			chainComplete = true;
@@ -288,8 +283,8 @@ public class VoxelUtils {
                				getVoxelUp(voxelArray,x,y) == VoxelType.AIR){
                			x++;
                		}
-               		addBottomWall();
-               		addLeftWall();
+               		addTopWall();
+               		addRightWall();
                		createSegment();
                		if(isComplete()){
                			chainComplete = true;
@@ -297,7 +292,7 @@ public class VoxelUtils {
                		}
                		direction = Direction.RIGHT_DOWN;
                		//COMP
-               	}else if(getVoxelRightDown(voxelArray,x,y) != VoxelType.AIR 
+               	}else if(getVoxelDownRight(voxelArray,x,y) != VoxelType.AIR 
                			&& getVoxelDown(voxelArray,x,y) !=  VoxelType.AIR
                			&& getVoxelRight(voxelArray,x,y) ==  VoxelType.AIR){
                		x++;
@@ -323,8 +318,8 @@ public class VoxelUtils {
                				&& getVoxelRight(voxelArray,x,y) == VoxelType.AIR){
                			y++;
                		}
-               		addLeftWall();
-               		addTopWall();
+               		addRightWall();
+               		addBottomWall();
                		createSegment();
                		if(isComplete()){
                			chainComplete = true;
@@ -347,11 +342,7 @@ public class VoxelUtils {
 		buildQueue.clear();
 	}
 
-	private static VoxelType getVoxelRightDown(Voxel[][] voxelArray, int x2,
-			int y2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	private static boolean isComplete() {
 		if((x == completeX && y == completeY && count != 1)){
