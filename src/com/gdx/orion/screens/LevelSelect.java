@@ -86,8 +86,8 @@ public class LevelSelect extends GameState implements Screen{
 		super(GameStateManager.PLAY);
 		Voxel[][] test = new Voxel[3][3];
 		test[0][0] = new Stone();
-		test[0][1] = new Stone();
-		test[0][2] = new Stone();
+		test[0][1] = new Air();
+		test[0][2] = new Air();
 		test[1][0] = new Stone();
 		test[1][1] = new Stone();
 		test[1][2] = new Stone();
