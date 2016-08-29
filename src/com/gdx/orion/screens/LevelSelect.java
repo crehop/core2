@@ -112,7 +112,6 @@ public class LevelSelect extends GameState implements Screen{
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		new VoxelizedPhysicsObject(test, gameWorld);
 
 
 	}
@@ -135,7 +134,6 @@ public class LevelSelect extends GameState implements Screen{
 			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine4("WORLD MAX VELOCITY: " + this.getGameWorld().getVelocityThreshold());
 
 			cam.update();
 			
@@ -147,7 +145,7 @@ public class LevelSelect extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 			accumulator += delta;
 		    while (accumulator >= step) {
-		        gameWorld.step(step, 1, 1);
+		        gameWorld.step(step, 3, 3, 3);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }

@@ -3,7 +3,12 @@ package com.gdx.orion.handlers;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
+import finnstr.libgdx.liquidfun.ParticleBodyContact;
+import finnstr.libgdx.liquidfun.ParticleContact;
+import finnstr.libgdx.liquidfun.ParticleSystem;
 
 public class ContactHandler implements ContactListener {
 	
@@ -24,6 +29,33 @@ public class ContactHandler implements ContactListener {
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beginParticleBodyContact(ParticleSystem system,
+			ParticleBodyContact contact) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endParticleBodyContact(Fixture fixture, ParticleSystem system,
+			int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beginParticleContact(ParticleSystem system,
+			ParticleContact contact) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endParticleContact(ParticleSystem system, int indexA, int indexB) {
 		// TODO Auto-generated method stub
 		
 	}

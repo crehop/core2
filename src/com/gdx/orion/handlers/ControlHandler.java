@@ -188,7 +188,6 @@ public class ControlHandler extends InputAdapter {
 	}
 	@Override
 	public boolean scrolled(int amount) {
-		System.out.println("SCROLLED" + amount + " " + GameStateManager.levelSelect.isActive());
 		if(GameStateManager.play.isActive()){
 			if(!(GameStateManager.play.cam.zoom + amount < 1)){
 				GameStateManager.play.cam.zoom += amount;
