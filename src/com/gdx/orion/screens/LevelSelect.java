@@ -47,7 +47,7 @@ public class LevelSelect extends GameState implements Screen{
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
 	public ScalingViewport mapViewport;  
-	private static ControlHandler playController = new ControlHandler();
+	private static ControlHandler levelSelectController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	@SuppressWarnings("unused")
@@ -83,16 +83,16 @@ public class LevelSelect extends GameState implements Screen{
 
 	
 	protected LevelSelect (Game game, int level) {
-		super(GameStateManager.PLAY);
+		super(GameStateManager.LEVELSELECT);
 		Voxel[][] test = new Voxel[3][3];
 		test[0][0] = new Stone();
 		test[0][1] = new Air();
 		test[0][2] = new Stone();
 		test[1][0] = new Stone();
-		test[1][1] = new Stone();
+		test[1][1] = new Air();
 		test[1][2] = new Stone();
 		test[2][0] = new Stone();
-		test[2][1] = new Air();
+		test[2][1] = new Stone();
 		test[2][2] = new Stone();
 		stars.scale(10f);
 		stars.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
@@ -113,8 +113,6 @@ public class LevelSelect extends GameState implements Screen{
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
 		new VoxelizedPhysicsObject(test, gameWorld);
-		new VoxelizedPhysicsObject(test, gameWorld);
-		new VoxelizedPhysicsObject(test, gameWorld);
 
 
 	}
@@ -122,7 +120,7 @@ public class LevelSelect extends GameState implements Screen{
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
-			playController.checkInput(gameWorld,cam);
+			levelSelectController.checkInput(gameWorld,cam);
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
@@ -132,7 +130,7 @@ public class LevelSelect extends GameState implements Screen{
 			
 			
 			if(WorldUtils.isWireframe()){
-				renderer.render(getGameWorld(), viewport.getCamera().combined);
+				renderer.render(getGameWorld(), cam.combined);
 			}
 			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
@@ -185,7 +183,7 @@ public class LevelSelect extends GameState implements Screen{
 	
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(playController);
+		Gdx.input.setInputProcessor(levelSelectController);
 		this.setActive(true);
 	}
 	

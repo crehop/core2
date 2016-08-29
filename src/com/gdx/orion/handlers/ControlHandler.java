@@ -188,14 +188,23 @@ public class ControlHandler extends InputAdapter {
 	}
 	@Override
 	public boolean scrolled(int amount) {
+		System.out.println("SCROLLED" + amount + " " + GameStateManager.levelSelect.isActive());
 		if(GameStateManager.play.isActive()){
 			if(!(GameStateManager.play.cam.zoom + amount < 1)){
 				GameStateManager.play.cam.zoom += amount;
-				GameStateManager.levelSelect.cam.zoom += amount;
 				Console.setLine8(""+GameStateManager.play.cam.zoom);
 			}
 			if(GameStateManager.play.cam.zoom < 0){
 				GameStateManager.play.cam.zoom = 1;
+			}
+		}
+		if(GameStateManager.levelSelect.isActive()){
+			if(!(GameStateManager.levelSelect.cam.zoom + amount < 1)){
+				GameStateManager.levelSelect.cam.zoom += amount;
+				Console.setLine8(""+GameStateManager.levelSelect.cam.zoom);
+			}
+			if(GameStateManager.levelSelect.cam.zoom < 0){
+				GameStateManager.levelSelect.cam.zoom = 1;
 			}
 		}
 		return super.scrolled(amount);
