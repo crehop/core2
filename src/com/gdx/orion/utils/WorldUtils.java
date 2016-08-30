@@ -81,7 +81,6 @@ public class WorldUtils {
 		worldBorder[7] = y1 - 2;
 		shape.set(worldBorder);
 		fdef.shape = shape;
-		fdef.restitution = 0;
 		body.createFixture(fdef);		
 		
 		worldBorder[0] = x1;

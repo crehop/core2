@@ -43,8 +43,10 @@ public class ControlHandler extends InputAdapter {
 		if(forward){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.y += 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(0, 1, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -55,8 +57,10 @@ public class ControlHandler extends InputAdapter {
 		if(back){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.y -= 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(0, -1, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -67,8 +71,10 @@ public class ControlHandler extends InputAdapter {
 		if(strafeLeft){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.x -= 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(-1, 0, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -79,8 +85,10 @@ public class ControlHandler extends InputAdapter {
 		if(strafeRight){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.translate(1, 0, 0);
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(1, 0, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -91,9 +99,6 @@ public class ControlHandler extends InputAdapter {
 		if(fired){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
-					position2.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-					position.set(cam.unproject(position2).x,cam.unproject(position2).y);
-					WorldUtils.fireBullet(world, position, 10f, 1, force);
 					break;
 				case GameStateManager.PLAY:
 					break;
@@ -194,7 +199,7 @@ public class ControlHandler extends InputAdapter {
 				Console.setLine8(""+GameStateManager.play.cam.zoom);
 			}
 			if(GameStateManager.play.cam.zoom < 0){
-				GameStateManager.play.cam.zoom = 1;
+				GameStateManager.play.cam.zoom = 0.01f;
 			}
 		}
 		if(GameStateManager.levelSelect.isActive()){
