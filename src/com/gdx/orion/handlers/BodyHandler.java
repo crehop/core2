@@ -5,19 +5,14 @@ import java.util.ArrayList;
 import com.gdx.orion.entities.Projectile;
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.orion.screens.GameStateManager;
-import com.gdx.orion.utils.EffectUtils;
-import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.WorldUtils;
 
 public class BodyHandler {
@@ -28,13 +23,9 @@ public class BodyHandler {
     private static Vector2 midPoint3 = new Vector2(0,0);
     private static ArrayList<Body> effectBody = new ArrayList<Body>();
 	private static float[] tempAsteroid = new float[48];
-	private static int fragmentsCulled;
 	private static int count;
     private static PolygonShape ps = new PolygonShape();
-	private static ImmediateModeRenderer20 r = new ImmediateModeRenderer20(false, true, 0);
-	private static ShapeRenderer sr = new ShapeRenderer();
 	public static void update(OrthographicCamera cam,World gameWorld,Array<Body> bodies){
-		fragmentsCulled = 0;
 		for(Body body:bodies){
 			if(body.getUserData() instanceof EntityData){
 				count = 0;

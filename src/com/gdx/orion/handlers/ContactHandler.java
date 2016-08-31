@@ -43,15 +43,11 @@ public class ContactHandler implements ContactListener {
 	@Override
 	public void endParticleBodyContact(Fixture fixture, ParticleSystem system,
 			int index) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void beginParticleContact(ParticleSystem system,
 			ParticleContact contact) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

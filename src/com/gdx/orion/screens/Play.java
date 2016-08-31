@@ -19,12 +19,15 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -41,6 +44,7 @@ import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.WorldUtils;
 
+import finnstr.libgdx.liquidfun.ColorParticleRenderer;
 import finnstr.libgdx.liquidfun.ParticleDebugRenderer;
 import finnstr.libgdx.liquidfun.ParticleDef.ParticleType;
 import finnstr.libgdx.liquidfun.ParticleGroupDef;
@@ -58,10 +62,11 @@ public class Play extends GameState implements Screen{
 	private static ControlHandler playController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
-    private ParticleDebugRenderer mParticleDebugRenderer;
+    private ColorParticleRenderer colorParticleRenderer;
     private ParticleSystem mParticleSystem;
     private ParticleGroupDef mParticleGroupDef1;
     private ParticleGroupDef mParticleGroupDef2;
+    public Body body;
 
 	@SuppressWarnings("unused")
 	private Stage stage;
@@ -125,60 +130,42 @@ public class Play extends GameState implements Screen{
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
 		count = 0;
-        vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
-        fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
-		shader = new ShaderProgram(vertexShader, fragmentShader);
-		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 		EffectUtils.initilize();
-		 //First we create a new particlesystem and 
+		 //First we create add new particlesystem and 
         //set the radius of each particle to 6 / 120 m (5 cm)
         ParticleSystemDef systemDef = new ParticleSystemDef();
-        systemDef.radius = 0.05f;
-        systemDef.dampingStrength = 1.5f;
+        systemDef.radius = 0.75f;
+        systemDef.dampingStrength = 0.0f;
 
         mParticleSystem = new ParticleSystem(gameWorld, systemDef);
-        mParticleSystem.setParticleDensity(1.3f);
-        mParticleDebugRenderer = 
-        		new ParticleDebugRenderer(new Color(0, 1, 0, 1), mParticleSystem.getParticleCount());
+        mParticleSystem.setParticleDensity(1f);
+        colorParticleRenderer = 
+        		new ColorParticleRenderer (mParticleSystem.getParticleCount());
         
         //Create a new particlegroupdefinition and set some properties
         //For the flags you can set more than only one
-        mParticleGroupDef1 = new ParticleGroupDef();
-        mParticleGroupDef1.color.set(1f, 0, 0, 1);
-        mParticleGroupDef1.flags.add(ParticleType.b2_waterParticle);
-        //Create a shape, give it to the definition and
-        //create the particlegroup in the particlesystem.
-        //This will return you a ParticleGroup instance, but
-        //we don't need it here, so we drop that.
-        //The shape defines where the particles are created exactly
-        //and how much are created
-        PolygonShape parShape = new PolygonShape();
-        parShape.setAsBox(4,4);
-        mParticleGroupDef1.shape = parShape;
-        mParticleSystem.createParticleGroup(mParticleGroupDef1);
-
-        //Exactly the same! This is the second group with a different
-        //color and shifted on the x-Axis
         mParticleGroupDef2 = new ParticleGroupDef();
-        mParticleGroupDef2.shape = mParticleGroupDef1.shape;
-        mParticleGroupDef2.flags = mParticleGroupDef1.flags;
-        mParticleGroupDef2.groupFlags = mParticleGroupDef1.groupFlags;
-        mParticleGroupDef2.color.set(0.2f, 1f, 0.3f, 1);
-        mParticleSystem.createParticleGroup(mParticleGroupDef2);
-
-        //Here we create a new shape and we set a
-        //linear velocity. This is used in createParticles1()
-        //and createParticles2()
-        CircleShape partShape = new CircleShape();
-        partShape.setRadius(0.02f);
-
-        mParticleGroupDef1.shape = partShape;
+        mParticleGroupDef2.color.set(1f, 1f, 0, 1);
+        mParticleGroupDef2.flags.add(ParticleType.b2_viscousParticle);
+        mParticleGroupDef2.strength = 10f;
+        mParticleGroupDef2.color.set(0.2f, 0.1f, 0.9f, 1);
+        PolygonShape partShape = new PolygonShape();
+        partShape.setAsBox(160.4f,22f);
+        PolygonShape partShape2 = new PolygonShape();
+        partShape2.setAsBox(14f,1f);
         mParticleGroupDef2.shape = partShape;
-        createParticles1(60,60);
+        mParticleGroupDef2.position.set(166, 60);
         createParticles2(60,60);
-        mParticleGroupDef1.linearVelocity.set(new Vector2(0, 0f));
-        mParticleGroupDef2.linearVelocity.set(new Vector2(0, 0f));
-        cam.combined.scale(120, 120, 1);
+        BodyDef def = new BodyDef();
+        def.position.x = 60;
+        def.position.y = 80;
+        body = gameWorld.createBody(def);
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = partShape2;
+		fdef.density = 0.2f;
+		fdef.friction = 1;
+		body.createFixture(fdef);
+        body.setType(BodyType.DynamicBody);
 	}
 	
 	@Override
@@ -188,6 +175,7 @@ public class Play extends GameState implements Screen{
 			if(aliveTime > MAX_ALIVE_TIME){
 				aliveTime = 0;
 			}
+			cam.position.set(body.getWorldCenter(), 0);
 			gameWorld.getBodies(bodies);
 			mapCam.position.set(0, 0, 0);
 			playController.checkInput(gameWorld,cam);
@@ -196,7 +184,7 @@ public class Play extends GameState implements Screen{
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(stars, 0 , 0, Main.GAME_WORLD_WIDTH, Main.GAME_WORLD_HEIGHT);
+			batch.draw(stars, 0 , 0, Main.getAppLogLevel(), Main.GAME_WORLD_HEIGHT);
 			batch.end();
 			EffectUtils.drawGrid(cam);
 			BodyHandler.update(cam, gameWorld, bodies);
@@ -218,7 +206,7 @@ public class Play extends GameState implements Screen{
 			
 			if(WorldUtils.isWireframe()){
 				renderer.render(getGameWorld(), viewport.getCamera().combined);
-				mParticleDebugRenderer.render(mParticleSystem, 1f, viewport.getCamera().combined);
+				colorParticleRenderer.render(mParticleSystem, 5f, viewport.getCamera().combined);
 			}
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD PARTICLES: " + mParticleSystem.getParticleCount());
@@ -234,7 +222,7 @@ public class Play extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 			accumulator += delta;
 		    while (accumulator >= step) {
-		        gameWorld.step(step, 3,3,3);
+		        gameWorld.step(step, 6,3,9);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
@@ -316,20 +304,14 @@ public class Play extends GameState implements Screen{
 	}
 	
     private void updateParticleCount() {
-        if(mParticleSystem.getParticleCount() > mParticleDebugRenderer.getMaxParticleNumber()) {
-            mParticleDebugRenderer.setMaxParticleNumber(mParticleSystem.getParticleCount() + 1000);
+        if(mParticleSystem.getParticleCount() > colorParticleRenderer.getMaxParticleNumber()) {
+            colorParticleRenderer.setMaxParticleNumber(mParticleSystem.getParticleCount() + 1000);
         }
     }
-    
-    public void createParticles1(float pX, float pY) {
-        mParticleGroupDef1.position.set(pX, pY);
-        mParticleSystem.createParticleGroup(mParticleGroupDef1);
-        updateParticleCount();
-    }
-
     private void createParticles2(float pX, float pY) {
-        mParticleGroupDef2.position.set(pX, pY);
         mParticleSystem.createParticleGroup(mParticleGroupDef2);
         updateParticleCount();
+        System.out.println(mParticleGroupDef2.position.toString() + "");
     }
+    
 }

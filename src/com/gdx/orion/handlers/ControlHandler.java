@@ -25,7 +25,7 @@ public class ControlHandler extends InputAdapter {
 	private int screen;
 	private Vector3 position2;
 	private Vector2 position;
-	private Vector2 force = new Vector2(0,100);
+	private Vector2 force = new Vector2(0,10000);
 	public void checkInput(World world, Camera cam) {
 		screen = GameStateManager.getLastScreen();
 		if(exitKey){
@@ -43,7 +43,7 @@ public class ControlHandler extends InputAdapter {
 		if(forward){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
-					GameStateManager.levelSelect.cam.position.y += 1;
+					GameStateManager.play.body.applyLinearImpulse(force, GameStateManager.play.body.getWorldCenter(), true);
 					break;
 				case GameStateManager.PLAY:
 					GameStateManager.play.cam.translate(0, 1, 0);
