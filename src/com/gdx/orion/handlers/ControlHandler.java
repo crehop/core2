@@ -43,7 +43,7 @@ public class ControlHandler extends InputAdapter {
 		if(forward){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
-					GameStateManager.play.body.applyLinearImpulse(force, GameStateManager.play.body.getWorldCenter(), true);
+					GameStateManager.levelSelect.cam.position.y += 1;
 					break;
 				case GameStateManager.PLAY:
 					GameStateManager.play.cam.translate(0, 1, 0);
