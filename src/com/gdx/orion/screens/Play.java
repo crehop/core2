@@ -1,6 +1,7 @@
 package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Projectile;
+import com.gdx.orion.entities.WaterBalloon;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -68,14 +69,9 @@ public class Play extends GameState implements Screen{
 	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Projectile> asteroids= new ArrayList<Projectile>();
 	private SpriteBatch batch = new SpriteBatch();
-	
+	private ParticleSystemDef systemDef;
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Sprite stars = new Sprite(texture);
-    
-
-    
-    private Vector2 position = new Vector2(0,0);
-    private Vector2 force = new Vector2(-50,0);
     
 	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
@@ -98,6 +94,19 @@ public class Play extends GameState implements Screen{
     float deltaTime = (float)frameTime;
 	public Array<JointDef> addJoint = new Array<JointDef>();
 	public Array<Joint> clearJoint = new Array<Joint>();
+	public WaterBalloon balloon;
+	public WaterBalloon balloon1;
+	public WaterBalloon balloon2;
+	public WaterBalloon balloon3;
+	public WaterBalloon balloon4;
+	public WaterBalloon balloon5;
+	public WaterBalloon balloon6;
+	public WaterBalloon balloon7;
+	public WaterBalloon balloon8;
+	public WaterBalloon balloon9;
+	public WaterBalloon balloon0;
+
+	private ParticleSystem particleSystem;
 	
 
 	
@@ -123,6 +132,13 @@ public class Play extends GameState implements Screen{
 		cam.zoom = 2.0f;
 		count = 0;
 		EffectUtils.initilize();
+		systemDef = new ParticleSystemDef();
+		systemDef.radius = 0.55f;
+		systemDef.dampingStrength = 0.5f;
+		particleSystem = new ParticleSystem(gameWorld,systemDef);
+		balloon = new WaterBalloon(10,5,particleSystem);
+		colorParticleRenderer = new ColorParticleRenderer(100000);
+		
 	}
 	
 	@Override
@@ -131,6 +147,7 @@ public class Play extends GameState implements Screen{
 			aliveTime++;
 			if(aliveTime > MAX_ALIVE_TIME){
 				aliveTime = 0;
+				balloon = new WaterBalloon(10,5,particleSystem);
 			}
 			mapCam.position.set(0, 0, 0);
 			playController.checkInput(gameWorld,cam);
@@ -159,7 +176,10 @@ public class Play extends GameState implements Screen{
 			
 			if(WorldUtils.isWireframe()){
 				renderer.render(getGameWorld(), viewport.getCamera().combined);
+				
 			}
+			balloon.render(colorParticleRenderer, particleSystem, cam);
+
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			cam.update();
 			//FIXED DEPENDENCIES
@@ -252,9 +272,4 @@ public class Play extends GameState implements Screen{
 	public SpriteBatch getBatch(){
 		return batch;
 	}
-	
-    private void updateParticleCount() {
-        if(mParticleSystem.getParticleCount() > colorParticleRenderer.getMaxParticleNumber()) {
-        }
-    }
 }
