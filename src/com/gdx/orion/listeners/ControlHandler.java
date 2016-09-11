@@ -1,4 +1,4 @@
-package com.gdx.orion.handlers;
+package com.gdx.orion.listeners;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

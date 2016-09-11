@@ -1,4 +1,4 @@
-package com.gdx.orion.handlers;
+package com.gdx.orion.listeners;
 
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;

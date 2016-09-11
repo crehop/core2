@@ -2,6 +2,11 @@ package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Projectile;
 import com.gdx.orion.entities.WaterBalloon;
+import com.gdx.orion.listeners.BodyHandler;
+import com.gdx.orion.listeners.ContactFilterHandler;
+import com.gdx.orion.listeners.ContactHandler;
+import com.gdx.orion.listeners.ControlHandler;
+import com.gdx.orion.listeners.JointHandler;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,10 +37,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
-import com.gdx.orion.handlers.BodyHandler;
-import com.gdx.orion.handlers.ContactHandler;
-import com.gdx.orion.handlers.JointHandler;
-import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
@@ -133,11 +134,25 @@ public class Play extends GameState implements Screen{
 		count = 0;
 		EffectUtils.initilize();
 		systemDef = new ParticleSystemDef();
-		systemDef.radius = 0.55f;
-		systemDef.dampingStrength = 0.5f;
+		systemDef.radius = 0.25f;
+		systemDef.dampingStrength = 1.3f;
 		particleSystem = new ParticleSystem(gameWorld,systemDef);
-		balloon = new WaterBalloon(10,5,particleSystem);
+		balloon = new WaterBalloon(10,50,particleSystem);
 		colorParticleRenderer = new ColorParticleRenderer(100000);
+		BodyDef def = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		Vector2[] triangle = new Vector2[3];
+		triangle[0] = new Vector2(-15,0);
+		triangle[1] = new Vector2(0,7);
+		triangle[2] = new Vector2(0,0);
+		PolygonShape shape = new PolygonShape();
+		shape.set(triangle);
+		fdef.shape = shape;
+		def.type = BodyType.DynamicBody;
+		def.position.set(10,30);
+		fdef.density = 1.3f;
+		Body body = gameWorld.createBody(def);
+		body.createFixture(fdef);
 		
 	}
 	
@@ -147,7 +162,6 @@ public class Play extends GameState implements Screen{
 			aliveTime++;
 			if(aliveTime > MAX_ALIVE_TIME){
 				aliveTime = 0;
-				balloon = new WaterBalloon(10,5,particleSystem);
 			}
 			mapCam.position.set(0, 0, 0);
 			playController.checkInput(gameWorld,cam);
