@@ -28,6 +28,7 @@ public class VoxelUtils {
 	public static int completeX;
 	public static int completeY;
 	public static int count;
+	public static int flip;
 	public static int right = 1;
 	public static int left = -1;
 	public static int up = 1;
@@ -71,11 +72,12 @@ public class VoxelUtils {
         }
         direction = Direction.RIGHT_DOWN;
         count = 0;
+        flip = 0;
 		System.out.println("Start:" + x + ":" +y);
 		chainComplete = false;
         while(!chainComplete){
         	count++;
-    		System.out.println("Direction:" + direction);
+    		System.out.println("Direction:" + direction + " " + count);
         	if(direction == Direction.RIGHT_DOWN){
                	if(getVoxelUpRight(voxelArray,x,y) != VoxelType.AIR
                			&& getVoxelRight(voxelArray,x,y) != VoxelType.AIR
@@ -208,6 +210,9 @@ public class VoxelUtils {
                	}else{
                		direction = Direction.LEFT_UP;
                		System.out.println("FUNCTION NONE-FOUND: LEFT <" + x + "/" + y);
+               		if(flip++ > 9){
+               			chainComplete = true;
+               		}
                	}
         	}else if(direction == Direction.LEFT_UP){
         		if(getVoxelDownLeft(voxelArray,x,y) != VoxelType.AIR 
@@ -342,6 +347,9 @@ public class VoxelUtils {
                	}else{
                		direction = Direction.RIGHT_DOWN;
                		System.out.println("FUNCTION NONE-FOUND: RIGHT >" + x + "/" + y);
+               		if(flip++ > 9){
+               			chainComplete = true;
+               		}
                	}
         	}
            	
@@ -361,8 +369,7 @@ public class VoxelUtils {
 
 
 	private static boolean isComplete() {
-		if((x == completeX && y == completeY && count != 1) || count == 9){
-			shell = new VoxelShell(segQueue);
+		if((x == completeX && y == completeY && count != 1) || count > 9 || flip > 9){
 			return true;
 		}else{
 			return false;

@@ -1,6 +1,7 @@
 package com.gdx.orion.entities;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.gdx.orion.entities.voxel.VoxelType;
 
 
 public class EntityData {
@@ -10,7 +11,9 @@ public class EntityData {
 	private int alive;
 	private Object object;
 	private int entropy = 0;
-	public EntityData(float life,EntityType type,Object object){
+	private VoxelType voxelType;
+	public EntityData(float life,EntityType type,Object object,VoxelType voxelType){
+		this.voxelType = voxelType;
 		this.type = type;
 		this.ID = UIDGetter.getID();
 		this.life = life;

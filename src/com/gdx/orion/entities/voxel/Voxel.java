@@ -1,16 +1,20 @@
 package com.gdx.orion.entities.voxel;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public abstract class Voxel {
 	
 	public static final float voxelSize = 0.25f;
+	public static final float voxelGap = .255f;
+
 	
 	public VoxelType type;
 	
 	protected int durability;
 	protected float density;
 	protected float absorbtion;
+	protected float friction;
 	
 	protected boolean breakable;
 

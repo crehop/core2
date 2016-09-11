@@ -2,6 +2,7 @@ package com.gdx.orion.utils;
 
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
+import com.gdx.orion.entities.voxel.VoxelType;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class GravityUtils{
 		thePlanet.setLinearVelocity(velocity);
 		planetVector.add(thePlanet);
 		gravitySprites.add(sprite);
-		if(inWardForce)thePlanet.setUserData(new EntityData(1000, EntityType.GRAVITY_WELL, null));
+		if(inWardForce)thePlanet.setUserData(new EntityData(1000, EntityType.GRAVITY_WELL, null, VoxelType.AIR));
 		else{
 		}
 		thePlanet.createFixture(fixtureDef);

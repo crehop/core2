@@ -17,6 +17,7 @@ public class Stone extends Voxel {
 		durability = 20;
 		density = 8.0f;
 		absorbtion = 8.0f;
+		friction = 1.0f;
 		
 		breakable = true;
 	}

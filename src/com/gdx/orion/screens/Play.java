@@ -2,6 +2,11 @@ package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Projectile;
 import com.gdx.orion.entities.WaterBalloon;
+import com.gdx.orion.entities.voxel.Voxel;
+import com.gdx.orion.entities.voxel.VoxelType;
+import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.voxel.types.Air;
+import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.listeners.BodyHandler;
 import com.gdx.orion.listeners.ContactFilterHandler;
 import com.gdx.orion.listeners.ContactHandler;
@@ -62,12 +67,14 @@ public class Play extends GameState implements Screen{
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
     private ColorParticleRenderer colorParticleRenderer;
     public Body body;
+    private Voxel[][] voxels;
 
 	@SuppressWarnings("unused")
 	private Stage stage;
 	Random rand = new Random();
 	public Array<Body> destroy = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
+	public static Array<JointDef> createJoints = new Array<JointDef>();
 	private ArrayList<Projectile> asteroids= new ArrayList<Projectile>();
 	private SpriteBatch batch = new SpriteBatch();
 	private ParticleSystemDef systemDef;
@@ -96,17 +103,6 @@ public class Play extends GameState implements Screen{
 	public Array<JointDef> addJoint = new Array<JointDef>();
 	public Array<Joint> clearJoint = new Array<Joint>();
 	public WaterBalloon balloon;
-	public WaterBalloon balloon1;
-	public WaterBalloon balloon2;
-	public WaterBalloon balloon3;
-	public WaterBalloon balloon4;
-	public WaterBalloon balloon5;
-	public WaterBalloon balloon6;
-	public WaterBalloon balloon7;
-	public WaterBalloon balloon8;
-	public WaterBalloon balloon9;
-	public WaterBalloon balloon0;
-
 	private ParticleSystem particleSystem;
 	
 
@@ -137,23 +133,29 @@ public class Play extends GameState implements Screen{
 		systemDef.radius = 0.25f;
 		systemDef.dampingStrength = 1.3f;
 		particleSystem = new ParticleSystem(gameWorld,systemDef);
-		balloon = new WaterBalloon(10,50,particleSystem);
+		balloon = new WaterBalloon(20,50,particleSystem);
 		colorParticleRenderer = new ColorParticleRenderer(100000);
-		BodyDef def = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		Vector2[] triangle = new Vector2[3];
-		triangle[0] = new Vector2(-15,0);
-		triangle[1] = new Vector2(0,7);
-		triangle[2] = new Vector2(0,0);
-		PolygonShape shape = new PolygonShape();
-		shape.set(triangle);
-		fdef.shape = shape;
-		def.type = BodyType.DynamicBody;
-		def.position.set(10,30);
-		fdef.density = 1.3f;
-		Body body = gameWorld.createBody(def);
-		body.createFixture(fdef);
+		voxels = new Voxel[3][6];
+		voxels[0][0] = new Stone();
+		voxels[0][1] = new Stone();
+		voxels[0][2] = new Stone();
+		voxels[1][0] = new Stone();
+		voxels[1][1] = new Stone();
+		voxels[1][2] = new Stone();
+		voxels[2][0] = new Stone();
+		voxels[2][1] = new Stone();
+		voxels[2][2] = new Stone();
+		voxels[0][3] = new Stone();
+		voxels[0][4] = new Stone();
+		voxels[0][5] = new Stone();
+		voxels[1][3] = new Stone();
+		voxels[1][4] = new Stone();
+		voxels[1][5] = new Stone();
+		voxels[2][3] = new Stone();
+		voxels[2][4] = new Stone();
+		voxels[2][5] = new Stone();
 		
+		VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(voxels, gameWorld, 10, 1); 
 	}
 	
 	@Override
@@ -184,6 +186,7 @@ public class Play extends GameState implements Screen{
 			//batch.setProjectionMatrix(cam.combined);
 			BodyHandler.applyEffects(batch);
 			BodyHandler.destroyBodies(gameWorld,destroy);
+			BodyHandler.createJoints(gameWorld,createJoints);
 			batch.end();
 			destroy.clear();
 			
