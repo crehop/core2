@@ -27,7 +27,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
 import com.gdx.orion.entities.voxel.Voxel;
 import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
-import com.gdx.orion.entities.voxel.types.Air;
 import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.handlers.ContactHandler;
 import com.gdx.orion.handlers.ControlHandler;
