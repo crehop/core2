@@ -18,19 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.entities.voxel.VoxelType;
-import com.gdx.orion.entities.voxel.types.Air;
-import com.gdx.orion.entities.voxel.types.Grass;
-import com.gdx.orion.entities.voxel.types.Stone;
 import com.gdx.orion.utils.Scene2dUtils;
 
 public class LevelEdit extends GameState implements Screen, InputProcessor {
@@ -277,8 +272,6 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 		private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
 		
-		private Texture[][] imageGrid = { {Grass.getTexture(), Stone.getTexture()} };
-		
 		public VoxelSelector()
 		{
 			stage = new Stage();
@@ -351,12 +344,9 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		
 		public void drawImageGrid()
 		{
-			for (int x = 0; x < imageGrid.length; x++)
+			for (int x = 0; x < VoxelType.values().length; x++)
 			{
-				for (int y = 0; y < imageGrid.length; y++)
-				{
-					sb.draw(imageGrid[x][y], x * 100, y * 100, 100, 100);
-				}
+				sb.draw(VoxelType.values()[x].getTexture(), x * 100, 0, 100, 100);
 			}
 		}
 		
