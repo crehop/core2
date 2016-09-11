@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.gdx.orion.entities.EntityData;
 import com.gdx.orion.entities.EntityType;
-
+import com.gdx.orion.entities.voxel.VoxelType;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -109,7 +109,7 @@ public class WorldUtils {
 		fdef.restitution = 0;
 		body.createFixture(fdef);
 		body.setSleepingAllowed(false);
-		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null));
+		body.setUserData(new EntityData(9999,EntityType.WORLD_BOUNDRY,null, VoxelType.AIR));
 	}
 	
 	public static float[] moveVerts(Body body){

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gdx.orion.entities.voxel.VoxelType;
 import com.gdx.orion.utils.WorldUtils;
 //TODO MAKE STATIC FOR REUSABLILITY! NO NEED TO STORE DUE TO USERDATA!
 public class Projectile {
@@ -67,7 +68,7 @@ public class Projectile {
 		body.createFixture(fdef);
 		body.setLinearVelocity(force);
 		body.setAngularVelocity(MathUtils.random(-4f,4f));
-		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this));
+		body.setUserData(new EntityData(MathUtils.random(10) * size,EntityType.ASTEROID,this, VoxelType.AIR));
 		this.size = size;
 	}
 

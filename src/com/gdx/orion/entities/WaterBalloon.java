@@ -19,7 +19,7 @@ public class WaterBalloon {
 		   //For the flags you can set more than only one
 		   particleGroupDef = new ParticleGroupDef();
 		   particleGroupDef.color.set(1f, 1f, 0, 1);
-		   particleGroupDef.flags.add(ParticleType.b2_tensileParticle);
+		   particleGroupDef.flags.add(ParticleType.b2_waterParticle);
 		   particleGroupDef.flags.add(ParticleType.b2_fixtureContactListenerParticle);
 		   particleGroupDef.strength = 10f;
 		   particleGroupDef.lifetime = 15f;
