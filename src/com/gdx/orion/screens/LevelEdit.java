@@ -5,19 +5,33 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.entities.voxel.VoxelType;
-import com.gdx.orion.object.CustomButton;
+import com.gdx.orion.entities.voxel.types.Air;
+import com.gdx.orion.entities.voxel.types.Grass;
+import com.gdx.orion.entities.voxel.types.Stone;
+import com.gdx.orion.utils.Scene2dUtils;
 
 public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
@@ -36,11 +50,6 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
 	private final Sprite background;
 	private final Sprite vacantSquare;
-	
-	private final Texture vsnormal;
-	private final Texture vspressed;
-	
-	private CustomButton selectVoxel;
 	
 	private int gridMaxX, gridMaxY;
 	
@@ -73,22 +82,34 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		vacantSquare = new Sprite(new Texture(Gdx.files.internal("images/vacantSquare.png")));
 		vacantSquare.setSize(gridSquareSize, gridSquareSize);
 		
-		vsnormal = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbnormal.png"));
-		vspressed = new Texture(Gdx.files.internal("buttons/editor/BlockSelect/sbpressed.png"));
+		Pixmap bp = new Pixmap(240, 200, Format.RGBA8888);
+		bp.setColor(Color.GRAY);
+		bp.fill();
+		bp.setColor(Color.BLACK);
+		bp.drawRectangle(0, 0, 240, 200);
 		
-		selectVoxel = new CustomButton(vsnormal, vspressed, editorCamera.viewportWidth - 200, editorCamera.viewportHeight - 100, (float)200, (float)100);
+		Skin skin = Scene2dUtils.createDefaultSkin(new Texture(bp));
+
+		TextButtonStyle style = Scene2dUtils.createTextButtonStyle(skin, "default");
+		
+		final int buttonXOffset = 200, buttonYOffset = 100;
+		
+		final Button selectVoxel = new TextButton("Select Voxel", style);
+		selectVoxel.setPosition(editorCamera.viewportWidth-buttonXOffset, editorCamera.viewportHeight-buttonYOffset);
+		selectVoxel.setWidth(buttonXOffset);
+		selectVoxel.setHeight(buttonYOffset);
 		
 		selectVoxel.addListener(new ClickListener() {
-			@Override
-		    public void clicked(InputEvent event, float x, float y) {
-		    	LevelEdit.this.selectVoxel.switchImage();
-		    	System.out.println("Press");
+			public void clicked(InputEvent event, float x, float y)
+			{
+				addScreen(new VoxelSelector());
 			}
 		});
 		
 		stage.addActor(selectVoxel);
 		
 		im.addProcessor(stage);
+		Gdx.input.setInputProcessor(im);
 		
 		resetGrid();
 	}
@@ -242,7 +263,103 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		}
 		return false;
 	}
-
 	
+	/*
+	 * Voxel Selector Class
+	 */
+	private class VoxelSelector implements Screen
+	{
+
+		private boolean active = true;
+		private Stage stage;
+		
+		private SpriteBatch sb;
+		
+		private InputProcessor previousInputProcessor = Gdx.input.getInputProcessor();
+		
+		private Texture[][] imageGrid = { {Grass.getTexture(), Stone.getTexture()} };
+		
+		public VoxelSelector()
+		{
+			stage = new Stage();
+			Gdx.input.setInputProcessor(this.stage);
+			
+			sb = new SpriteBatch();
+			
+			this.stage.clear();
+			this.stage.addListener(new InputListener() {
+				public boolean keyUp(InputEvent event, int keycode)
+				{
+					switch(keycode)
+					{
+						case Keys.ESCAPE: cancel(); break;
+					}
+					
+					return super.keyUp(event, keycode);
+				}
+			});
+		}
+		
+		public void show() 
+		{
+			Gdx.input.setInputProcessor(this.stage);
+			active = true;
+		}
+
+		public void render(float delta) 
+		{
+			if (active)
+			{
+				sb.begin();
+				drawImageGrid();
+				sb.end();
+				stage.draw();
+				stage.act();
+				editorCamera.update();
+			}
+		}
+
+		public void resize(int width, int height) 
+		{
+			
+		}
+
+		public void pause() 
+		{
+			
+		}
+		
+		public void resume() 
+		{
+			
+		}
+
+		public void hide() 
+		{
+			this.active = false;
+		}
+
+		public void dispose() 
+		{
+			Gdx.input.setInputProcessor(previousInputProcessor);
+		}
+		
+		public void cancel()
+		{
+			LevelEdit.this.removeScreen(this);
+		}
+		
+		public void drawImageGrid()
+		{
+			for (int x = 0; x < imageGrid.length; x++)
+			{
+				for (int y = 0; y < imageGrid.length; y++)
+				{
+					sb.draw(imageGrid[x][y], x * 100, y * 100, 100, 100);
+				}
+			}
+		}
+		
+	}
 	
 }
