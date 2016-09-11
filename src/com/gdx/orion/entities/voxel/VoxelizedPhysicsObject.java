@@ -67,6 +67,7 @@ public class VoxelizedPhysicsObject {
 						if(VoxelUtils.getVoxelLeft(voxels, x, y) == VoxelType.STONE){
 							jdef.bodyA = bodyArray[x][y];
 							jdef.bodyB = bodyArray[x - 1][y];
+							jdef.collideConnected = true;
 							jdef.localAnchorA.set(bodyArray[x][y].getWorldCenter().x - Voxel.voxelSize, bodyArray[x][y].getWorldCenter().y);
 							jdef.localAnchorB.set(bodyArray[x - 1][y].getWorldCenter().x + Voxel.voxelSize, bodyArray[x][y].getWorldCenter().y);
 							world.createJoint(jdef);
