@@ -1,7 +1,12 @@
 package com.gdx.orion.screens;
 
 import com.gdx.orion.entities.Projectile;
-import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
+import com.gdx.orion.entities.WaterBalloon;
+import com.gdx.orion.listeners.BodyHandler;
+import com.gdx.orion.listeners.ContactFilterHandler;
+import com.gdx.orion.listeners.ContactHandler;
+import com.gdx.orion.listeners.ControlHandler;
+import com.gdx.orion.listeners.JointHandler;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,28 +20,34 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.gdx.orion.Main;
-import com.gdx.orion.handlers.BodyHandler;
-import com.gdx.orion.handlers.ContactHandler;
-import com.gdx.orion.handlers.JointHandler;
-import com.gdx.orion.handlers.ControlHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.GravityUtils;
 import com.gdx.orion.utils.WorldUtils;
+
+import finnstr.libgdx.liquidfun.ColorParticleRenderer;
+import finnstr.libgdx.liquidfun.ParticleDebugRenderer;
+import finnstr.libgdx.liquidfun.ParticleDef.ParticleType;
+import finnstr.libgdx.liquidfun.ParticleGroupDef;
+import finnstr.libgdx.liquidfun.ParticleSystem;
+import finnstr.libgdx.liquidfun.ParticleSystemDef;
 
 public class Play extends GameState implements Screen{
 	public Game game;
@@ -49,6 +60,9 @@ public class Play extends GameState implements Screen{
 	private static ControlHandler playController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
+    private ColorParticleRenderer colorParticleRenderer;
+    public Body body;
+
 	@SuppressWarnings("unused")
 	private Stage stage;
 	Random rand = new Random();
@@ -56,15 +70,9 @@ public class Play extends GameState implements Screen{
 	private Array<Body> bodies = new Array<Body>();
 	private ArrayList<Projectile> asteroids= new ArrayList<Projectile>();
 	private SpriteBatch batch = new SpriteBatch();
-	
+	private ParticleSystemDef systemDef;
     private Texture texture = new Texture(Gdx.files.internal("images/stars.png"));
     private Sprite stars = new Sprite(texture);
-    
-    private String fragmentShader;
-    private String vertexShader;
-    
-    private Vector2 position = new Vector2(0,0);
-    private Vector2 force = new Vector2(-50,0);
     
 	public final int MAX_BODIES = 2500;
 	public final int FRAGMENT_CULL_PER_FRAME = 10;
@@ -87,6 +95,19 @@ public class Play extends GameState implements Screen{
     float deltaTime = (float)frameTime;
 	public Array<JointDef> addJoint = new Array<JointDef>();
 	public Array<Joint> clearJoint = new Array<Joint>();
+	public WaterBalloon balloon;
+	public WaterBalloon balloon1;
+	public WaterBalloon balloon2;
+	public WaterBalloon balloon3;
+	public WaterBalloon balloon4;
+	public WaterBalloon balloon5;
+	public WaterBalloon balloon6;
+	public WaterBalloon balloon7;
+	public WaterBalloon balloon8;
+	public WaterBalloon balloon9;
+	public WaterBalloon balloon0;
+
+	private ParticleSystem particleSystem;
 	
 
 	
@@ -106,17 +127,33 @@ public class Play extends GameState implements Screen{
 		viewport.apply();
 		this.stage = new Stage(viewport);
 		this.game = game;
-		this.setGameWorld(new World(new Vector2(0f,-1f), false));
+		this.setGameWorld(new World(new Vector2(0f,-10f), false));
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, Main.GAME_WORLD_WIDTH, 0, Main.GAME_WORLD_HEIGHT);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
 		count = 0;
-        vertexShader = Gdx.files.internal("shaders/vertex/asteroid.vsh").readString();
-        fragmentShader = Gdx.files.internal("shaders/fragment/asteroid.fsh").readString();
-		shader = new ShaderProgram(vertexShader, fragmentShader);
-		if (!shader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shader.getLog());
 		EffectUtils.initilize();
-		//VoxelizedPhysicsObject object = new VoxelizedPhysicsObject(null, gameWorld);
+		systemDef = new ParticleSystemDef();
+		systemDef.radius = 0.25f;
+		systemDef.dampingStrength = 1.3f;
+		particleSystem = new ParticleSystem(gameWorld,systemDef);
+		balloon = new WaterBalloon(10,50,particleSystem);
+		colorParticleRenderer = new ColorParticleRenderer(100000);
+		BodyDef def = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		Vector2[] triangle = new Vector2[3];
+		triangle[0] = new Vector2(-15,0);
+		triangle[1] = new Vector2(0,7);
+		triangle[2] = new Vector2(0,0);
+		PolygonShape shape = new PolygonShape();
+		shape.set(triangle);
+		fdef.shape = shape;
+		def.type = BodyType.DynamicBody;
+		def.position.set(10,30);
+		fdef.density = 1.3f;
+		Body body = gameWorld.createBody(def);
+		body.createFixture(fdef);
+		
 	}
 	
 	@Override
@@ -126,29 +163,25 @@ public class Play extends GameState implements Screen{
 			if(aliveTime > MAX_ALIVE_TIME){
 				aliveTime = 0;
 			}
-			gameWorld.getBodies(bodies);
-			cam.position.set(0, 0, 0);
 			mapCam.position.set(0, 0, 0);
 			playController.checkInput(gameWorld,cam);
-			asteroids.clear();
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(stars, 0 , 0, Main.GAME_WORLD_WIDTH, Main.GAME_WORLD_HEIGHT);
 			batch.end();
-			EffectUtils.drawGrid(cam);
 			BodyHandler.update(cam, gameWorld, bodies);
 			batch.begin();
-			GravityUtils.renderWells(batch);
+			//GravityUtils.renderWells(batch);
 			BodyHandler.handleStates(gameWorld,bodies);
 			gameWorld.getJoints(clearJoint);
 			JointHandler.handleJoints(gameWorld,addJoint,clearJoint);
 			addJoint.clear();
 			clearJoint.clear();
-			batch.setProjectionMatrix(mapCam.combined);
-			GravityUtils.renderWells(batch);
-			batch.setProjectionMatrix(cam.combined);
+			//batch.setProjectionMatrix(mapCam.combined);
+			//GravityUtils.renderWells(batch);
+			//batch.setProjectionMatrix(cam.combined);
 			BodyHandler.applyEffects(batch);
 			BodyHandler.destroyBodies(gameWorld,destroy);
 			batch.end();
@@ -157,13 +190,13 @@ public class Play extends GameState implements Screen{
 			
 			if(WorldUtils.isWireframe()){
 				renderer.render(getGameWorld(), viewport.getCamera().combined);
+				
 			}
-			
-			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
-			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine4("WORLD MAX VELOCITY: " + this.getGameWorld().getVelocityThreshold());
+			balloon.render(colorParticleRenderer, particleSystem, cam);
 
+			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			cam.update();
+			//FIXED DEPENDENCIES
 			
 			
 			//TIMESTEP AND WORLD UPDATE INFORMATION
@@ -173,7 +206,7 @@ public class Play extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 			accumulator += delta;
 		    while (accumulator >= step) {
-		        gameWorld.step(step, 1, 1);
+		        gameWorld.step(step, 6,3,9);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
@@ -183,7 +216,6 @@ public class Play extends GameState implements Screen{
 			//MUST BE LAST
 			renderer.render(gameWorld, mapCam.combined);              
 			Console.render(consoleCam);
-			cam.position.set(0f,0f,0f);
 			consoleCam.update();
 			//////////////
 		}

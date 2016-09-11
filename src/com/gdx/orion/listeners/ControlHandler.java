@@ -1,4 +1,4 @@
-package com.gdx.orion.handlers;
+package com.gdx.orion.listeners;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,7 +25,7 @@ public class ControlHandler extends InputAdapter {
 	private int screen;
 	private Vector3 position2;
 	private Vector2 position;
-	private Vector2 force = new Vector2(0,100);
+	private Vector2 force = new Vector2(0,10000);
 	public void checkInput(World world, Camera cam) {
 		screen = GameStateManager.getLastScreen();
 		if(exitKey){
@@ -43,8 +43,10 @@ public class ControlHandler extends InputAdapter {
 		if(forward){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.y += 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(0, 1, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -55,8 +57,10 @@ public class ControlHandler extends InputAdapter {
 		if(back){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.y -= 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(0, -1, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -67,8 +71,10 @@ public class ControlHandler extends InputAdapter {
 		if(strafeLeft){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.position.x -= 1;
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(-1, 0, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -79,8 +85,10 @@ public class ControlHandler extends InputAdapter {
 		if(strafeRight){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
+					GameStateManager.levelSelect.cam.translate(1, 0, 0);
 					break;
 				case GameStateManager.PLAY:
+					GameStateManager.play.cam.translate(1, 0, 0);
 					break;
 				case GameStateManager.LEVELEDIT:
 					break;
@@ -91,9 +99,6 @@ public class ControlHandler extends InputAdapter {
 		if(fired){
 			switch(GameStateManager.getLastScreen()){
 				case GameStateManager.LEVELSELECT:
-					position2.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-					position.set(cam.unproject(position2).x,cam.unproject(position2).y);
-					WorldUtils.fireBullet(world, position, 10f, 1, force);
 					break;
 				case GameStateManager.PLAY:
 					break;
@@ -191,11 +196,19 @@ public class ControlHandler extends InputAdapter {
 		if(GameStateManager.play.isActive()){
 			if(!(GameStateManager.play.cam.zoom + amount < 1)){
 				GameStateManager.play.cam.zoom += amount;
-				GameStateManager.levelSelect.cam.zoom += amount;
 				Console.setLine8(""+GameStateManager.play.cam.zoom);
 			}
 			if(GameStateManager.play.cam.zoom < 0){
-				GameStateManager.play.cam.zoom = 1;
+				GameStateManager.play.cam.zoom = 0.01f;
+			}
+		}
+		if(GameStateManager.levelSelect.isActive()){
+			if(!(GameStateManager.levelSelect.cam.zoom + amount < 1)){
+				GameStateManager.levelSelect.cam.zoom += amount;
+				Console.setLine8(""+GameStateManager.levelSelect.cam.zoom);
+			}
+			if(GameStateManager.levelSelect.cam.zoom < 0){
+				GameStateManager.levelSelect.cam.zoom = 1;
 			}
 		}
 		return super.scrolled(amount);

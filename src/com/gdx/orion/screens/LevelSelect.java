@@ -28,8 +28,8 @@ import com.gdx.orion.Main;
 import com.gdx.orion.entities.voxel.Voxel;
 import com.gdx.orion.entities.voxel.VoxelizedPhysicsObject;
 import com.gdx.orion.entities.voxel.types.Stone;
-import com.gdx.orion.handlers.ContactHandler;
-import com.gdx.orion.handlers.ControlHandler;
+import com.gdx.orion.listeners.ContactHandler;
+import com.gdx.orion.listeners.ControlHandler;
 import com.gdx.orion.utils.Console;
 import com.gdx.orion.utils.EffectUtils;
 import com.gdx.orion.utils.WorldUtils;
@@ -46,7 +46,7 @@ public class LevelSelect extends GameState implements Screen{
 	public ScalingViewport viewport;  
 	public ScalingViewport consoleViewport;  
 	public ScalingViewport mapViewport;  
-	private static ControlHandler playController = new ControlHandler();
+	private static ControlHandler levelSelectController = new ControlHandler();
 	private World gameWorld;
 	private Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 	@SuppressWarnings("unused")
@@ -82,13 +82,13 @@ public class LevelSelect extends GameState implements Screen{
 
 	
 	protected LevelSelect (Game game, int level) {
-		super(GameStateManager.PLAY);
+		super(GameStateManager.LEVELSELECT);
 		Voxel[][] test = new Voxel[3][3];
 		test[0][0] = new Stone();
-		test[0][1] = new Stone();
+		test[0][1] = new Air();
 		test[0][2] = new Stone();
 		test[1][0] = new Stone();
-		test[1][1] = new Stone();
+		test[1][1] = new Air();
 		test[1][2] = new Stone();
 		test[2][0] = new Stone();
 		test[2][1] = new Stone();
@@ -111,14 +111,14 @@ public class LevelSelect extends GameState implements Screen{
 		WorldUtils.GenerateWorldBorder(getGameWorld(), 0, 250, 0, 100);
 		this.gameWorld.setContactListener(new ContactHandler());
 		cam.zoom = 2.0f;
-		new VoxelizedPhysicsObject(test, gameWorld);
+
 
 	}
 
 	@Override
 	public void render(float delta) {
 		if(isActive()) {
-			playController.checkInput(gameWorld,cam);
+			levelSelectController.checkInput(gameWorld,cam);
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.setProjectionMatrix(cam.combined);
@@ -128,12 +128,11 @@ public class LevelSelect extends GameState implements Screen{
 			
 			
 			if(WorldUtils.isWireframe()){
-				renderer.render(getGameWorld(), viewport.getCamera().combined);
+				renderer.render(getGameWorld(), cam.combined);
 			}
 			
 			Console.setLine1("FPS : " + Gdx.graphics.getFramesPerSecond());
 			Console.setLine2("WORLD ENTITIES: " + getGameWorld().getBodyCount());
-			Console.setLine4("WORLD MAX VELOCITY: " + this.getGameWorld().getVelocityThreshold());
 
 			cam.update();
 			
@@ -145,7 +144,7 @@ public class LevelSelect extends GameState implements Screen{
 		    deltaTime = (float)frameTime;
 			accumulator += delta;
 		    while (accumulator >= step) {
-		        gameWorld.step(step, 1, 1);
+		        gameWorld.step(step, 3, 3, 3);
 		        EffectUtils.updateEffects(step);
 		        accumulator -= step;
 		    }
@@ -181,7 +180,7 @@ public class LevelSelect extends GameState implements Screen{
 	
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(playController);
+		Gdx.input.setInputProcessor(levelSelectController);
 		this.setActive(true);
 	}
 	
