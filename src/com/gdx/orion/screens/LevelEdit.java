@@ -2,6 +2,7 @@ package com.gdx.orion.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -18,7 +19,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -53,8 +53,7 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	
 	private VoxelType current = VoxelType.AIR;
 	
-	private final TextButton selectVoxel;
-	private final TextButton placement;
+	private final TextButton selectVoxel, placement, load, save;
 	
 	private final Color defaultButtonColor;
 	
@@ -101,6 +100,10 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		selectVoxel.setPosition(editorCamera.viewportWidth-buttonXOffset, editorCamera.viewportHeight-buttonYOffset);
 		placement = new TextButton("Place Voxel", style);
 		placement.setPosition(editorCamera.viewportWidth-buttonXOffset, editorCamera.viewportHeight-(buttonYOffset*2));
+		load = new TextButton("Load Set", style);
+		load.setPosition(editorCamera.viewportWidth-buttonXOffset, editorCamera.viewportHeight-(buttonYOffset*3));
+		save = new TextButton("Save Set", style);
+		save.setPosition(editorCamera.viewportWidth-buttonXOffset, editorCamera.viewportHeight-(buttonYOffset*4));
 		
 		defaultButtonColor = selectVoxel.getColor();
 		
@@ -120,8 +123,24 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			}
 		});
 		
+		load.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y)
+			{
+				
+			}
+		});
+		
+		save.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y)
+			{
+				
+			}
+		});
+		
 		stage.addActor(selectVoxel);
 		stage.addActor(placement);
+		stage.addActor(load);
+		stage.addActor(save);
 		im.addProcessor(stage);
 		
 		resetGrid();
@@ -169,11 +188,6 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 			return true;
 		}
 		return false;
-	}
-	
-	private void placeVoxelOnGrid(int x, int y)
-	{
-		
 	}
 	
 	/*
@@ -422,6 +436,19 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 					}
 				}
 			}
+			
+		}
+		
+	}
+	
+	private class FileNamePrompt implements TextInputListener 
+	{
+
+		public void input(String text) {
+			
+		}
+
+		public void canceled() {
 			
 		}
 		

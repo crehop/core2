@@ -15,7 +15,7 @@ public class FileUtils
 	{
 		try
 		{
-			FileOutputStream fout = new FileOutputStream(System.getProperty("user.dir") + "/res/" + filename + ".ser");
+			FileOutputStream fout = new FileOutputStream(System.getProperty("user.dir") + "/res/voxelarrays" + filename + ".ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(voxels);
 			oos.close();
@@ -30,7 +30,7 @@ public class FileUtils
 	{
 		try 
 		{
-			FileInputStream fin = new FileInputStream(System.getProperty("user.dir") + "/res/" + filename + ".ser");
+			FileInputStream fin = new FileInputStream(System.getProperty("user.dir") + "/res/voxelarrays" + filename + ".ser");
 			ObjectInputStream ois = new ObjectInputStream(fin);
 			VoxelType[][] voxels = (VoxelType[][]) ois.readObject();
 			ois.close();
@@ -45,7 +45,7 @@ public class FileUtils
 	
 	public static String[] displayLoadableVoxelFileNames()
 	{
-		File file = new File(System.getProperty("user.dir") + "/res");
+		File file = new File(System.getProperty("user.dir") + "/res/voxelarrays");
 		File[] files = file.listFiles();
 		
 		String[] names = new String[files.length];
