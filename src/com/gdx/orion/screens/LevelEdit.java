@@ -27,6 +27,8 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.orion.entities.voxel.VoxelType;
+import com.gdx.orion.object.VoxelData;
+import com.gdx.orion.utils.FileUtils;
 import com.gdx.orion.utils.Scene2dUtils;
 
 public class LevelEdit extends GameState implements Screen, InputProcessor {
@@ -126,14 +128,15 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 		load.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y)
 			{
-				
+
 			}
 		});
 		
 		save.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y)
 			{
-				
+				FileNamePrompt fnp = new FileNamePrompt();
+				Gdx.input.getTextInput(fnp, "Save Creation", "Untitled", "");
 			}
 		});
 		
@@ -445,7 +448,29 @@ public class LevelEdit extends GameState implements Screen, InputProcessor {
 	{
 
 		public void input(String text) {
-			
+			if (text.matches("[a-zA-Z]+"))
+			{
+				try
+				{
+					for (String s : FileUtils.displayLoadableObjectFileNames())
+					{
+						if (s.equalsIgnoreCase(text))
+						{
+							return;
+						}
+					}
+				}
+			catch (NullPointerException ex) {}
+				
+				VoxelData vd = new VoxelData(text, LevelEdit.this.voxelTypes);
+				FileUtils.serializeObject(text, vd);
+				return;
+				
+			}
+			else
+			{
+				return;
+			}
 		}
 
 		public void canceled() {
